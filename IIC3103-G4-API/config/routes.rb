@@ -12,9 +12,11 @@ Rails.application.routes.draw do
     put '/purchase_order', to: 'purchase_orders#create'
     #TODO: accept and delete
 
+    post '/recepcionar/:id', to: 'purchase_orders#receive' , defaults: {format: :json}
+
     #Invoice
 
     #Payment
-    
+
   end
 end

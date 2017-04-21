@@ -12,6 +12,10 @@ class Api::PurchaseOrdersController < Api::ApplicationController
         #end
     end
 
+    def receive
+        
+    end
+
     def purchase_order_params
         params.permit(:id,:product_sku,:qty,:delivery_date,:payment,:payment_option)
     end
