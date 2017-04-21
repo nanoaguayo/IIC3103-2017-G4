@@ -14,6 +14,12 @@ Rails.application.routes.draw do
 
     post '/recepcionar/:id', to: 'purchase_orders#receive' , defaults: {format: :json}
 
+    post '/rechazar/:id', to: 'purchase_orders#reject'
+
+    delete '/anular/:id', to: 'purchase_orders#cancel'
+
+    get '/obtener/:id', to: 'purchase_orders#get'
+
     #Invoice
 
     #Payment

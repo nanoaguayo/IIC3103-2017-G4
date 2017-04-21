@@ -13,7 +13,19 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def receive
-        
+    #  @purchase_order = Purchase_order.find(params[:id])
+    end
+
+    def reject
+    #  @purchase_order = Purchase_order.find(params[:id])
+    end
+
+    def cancel
+    #  @purchase_order = Purchase_order.find(params[:id])
+    end
+
+    def get
+    #  @purchase_order = Purchase_order.find(params[:id])
     end
 
     def purchase_order_params
