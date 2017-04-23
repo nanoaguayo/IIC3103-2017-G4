@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'api#index'
   #API
@@ -9,16 +10,16 @@ Rails.application.routes.draw do
     get '/products', to: 'products#index'
 
     #Purchase order
-    put '/purchase_order', to: 'purchase_orders#create'
-    #TODO: accept and delete
-
+    #show
+    get '/obtener/:id', to:'purchase_orders#show'
+    #create
+    put '/crear', to: 'purchase_orders#create'
+    #accept
     post '/recepcionar/:id', to: 'purchase_orders#receive' , defaults: {format: :json}
-
+    #reject
     post '/rechazar/:id', to: 'purchase_orders#reject'
-
+    #cancel
     delete '/anular/:id', to: 'purchase_orders#cancel'
-
-    get '/obtener/:id', to: 'purchase_orders#get'
 
     #Invoice
 
