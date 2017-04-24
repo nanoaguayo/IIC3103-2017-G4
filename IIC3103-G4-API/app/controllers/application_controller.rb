@@ -1,7 +1,14 @@
 class ApplicationController < ActionController::API
+
   def render_error(error)
     render status: 500, json:{
-      Message: error
+      Error: error
+    }
+  end
+
+  def index
+    render json: {
+      api: 'v1',
     }
   end
 end

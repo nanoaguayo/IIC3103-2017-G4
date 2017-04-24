@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170421155302) do
+ActiveRecord::Schema.define(version: 20170423221136) do
+
+  create_table "balances", force: :cascade do |t|
+    t.string   "account"
+    t.bigint   "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "products", force: :cascade do |t|
     t.string   "sku"
@@ -37,6 +44,14 @@ ActiveRecord::Schema.define(version: 20170421155302) do
     t.string   "cancellationCause"
     t.string   "notes"
     t.string   "billid"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.string   "originAccount"
+    t.string   "destinationAccount"
+    t.bigint   "amount"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end

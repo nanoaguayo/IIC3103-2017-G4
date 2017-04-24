@@ -15,15 +15,22 @@ Rails.application.routes.draw do
     #create
     put '/crear', to: 'purchase_orders#create'
     #accept
-    post '/recepcionar/:id', to: 'purchase_orders#receive' , defaults: {format: :json}
+    post '/recepcionar/:id', to: 'purchase_orders#receive'
     #reject
     post '/rechazar/:id', to: 'purchase_orders#reject'
     #cancel
     delete '/anular/:id', to: 'purchase_orders#cancel'
 
-    #Invoice
+    #Bank
+    #Transfer money
+    put '/trx', to: "bank#transfer"
+    #show transaction
+    get '/trx:id', to: 'bank#show_transaction'
+    #get Account Statement
+    post '/cartola', to:'bank#accStatement'
+    #get account balance
+    get '/banco/cuenta/:id', to:'bank#accBalance'
 
-    #Payment
 
   end
 end

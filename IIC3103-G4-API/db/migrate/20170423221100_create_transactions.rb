@@ -3,7 +3,7 @@ class CreateTransactions < ActiveRecord::Migration[5.0]
     create_table :transactions do |t|
       t.string :originAccount
       t.string :destinationAccount
-      t.double :amount
+      t.bigint :amount
 
       t.timestamps
     end
