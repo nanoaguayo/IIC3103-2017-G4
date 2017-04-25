@@ -1,9 +1,10 @@
 class Api::PurchaseOrdersController < Api::ApplicationController
     def create
         params_aux = check_params
-        @new_order = Purchase_order.create(params_aux)
-        if @new_order.save then
-          render status: 202, :show
+        @purchase_order = PurchaseOrder.create(params_aux)
+        if @purchase_order.save then
+          params[:id] = @purchase_order.id
+          render :show, status: 202
         else
           render status: 500, json:{
             Message: 'Declined: failed to process order, we need more details'
@@ -12,7 +13,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def show
-      @purchase_order = Purchase_order.find_by_id(params[:id])
+      @purchase_order = PurchaseOrder.find_by_id(params[:id])
       if @purchase_order then
           #render show
       else
@@ -21,12 +22,12 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def receive
-      @purchase_order = Purchase_order.find(params[:id])
+      @purchase_order = PurchaseOrder.find_by_id(params[:id])
       if @purchase_order then
-        if @purchase_order.state == 'accepted' || @purchase_order.state = 'rejected' then
+        if @purchase_order.state == 'accepted' || @purchase_order.state == 'rejected' then
           render_error('Order already accepted or rejected')
         else
-          @purchase_oder.state = 'accepted'
+          @purchase_order.state = 'accepted'
           if @purchase_order.save then
             render :show
           else
@@ -39,13 +40,13 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def reject
-      @purchase_order = Purchase_order.find(params[:id])
+      @purchase_order = PurchaseOrder.find(params[:id])
       if @purchase_order then
         if @purchase_order.state == 'rejected' || @purchase_order.state == 'accepted' then
           render_error('Order already accepted or rejected')
         else
-          @purchase_oder.state = 'rejected'
-          @purchase_oder.rejectionCause = params['rechazo']
+          @purchase_order.state = 'rejected'
+          @purchase_order.rejectionCause = params['rechazo']
           if @purchase_order.save then
             render :show
           else
@@ -58,13 +59,13 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def cancel
-      @purchase_order = Purchase_order.find(params[:id])
+      @purchase_order = PurchaseOrder.find(params[:id])
       if @purchase_order then
         if @purchase_order.state == 'cancelled' then
           render_error('Order already cancelled')
         else
-          @purchase_oder.state = 'cancelled'
-          @purchase_oder.cancellationCause = params['anulacion']
+          @purchase_order.state = 'cancelled'
+          @purchase_order.cancellationCause = params['anulacion']
           if @purchase_order.save then
             render :show
           else
@@ -79,12 +80,14 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     def check_params
       #check params before creation of po
       params_names = ['channel','quantity','sku','client','supplier','unitPrice','deadline','notes']
+      params_names2 = ['canal','cantidad','sku','cliente','proveedor','precioUnitario','fechaEntrega','notas']
+      params_result = Hash.new
       params_result['dispatchedQuantity'] = 0
       params_result['state'] = 'created'
 
-      params_names.each do |param|
-          if params[param] != NULL then
-            params_result = params[param]
+      params_names2.each_with_index  do |param,index|
+          if params[param] then
+            params_result[params_names[index]] = params[param]
           end
       end
 
