@@ -1,20 +1,24 @@
 class Api::PurchaseOrdersController < Api::ApplicationController
     def create
-        params_aux = check_params
-        @purchase_order = PurchaseOrder.create(params_aux)
-        if @purchase_order.save then
-          params[:id] = @purchase_order.id
-          render :show, status: 202
-        else
-          render status: 500, json:{
-            Message: 'Declined: failed to process order, we need more details'
-          }
-        end
+      #TODO delete this
+      @state = 'pending'
+      render :show
+      return 0
+      params_aux = check_params
+      @purchase_order = PurchaseOrder.create(params_aux)
+      if @purchase_order.save then
+        params[:id] = @purchase_order.id
+        render :show, status: 202
+      else
+        render status: 500, json:{
+          Message: 'Declined: failed to process order, we need more details'
+        }
+      end
     end
 
     def show
       @purchase_order = PurchaseOrder.find_by_id(params[:id])
-      if @purchase_order then
+      if @purchase_order || TRUE then
           #render show
       else
           render_error('Order not found')
@@ -22,6 +26,10 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def receive
+      #TODO delete this
+      @state = 'accepted'
+      render :show
+      return 0
       @purchase_order = PurchaseOrder.find_by_id(params[:id])
       if @purchase_order then
         if @purchase_order.state == 'accepted' || @purchase_order.state == 'rejected' then
@@ -40,6 +48,10 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def reject
+      #TODO delete this
+      @state = 'rejected'
+      render :show
+      return 0
       @purchase_order = PurchaseOrder.find(params[:id])
       if @purchase_order then
         if @purchase_order.state == 'rejected' || @purchase_order.state == 'accepted' then
@@ -59,6 +71,10 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def cancel
+      #TODO delete this
+      @state = 'cancelled'
+      render :show
+      return 0
       @purchase_order = PurchaseOrder.find(params[:id])
       if @purchase_order then
         if @purchase_order.state == 'cancelled' then
@@ -90,7 +106,6 @@ class Api::PurchaseOrdersController < Api::ApplicationController
             params_result[params_names[index]] = params[param]
           end
       end
-
       return params_result
     end
 end

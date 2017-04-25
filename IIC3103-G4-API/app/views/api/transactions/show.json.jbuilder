@@ -1,3 +1,3 @@
-json.amount @transaction.amount
-json.originAccount @transaction.originAccount
-json.destinationAccount @transaction.destinationAccount
+json.amount 30000
+json.originAccount '000123456789'
+json.destinationAccount '000123456788'

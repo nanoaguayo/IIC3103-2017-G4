@@ -1,6 +1,9 @@
 class Api::TransactionsController < Api::ApplicationController
 
   def transfer
+    #TODO delete this
+    render :show
+    return 0
     if !(params['origen'] && params['destino'] && params['monto']) then
       render_error('Params missing')
     else
@@ -16,7 +19,7 @@ class Api::TransactionsController < Api::ApplicationController
 
   def show
     @transaction = Transaction.find_by_id(params[:id])
-    if @transaction then
+    if @transaction || TRUE then
       #render
     else
       render_error('Transaction not found')

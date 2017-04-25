@@ -1,5 +1,9 @@
 class Api::InvoicesController < Api::ApplicationController
   def create
+      #TODO delete this
+      @state = 'pending'
+      render :show
+      return 0
       po = PurchaseOrder.find_by_id(params[:id])
       if po then
         #process
@@ -24,7 +28,7 @@ class Api::InvoicesController < Api::ApplicationController
 
   def show
     @invoice = Invoice.find_by_id(params[:id])
-    if @invoice then
+    if @invoice || TRUE then
       #render
     else
       render_error('Invoice not found')
@@ -32,6 +36,10 @@ class Api::InvoicesController < Api::ApplicationController
   end
 
   def accept
+    #TODO delete this
+    @state = 'accepted'
+    render :show
+    return 0
     @invoice = Invoice.find_by_id(params[:id])
     if @invoice then
         @invoice.state = "accepted"
@@ -46,6 +54,10 @@ class Api::InvoicesController < Api::ApplicationController
   end
 
   def cancel
+    #TODO delete this
+    @state = 'cancelled'
+    render :show
+    return 0
     @invoice = Invoice.find_by_id(params[:id])
     if @invoice then
         @invoice.state = "rejected"
@@ -62,6 +74,10 @@ class Api::InvoicesController < Api::ApplicationController
     end
   end
   def reject
+    #TODO delete this
+    @state = 'rejected'
+    render :show
+    return 0
     @invoice = Invoice.find_by_id(params[:id])
     if @invoice then
         @invoice.state = "rejected"
@@ -79,6 +95,10 @@ class Api::InvoicesController < Api::ApplicationController
   end
 
   def delivered
+    #TODO delete this
+    @state = 'delivered'
+    render :show
+    return 0
     @invoice = Invoice.find_by_id(params[:id])
     if @invoice then
         @invoice.state = "delivered"
@@ -93,6 +113,10 @@ class Api::InvoicesController < Api::ApplicationController
   end
 
   def paid
+    #TODO delete this
+    @state = 'paid'
+    render :show
+    return 0
     @invoice = Invoice.find_by_id(params[:id])
     if @invoice then
         @invoice.state = "paid"

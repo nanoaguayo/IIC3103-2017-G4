@@ -1,6 +1,8 @@
-json.transactions @transactions do |trans|
-  json.amount trans.amount
-  json.originAccount trans.originAccount
-  json.destinationAccount trans.destinationAccount
-end
-json.total @transactions.count
+json.transactions = [
+  {
+    json.amount 30000
+    json.originAccount '000123456789'
+    json.destinationAccount '000123456788'
+  }
+]
+json.total 1
