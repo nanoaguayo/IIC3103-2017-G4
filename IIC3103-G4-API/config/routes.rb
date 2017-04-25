@@ -12,25 +12,35 @@ Rails.application.routes.draw do
 
     #Purchase order
     #show
-    get '/obtener/:id', to:'purchase_orders#show'
+    get '/purchase_orders/:id', to:'purchase_orders#show'
     #create
-    put '/crear', to: 'purchase_orders#create'
+    put '/purchase_orders', to: 'purchase_orders#create'
     #accept
-    post '/recepcionar/:id', to: 'purchase_orders#receive'
+    patch '/purchase_orders/:id/accepted', to: 'purchase_orders#receive'
     #reject
-    post '/rechazar/:id', to: 'purchase_orders#reject'
+    patch '/purchase_orders/:id/rejected', to: 'purchase_orders#reject'
     #cancel
-    delete '/anular/:id', to: 'purchase_orders#cancel'
+    delete '/purchase_orders/:id', to: 'purchase_orders#cancel'
 
-    #Bank
+    #Transfers
     #Transfer money
-    put '/trx', to: "bank#transfer"
+    put '/trx', to: "transactions#transfer"
     #show transaction
-    get '/trx:id', to: 'bank#show_transaction'
+    get '/trx/:id', to: 'transactions#show'
     #get Account Statement
-    post '/cartola', to:'bank#accStatement'
-    #get account balance
-    get '/banco/cuenta/:id', to:'bank#accBalance'
+    post '/cartola', to:'transactions#accStatement'
+
+    #Balance
+    get '/banco/cuenta/:id', to:'balances#accBalance'
+
+    #Invoice
+    put '/invoices/:id', to:'invoices#create'
+    get '/invoices/:id', to:'invoices#show'
+    patch '/invoices/:id/accepted', to:'invoices#accept'
+    patch '/invoices/:id/rejected', to:'invoices#reject'
+    patch '/invoices/:id/delivered', to:'invoices#delivered'
+    patch '/invoices/:id/paid', to:'invoices#paid'
+    delete '/invoices/:id/cancel', to:'invoices#cancel'
 
     #WareHouse
     #show
