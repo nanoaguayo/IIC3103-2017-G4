@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170423221136) do
+ActiveRecord::Schema.define(version: 20170424164155) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "account"
@@ -21,11 +21,11 @@ ActiveRecord::Schema.define(version: 20170423221136) do
 
   create_table "products", force: :cascade do |t|
     t.string   "sku"
-    t.string   "name"
-    t.integer  "price"
+    t.string   "ware_house_id"
+    t.integer  "costs"
     t.integer  "stock"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "purchase_orders", force: :cascade do |t|
@@ -54,6 +54,16 @@ ActiveRecord::Schema.define(version: 20170423221136) do
     t.bigint   "amount"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+  end
+
+  create_table "ware_houses", force: :cascade do |t|
+    t.integer  "usedspace"
+    t.integer  "totalspace"
+    t.boolean  "reception"
+    t.boolean  "dispatch"
+    t.boolean  "pulmon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
