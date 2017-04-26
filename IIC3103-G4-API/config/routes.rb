@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     #show
     get '/purchase_orders/:id', to:'purchase_orders#show'
     #create
-    put '/purchase_orders', to: 'purchase_orders#create'
+    put '/purchase_orders/:id', to: 'purchase_orders#create'
     #accept
     patch '/purchase_orders/:id/accepted', to: 'purchase_orders#receive'
     #reject
