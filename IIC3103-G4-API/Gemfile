@@ -41,3 +41,22 @@ gem 'pg'
 
 #Heroku testing
 gem 'rails_12factor'
+
+#Bootstrap
+gem 'bootstrap-sass'
+gem 'autoprefixer-rails'
+
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 2.7.2'
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+
+gem 'turbolinks'
+
+gem 'better_errors'
+#charts
+gem 'chartkick'
