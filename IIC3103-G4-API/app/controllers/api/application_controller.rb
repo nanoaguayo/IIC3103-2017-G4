@@ -20,7 +20,9 @@ class Api::ApplicationController < ActionController::API
   def hash
     #POR EJEMPLO encriptar string "GET" y generar auth para request bodegas
     ret = Crypt.generarauthdev("GET")
+    puts ret
     render json: ret, status: :ok
+    Fetcher.Bodegas("GET","almacenes")
   end
 
 
