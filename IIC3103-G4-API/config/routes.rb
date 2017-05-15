@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   namespace :api do
     get '/', to:  'application#index'
 
+    get '/hash', to: 'application#hash'
+
     #Products
     get '/products', to: 'products#index'
 
