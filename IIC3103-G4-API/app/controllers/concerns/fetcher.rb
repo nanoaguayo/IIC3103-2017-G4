@@ -12,7 +12,7 @@ module Fetcher
     end
     options = {'Content-type' => 'application/json', 'Authorization' => auth}
     response = HTTParty.get(BODEGA_URI+uri_ext,headers: options)
-    puts response
+    return response
   end
 
 end

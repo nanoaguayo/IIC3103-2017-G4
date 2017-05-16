@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'api#index'
+  root 'dashboard#index'
   #API
   namespace :api do
     get '/', to:  'application#index'

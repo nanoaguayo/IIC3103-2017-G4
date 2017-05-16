@@ -1,0 +1,38 @@
+<h3 class="dashTitle">Listado de almacenes</h3>
+<% for aux in @almacenes do %>
+  <div class="container-fluid almacen row">
+      <div class="col-md-8">
+        <% if aux['recepcion'] then %>
+          <h5><strong>Almacen de Recepcion:</strong></h5>
+        <% elsif aux['pulmon'] then%>
+          <h5><strong>Almacen Pulmon:</strong></h5>
+        <% elsif aux['despacho'] then%>
+          <h5><strong>Almacen de Despacho:</strong></h5>
+        <% else %>
+          <h5><strong>Almacen:</strong></h5>
+        <% end%>
+        <h5><%= aux['_id'] %></h5>
+        <strong><p>
+          Espacio:
+        </p></strong>
+        <p>
+          <%= aux['usedSpace'] %>
+          /
+          <%= aux['totalSpace'] %>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <%= pie_chart ({"Utilizado" => Integer(aux['usedSpace']), "Libre" => (Integer(aux['totalSpace'])-Integer(aux['usedSpace']))}), donut: true, height:"200px", colors:["#aaa","#555"] %>
+      </div>
+  </div>
+<%end %>
+<h3 class="dashTitle">Listado de productos por SKU</h3>
+<%= column_chart @row_data, stacked: true, colors:["#aaa"] %>
+<%for aux in @productos.keys do %>
+  <div class="container-fluid">
+    <p>
+      <strong><%=aux%>:</strong> <%=@productos[aux]%> unidades
+    </p>
+  </div>
+<%end%>
+<h3 class="dashTitle">Ordenes de fabricacion</h3>
