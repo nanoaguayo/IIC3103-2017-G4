@@ -26,25 +26,21 @@ module Fetcher
   end
 
   def self.getProductsWithStock
-    almacenes = Bodegas("GET","almacenes")
-    productos = Hash.new 0
-    for almacen in almacenes do
-      id = almacen['_id']
-      resp = Bodegas("GET"+id,"skusWithStock?almacenId="+id)
-      puts resp
-      for aux in resp do
-        productos[aux['_id']] = productos[aux['_id']] + aux['total']
-      end
-    end
+   almacenes = Bodegas("GET","almacenes")
+   productos = Hash.new 0
+   for almacen in almacenes do
+     id = almacen['_id']
+     resp = Bodegas("GET"+id,"skusWithStock?almacenId="+id)
+     for aux in resp do
+       productos[aux['_id']] = productos[aux['_id']] + aux['total']
+     end
+   end
 
-    row_data = Array.new(productos.count)
-    index = 0
-    for prod in productos.keys do
-      puts prod
-      row_data[index] = [prod,productos[prod]]
-      index = index +1
-    end
-    return row_data
-  end
+   row_data = Hash.new 0
+   for prod in productos.keys do
+     row_data[prod] = row_data[prod] + productos[prod]
+   end
+   return row_data
+ end
 
 end
