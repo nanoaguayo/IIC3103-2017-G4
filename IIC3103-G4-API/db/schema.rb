@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516232752) do
+ActiveRecord::Schema.define(version: 20170517010223) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "account"
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(version: 20170516232752) do
     t.string   "billid"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.datetime "fechaDespachos"
+    t.string   "fechaDespachos"
     t.integer  "__v"
   end
 

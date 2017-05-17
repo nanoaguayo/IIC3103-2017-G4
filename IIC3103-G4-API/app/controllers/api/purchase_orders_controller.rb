@@ -1,14 +1,18 @@
 class Api::PurchaseOrdersController < Api::ApplicationController
+
     def create
       #TODO delete this
       @state = 'pending'
-      render :show
-      return 0
-      params_aux = check_params
-      @purchase_order = PurchaseOrder.create(params_aux)
-      if @purchase_order.save then
-        params[:id] = @purchase_order.id
-        render :show, status: 202
+
+      path = "http://integracion-2017-dev.herokuapp.com/oc/obtener/" + params[:id]
+      puts path
+      header = {"Content-Type" => "application/json"}
+      @result = HTTParty.get(path, :query => {}, :header => header)
+      @ordenc = JSON.parse(@result.response.body)[0]
+      puts JSON.pretty_generate(@ordenc)
+      unless @ordenc.key?('msg')
+        @purchase_order = PurchaseOrder.create(@ordenc)
+        render json: @result.response.body, status: :ok
       else
         render status: 500, json:{
           Message: 'Declined: failed to process order, we need more details'
@@ -19,7 +23,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     def show
       @purchase_order = PurchaseOrder.find_by_id(params[:id])
       if @purchase_order || TRUE then
-          #render show
+          render :show
       else
           render_error('Order not found')
       end
