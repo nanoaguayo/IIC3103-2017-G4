@@ -37,7 +37,6 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       case @result.code
         when 200
           @ordenc = JSON.parse(@result.response.body)
-
           @purchase_order = PurchaseOrder.new(@ordenc)
           if @purchase_order.save then
             puts "Guardada con éxito"
@@ -73,6 +72,17 @@ class Api::PurchaseOrdersController < Api::ApplicationController
 
     def cancel
       @state = 'cancelled'
+      @result = Fetcher.OC("POST","anular/"+params[:id].to_s)
+      render json: @result.response.body, status: :ok
+      #@ordenc = JSON.parse(@result.response.body)[0]
+      #puts JSON.pretty_generate(@ordenc)
+      # unless @ordenc.key?('msg')
+      #   render json: @result.response.body, status: :ok
+      # else
+      #   render status: 500, json:{
+      #     Message: 'Declined: failed to process order, we need more details'
+      #   }
+      # end
 
     end
 

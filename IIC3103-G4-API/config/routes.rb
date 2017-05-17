@@ -26,7 +26,9 @@ Rails.application.routes.draw do
     #reject
     patch '/purchase_orders/:id/rejected', to: 'purchase_orders#reject'
     #cancel
-    delete '/purchase_orders/:id', to: 'purchase_orders#cancel'
+    post '/purchase_orders/:id', to: 'purchase_orders#cancel'
+    #crear OC experimentales
+    put '/purchase_orders/', to:'purchase_orders#comprar'
 
     #Transfers
     #Transfer money
