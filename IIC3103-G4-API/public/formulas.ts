@@ -18,7 +18,7 @@
     },
     {
       "nombre": "Pan Marraqueta",
-      "sku": 4,
+      "sku": 10,
       "ingredientes": [
         {
           "nombre": "Harina",

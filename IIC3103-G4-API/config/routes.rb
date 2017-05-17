@@ -8,7 +8,9 @@ Rails.application.routes.draw do
     get '/', to:  'application#index'
 
     #test
-    get '/testupdate', to: 'products#updateStock'
+    post '/producir', to: 'factory#prodForced'
+    get '/cleanStorage', to: 'ware_houses#cleanStorage'
+    
     post '/fabricar', to: 'ware_houses#fabricar'
 
     get '/hash', to: 'application#hash'
@@ -22,11 +24,13 @@ Rails.application.routes.draw do
     #create
     put '/purchase_orders/:id', to: 'purchase_orders#recibir'
     #accept
-    patch '/purchase_orders/:id/accepted', to: 'purchase_orders#accept'
+    post '/purchase_orders/:id/accept', to: 'purchase_orders#accept'
     #reject
-    patch '/purchase_orders/:id/rejected', to: 'purchase_orders#reject'
+    post '/purchase_orders/:id/reject', to: 'purchase_orders#reject'
     #cancel
-    delete '/purchase_orders/:id', to: 'purchase_orders#cancel'
+    delete '/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
+    #crear OC experimentales
+    put '/purchase_orders/', to:'purchase_orders#comprar'
 
     #Transfers
     #Transfer money

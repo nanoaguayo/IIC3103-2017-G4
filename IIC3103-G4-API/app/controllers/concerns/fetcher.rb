@@ -4,6 +4,7 @@ HTTParty::Basement.default_options.update(verify: false)
 module Fetcher
 
   BODEGA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
+  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-herokuapp.com/oc/"
 
   def self.Bodegas(httpRequest,uri_ext,body = {})
     auth = Crypt.generarauthdev(httpRequest)
@@ -43,6 +44,44 @@ module Fetcher
       row_data[prod] = row_data[prod] + productos[prod]
     end
     return row_data
+  end
+
+  def self.cheapestProvider(sku_ask) #sku de input que sea string, para no parsear a cada rato los sku de los json
+    groups = SkuGroup.where(sku: sku_ask.to_i).map(&:group)
+    cheapest_id = 4
+    best_price = 100000000
+    groups.each do |n|
+      other_group_uri = "http://integra17-#{n}.ing.puc.cl/products"
+      response = HTTParty.get(other_group_uri)
+      begin
+        response.each do |product|
+          if product['sku'] = sku_ask then
+            if product['price'].to_i < best_price then
+              best_price = product['price'].to_i
+              cheapest_id = n
+            end
+          end
+        end
+      rescue
+        end
+    end
+    return cheapest_id #si retorna 4 es porque no reviso los demás
+  end
+
+  def self.OC(httpRequest,uri_ext,body = {})
+    options = {'Content-type' => 'application/json'}
+    #JSON body
+    body = body.to_json
+    if httpRequest[0..5] == "DELETE" then
+      response = HTTParty.delete(OC_URI+uri_ext, headers: options, body: body)
+    elsif httpRequest[0..2] == "GET" then
+      response = HTTParty.get(OC_URI+uri_ext, headers: options, body: body)
+    elsif httpRequest[0..2] == "PUT" then
+      response = HTTParty.put(OC_URI+uri_ext, headers: options, body: body)
+    elsif httpRequest[0..3] == "POST" then
+      response = HTTParty.post(OC_URI+uri_ext, headers: options, body: body)
+    end
+    return response
   end
 
 end

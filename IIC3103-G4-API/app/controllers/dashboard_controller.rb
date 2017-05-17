@@ -18,5 +18,7 @@ class DashboardController < ApplicationController
       @row_data[index] = [prod,@productos[prod]]
       index = index +1
     end
+
+    @orders = ProducedOrder.all.reverse.first(20)
   end
 end
