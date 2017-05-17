@@ -1,6 +1,8 @@
 class Api::WareHousesController < Api::ApplicationController
 
-  def fabricar(sku,cantidad)
+  def fabricar
+    cantidad = params[:cantidad].to_i
+    sku = params[:sku]
     if cantidad <= 5000 then
       body = {
         'sku': sku,

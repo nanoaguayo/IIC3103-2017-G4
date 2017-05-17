@@ -36,3 +36,8 @@
   </div>
 <%end%>
 <h3 class="dashTitle">Ordenes de fabricacion</h3>
+<%= form_tag '/api/fabricar' do -%>
+  <div> CANTIDAD: <%= number_field_tag 'cantidad' %></div>
+  <div> SKU:<%= text_field_tag 'sku' %></div>
+  <div><%= submit_tag 'enviar' %></div>
+<% end -%>
