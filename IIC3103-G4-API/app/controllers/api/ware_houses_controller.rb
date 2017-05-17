@@ -40,7 +40,6 @@ class Api::WareHousesController < Api::ApplicationController
 
 
   def cleanStorage
-      #TODO
       almacenes = Fetcher.Bodegas("GET","almacenes")
       id_pulmon = ""
       id_recepcion = ""
@@ -89,7 +88,6 @@ class Api::WareHousesController < Api::ApplicationController
 
   end
 
-  #TODO check if working
   def moveStock(id,to)
     #to = almacenId
     body = {
@@ -100,6 +98,20 @@ class Api::WareHousesController < Api::ApplicationController
     render json: resp
   end
 
+  def checkStock
+    prods = Fetcher.getProductsWithStock
+    products = Product.all
+    min_lot = 12
+    for prod in products do
+      if prods[prod.sku] < min_lot * prod.lot then
+        #produce
+        numToProd = Integer( ((min_lot * prod.lot) - prods[prod.sku])/prod.lot)
+        #Get best buyer
+      end
+    end
+  end
+
+  #TODO check if working
   def dispatchStock(prodId,oc,address,price)
     body = {
       'productoId': prodId,
