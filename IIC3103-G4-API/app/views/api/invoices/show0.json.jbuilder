@@ -1,0 +1,12 @@
+json.id = @invoice.id
+json.created_at = @invoice.created_at
+json.supplier = @invoice.supplier
+json.client = @invoice.client
+json.grossValue = @invoice.grossValue
+json.iva = @invoice.iva
+json.totalValue = @invoice.totalValue
+json.state = @invoice.state
+json.payDate = @invoice.payDate
+json.purchaseOrderId = @invoice.purchaseOrderId
+json.rejectionCause = @invoice.rejectionCause
+json.cancellationCause = @invoice.cancellationCause

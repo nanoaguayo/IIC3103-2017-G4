@@ -1,0 +1,2 @@
+class WareHouse < ApplicationRecord
+end

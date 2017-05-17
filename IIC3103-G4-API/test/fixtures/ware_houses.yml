@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  usedspace: 1
+  totalspace: 1
+  reception: 
+  dispatch: 
+  pulmon: 
+
+two:
+  usedspace: 1
+  totalspace: 1
+  reception: 
+  dispatch: 
+  pulmon: 
