@@ -1,0 +1,2 @@
+class ProducedOrder < ApplicationRecord
+end

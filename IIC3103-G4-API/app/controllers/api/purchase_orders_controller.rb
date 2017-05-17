@@ -34,6 +34,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
         "notas": comments
       }
       @result = HTTParty.put(path, :body => params, :header => header)
+      puts @result.response.body
       case @result.code
         when 200
           @ordenc = JSON.parse(@result.response.body)
@@ -41,9 +42,14 @@ class Api::PurchaseOrdersController < Api::ApplicationController
           @purchase_order = PurchaseOrder.new(@ordenc)
           if @purchase_order.save then
             puts "Guardada con éxito"
+            render json: @ordenc
           end
       end
       return @result
+    end
+
+    def testMovement
+      comprar('prov',22,1000,300,'com',9999999999999)
     end
 
     def obtener
