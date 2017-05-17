@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   namespace :api do
     get '/', to:  'application#index'
 
+    #test
+    get '/testupdate', to: 'ware_houses#testMovement'
+    post '/fabricar', to: 'ware_houses#fabricar'
+
     get '/hash', to: 'application#hash'
 
     #Products
@@ -53,6 +57,7 @@ Rails.application.routes.draw do
     get '/stock', to: 'ware_houses#stock'
     #mover stock
     post '/moveStock', to: 'ware_houses#moveStock'
+
 
   end
 end
