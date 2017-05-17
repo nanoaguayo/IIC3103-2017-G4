@@ -1,4 +1,5 @@
 class Api::PurchaseOrdersController < Api::ApplicationController
+
     def create
       #TODO delete this
       @state = 'pending'
@@ -7,15 +8,11 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       puts path
       header = {"Content-Type" => "application/json"}
       @result = HTTParty.get(path, :query => {}, :header => header)
-      @ordenc = JSON.parse(@result.response.body)
-      #puts @ordenc.respond_to?body.fechaDespachos
-      #puts JSON.pretty_generate(@ordenc).gsub(":", " =>")
-      @purchase_order = PurchaseOrder.create(@ordenc)
-      render json: @result.response.body, status: :ok
-
-      if @purchase_order.save then
-        params[:id] = @purchase_order.id
-        render :show, status: 202
+      @ordenc = JSON.parse(@result.response.body)[0]
+      puts JSON.pretty_generate(@ordenc)
+      unless @ordenc.key?('msg')
+        @purchase_order = PurchaseOrder.create(@ordenc)
+        render json: @result.response.body, status: :ok
       else
         render status: 500, json:{
           Message: 'Declined: failed to process order, we need more details'
