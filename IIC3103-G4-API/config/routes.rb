@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     get '/', to:  'application#index'
 
     #test
-    get '/testupdate', to: 'ware_houses#testMovement'
+    get '/testupdate', to: 'products#updateStock'
     post '/fabricar', to: 'ware_houses#fabricar'
 
     get '/hash', to: 'application#hash'

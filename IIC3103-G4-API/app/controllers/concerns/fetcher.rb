@@ -37,12 +37,10 @@ module Fetcher
       end
     end
 
-    row_data = Array.new(productos.count)
-    index = 0
+    row_data = Hash.new 0
     for prod in productos.keys do
       puts prod
-      row_data[index] = [prod,productos[prod]]
-      index = index +1
+      row_data[prod] = row_data[prod] + productos[prod]
     end
     return row_data
   end
