@@ -32,6 +32,7 @@ prod = Product.create(sku:55,description:"Galletas Integrales",prodType:"Procesa
 prod.save
 
 #tuplas sku-grupo
+SkuGroup.delete_all
 sku = SkuGroup.create(sku:1,group:1)
 sku.save
 sku = SkuGroup.create(sku:1,group:3)
