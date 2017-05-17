@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425183904) do
+ActiveRecord::Schema.define(version: 20170516232752) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "account"
@@ -44,23 +44,25 @@ ActiveRecord::Schema.define(version: 20170425183904) do
   end
 
   create_table "purchase_orders", force: :cascade do |t|
-    t.string   "orderid"
-    t.string   "channel"
-    t.string   "delivery_date"
-    t.string   "supplier"
-    t.string   "client"
+    t.string   "_id"
+    t.string   "canal"
+    t.datetime "fechaEntrega"
+    t.string   "proveedor"
+    t.string   "cliente"
     t.string   "sku"
-    t.integer  "quantity"
-    t.integer  "dispatchedQuantity"
-    t.integer  "unitPrice"
+    t.integer  "cantidad"
+    t.integer  "cantidadDespachada"
+    t.integer  "precioUnitario"
     t.datetime "deadline"
-    t.string   "state"
-    t.string   "rejectionCause"
-    t.string   "cancellationCause"
-    t.string   "notes"
+    t.string   "estado"
+    t.string   "rechazo"
+    t.string   "anulacion"
+    t.string   "notas"
     t.string   "billid"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.datetime "fechaDespachos"
+    t.integer  "__v"
   end
 
   create_table "transactions", force: :cascade do |t|
