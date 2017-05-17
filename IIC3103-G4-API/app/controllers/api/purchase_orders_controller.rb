@@ -36,7 +36,6 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       @result = HTTParty.put(path, :body => params, :header => header)
       case @result.code
         when 200
-          puts "ENTROOOOOOOOOOOOOO"
           @ordenc = JSON.parse(@result.response.body)
 
           @purchase_order = PurchaseOrder.new(@ordenc)
@@ -48,7 +47,18 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     end
 
     def obtener
-
+      path = "http://integracion-2017-dev.herokuapp.com/oc/obtener/" + params[:id]
+      puts path
+      header = {"Content-Type" => "application/json"}
+      @result = HTTParty.get(path, :query => {}, :header => header)
+      @ordenc = JSON.parse(@result.response.body)[0]
+      unless @ordenc.key?('msg')
+        render json: @result.response.body, status: :ok
+      else
+        render status: 500, json:{
+          Message: 'Declined: failed to process order, we need more details'
+        }
+      end
     end
 
     def accept
