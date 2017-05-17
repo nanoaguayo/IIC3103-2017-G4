@@ -18,11 +18,11 @@ Rails.application.routes.draw do
 
     #Purchase order
     #show
-    get '/purchase_orders/:id', to:'purchase_orders#show'
+    get '/purchase_orders/:id', to:'purchase_orders#obtener'
     #create
-    put '/purchase_orders/:id', to: 'purchase_orders#create'
+    put '/purchase_orders/:id', to: 'purchase_orders#recibir'
     #accept
-    patch '/purchase_orders/:id/accepted', to: 'purchase_orders#receive'
+    patch '/purchase_orders/:id/accepted', to: 'purchase_orders#accept'
     #reject
     patch '/purchase_orders/:id/rejected', to: 'purchase_orders#reject'
     #cancel
