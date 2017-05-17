@@ -29,3 +29,153 @@ prod = Product.create(sku:54,description:"Hamburguesas",prodType:"Procesado",uni
 prod.save
 prod = Product.create(sku:55,description:"Galletas Integrales",prodType:"Procesado",unit_cost:925,lot:950,prod_time:3.283,stock:0,price:1100)
 prod.save
+
+#tuplas sku-grupo
+sku = SkuGroup.create(sku:1,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:1,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:2,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:2,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:3,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:3,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:4,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:4,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:5,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:6,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:6,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:6,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:7,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:7,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:7,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:7,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:8,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:8,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:9,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:9,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:11,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:12,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:13,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:13,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:13,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:14,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:15,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:15,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:17,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:18,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:19,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:19,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:20,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:20,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:20,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:22,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:22,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:22,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:23,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:23,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:23,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:23,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:25,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:25,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:25,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:25,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:26,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:26,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:26,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:27,geoup:6)
+sku.save
+sku = SkuGroup.create(sku:27,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:27,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:34,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:38,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:38,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:39,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:39,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:40,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:41,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:41,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:41,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:42,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:46,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:47,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:48,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:49,geoup:1)
+sku.save
+sku = SkuGroup.create(sku:49,geoup:2)
+sku.save
+sku = SkuGroup.create(sku:49,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:51,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:52,geoup:3)
+sku.save
+sku = SkuGroup.create(sku:52,geoup:5)
+sku.save
+sku = SkuGroup.create(sku:52,geoup:7)
+sku.save
+sku = SkuGroup.create(sku:53,geoup:8)
+sku.save
+sku = SkuGroup.create(sku:56,geoup:5)
+sku.save

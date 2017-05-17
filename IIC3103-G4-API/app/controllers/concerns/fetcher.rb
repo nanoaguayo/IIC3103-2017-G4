@@ -47,4 +47,25 @@ module Fetcher
     return row_data
   end
 
+  def self.cheapestProvider(sku_ask) #sku de input que sea string, para no parsear a cada rato los sku de los json
+    groups = SkuGroup.where(sku: sku_ask)
+    cheapest_id = 4
+    best_price = 100000000
+    groups.each do |n|
+      other_group_uri = "http://integra17-#{n}.ing.puc.cl/products"        
+      response = HTTParty.get(other_group_uri)
+      begin
+        response.each do |product|
+          if product.sku == sku_ask then
+            if product.price.to_i < best_price then
+              best_price = product.price.to_i
+              cheapest_id = n
+            end
+          end
+        end
+      rescue
+        end
+    end
+    return cheapest_id #si retorna 4 es porque no reviso los demás
+  end
 end
