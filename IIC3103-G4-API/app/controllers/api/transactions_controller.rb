@@ -1,11 +1,11 @@
 class Api::TransactionsController < Api::ApplicationController
 
-  def transfer
+  def transfer(monto)
     path = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/banco/trx" || Rails.env.production && "https://integracion-2017-prod.herokuapp.com/banco/trx"
     cuenta = obtenerCuenta()
     header = {"Content-Type" => "application/json"}
     params = {
-      "monto": 100, # nuestro dev grupo 4
+      "monto": monto, # nuestro dev grupo 4
       "origen": "590baa00d6b4ec000490246e", #dev
       #"origen": "5910c0910e42840004f6e68c" #prod
       "destino": cuenta
