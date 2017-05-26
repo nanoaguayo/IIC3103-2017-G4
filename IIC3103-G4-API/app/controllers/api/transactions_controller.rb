@@ -1,21 +1,55 @@
 class Api::TransactionsController < Api::ApplicationController
 
   def transfer
-    #TODO delete this
-    render :show
-    return 0
-    if !(params['origen'] && params['destino'] && params['monto']) then
-      render_error('Params missing')
-    else
-      @transaction = Transaction.create(transaction_params)
+    path = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/banco/trx" || Rails.env.production && "https://integracion-2017-prod.herokuapp.com/banco/trx"
+    cuenta = obtenerCuenta()
+    header = {"Content-Type" => "application/json"}
+    params = {
+      "monto": 100, # nuestro dev grupo 4
+      "origen": "590baa00d6b4ec000490246e", #dev
+      #"origen": "5910c0910e42840004f6e68c" #prod
+      "destino": cuenta
+    }
+    @result = HTTParty.put(path, :body => params, :header => header)
+    case @result.code
+    when 200
+      @trans = JSON.parse(@result.response.body)
+      @transaction = Transaction.new(@trans)
       if @transaction.save then
-        params[:id] = @transaction.id
-        render :show
-      else
-        render_error('Transaction was not done')
+        puts "Guardada con éxito"
       end
     end
+    render json: @result, status: :ok
   end
+  #   #TODO delete this
+  #   render :show
+  #   return 0
+  #   if !(params['origen'] && params['destino'] && params['monto']) then
+  #     render_error('Params missing')
+  #   else
+  #     @transaction = Transaction.create(transaction_params)
+  #     if @transaction.save then
+  #       params[:id] = @transaction.id
+  #       render :show
+  #     else
+  #       render_error('Transaction was not done')
+  #     end
+  #   end
+  # end
+
+  def obtenerCuenta
+    pathdev = "https://integracion-2017-dev.herokuapp.com/bodega/fabrica/getCuenta"
+    pathprod = "https://integracion-2017-prod.herokuapp.com/bodega/fabrica/getCuenta"
+    auth = Crypt.generarauth("GET")
+    puts auth
+    headers = {'Content-type' => 'application/json', 'Authorization' => auth}
+    params = {}
+    @result = HTTParty.get(pathdev, :headers => headers)
+    cuenta = JSON.parse(@result.response.body)
+    puts cuenta["cuentaId"]
+    return cuenta["cuentaId"]
+  end
+
 
   def show
     @transaction = Transaction.find_by_id(params[:id])
