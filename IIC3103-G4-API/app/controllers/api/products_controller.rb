@@ -14,4 +14,14 @@ class Api::ProductsController < Api::ApplicationController
     end
   end
 
+  def publico
+  	updateStock
+  	products = Product.all
+  	ret = Array.new
+  	products.each do |prod|
+  		ret << {sku: prod.sku, precio: prod.price, stock: prod.stock}
+  	end
+  	render json: ret
+  end
+
 end
