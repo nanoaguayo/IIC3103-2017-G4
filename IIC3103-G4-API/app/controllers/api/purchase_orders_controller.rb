@@ -1,5 +1,8 @@
 class Api::PurchaseOrdersController < Api::ApplicationController
 
+  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-herokuapp-prod.com/oc/"
+  OPT = {'Content-type' => 'application/json'}
+
   def comprar(proveedor,sku,cantidad,precio,comments,fechaE)
     path = "http://integracion-2017-dev.herokuapp.com/oc/crear"
     puts path
@@ -28,103 +31,44 @@ class Api::PurchaseOrdersController < Api::ApplicationController
 
 #En este metodo debiesen ir todas las validaciones para aceptar una orden de compra
     def recibir
-      @state = 'pending'
-      path = "http://integracion-2017-dev.herokuapp.com/oc/obtener/" + params[:id]
-      puts path
-      header = {"Content-Type" => "application/json"}
-      @result = HTTParty.get(path, :query => {}, :header => header)
-      @ordenc = JSON.parse(@result.response.body)[0]
-      puts JSON.pretty_generate(@ordenc)
-      if @ordenc.key?('created_at')
-        @purchase_order = PurchaseOrder.create(@ordenc)
-        accept
-        #render json: @result.response.body, status: :ok
-      else
-        render status: 500, json:{
-          Message: 'Declined: failed to process order, we need more details. '+ @ordenc['msg'].to_s
-        }
-      end
+      #obtener la orden de compra con el id que nos envía el otro grupo.
+      body = {}
+      body = body.to_json
+      oc = HTTParty.get(OC_URI + 'obtener/' + params[:id],headers: OPT, body: body)
+      
     end
 
     def testMovement
       comprar('prov',22,1000,300,'com',9999999999999)
     end
 
-    def obtener
-      path = "http://integracion-2017-dev.herokuapp.com/oc/obtener/" + params[:id]
-      puts path
-      header = {"Content-Type" => "application/json"}
-      @result = HTTParty.get(path, :query => {}, :header => header)
-      @ordenc = JSON.parse(@result.response.body)[0]
-      puts JSON.pretty_generate(@ordenc)
-      if @ordenc.key?('created_at')
-        render json: @result.response.body, status: :ok
-      else
-        render status: 500, json:{
-          Message: 'Declined: failed to process order, we need more details. '+ @ordenc['msg'].to_s
-        }
-      end
+
+    def accept(id)#recepcionar
+      #hay que afectar nuestro inventario proyectado
+      body = {id: id}
+      body = body.to_json
+      response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)
+      #pta en vola hacer algo con eso.
     end
 
-    def accept
-      @state = 'accepted'
-      path = "http://integracion-2017-dev.herokuapp.com/oc/recepcionar/" + params[:id]
-      puts path
-      body = {
-            :_id => params[:id]
-        }
-      header = {"Content-Type" => "application/json"}
-      @result = HTTParty.post(path, :body => body.to_json, :headers => header)
-      @ordenc = JSON.parse(@result.body)[0]
-      puts JSON.pretty_generate(@ordenc)
-      if @ordenc.key?('created_at')
-        render json: @result.response.body, status: :ok
+    def reject(id, motive) #rechazar
+      if motive != ''
+        body = {id: id, rechazo: motive}
       else
-        render status: 500, json:{
-          Message: 'Declined: failed to process order, we need more details. '+ @ordenc['msg'].to_s
-        }
+        body = {id: id}
       end
-    end
+      body = body.to_json
+      response = HTTParty.post(OC_URI + 'rechazar/' + id, headers: OPT, body: body)
 
-    def reject
-      @state = 'rejected'
-      path = "http://integracion-2017-dev.herokuapp.com/oc/rechazar/" + params[:id]
-      puts path
-      body = {
-            :_id => params[:id],
-            :rechazo => "Rechazada por alguna razon"
-        }
-      header = {"Content-Type" => "application/json"}
-      @result = HTTParty.post(path, :body => body.to_json, :headers => header)
-      @ordenc = JSON.parse(@result.body)[0]
-      puts JSON.pretty_generate(@ordenc)
-      if @ordenc.key?('created_at')
-        render json: @result.response.body, status: :ok
-      else
-        render status: 500, json:{
-          Message: 'Declined: failed to process order, we need more details. '+ @ordenc['msg'].to_s
-        }
-      end
-    end
+    end 
 
-    def cancel
-      @state = 'cancelled'
-      path = "http://integracion-2017-dev.herokuapp.com/oc/anular/" + params[:id]
-      puts path
-      body = {
-        :_id => params[:id],
-        :anulacion => "Anulada por alguna razon"
-      }
-      header = {"Content-Type" => "application/json"}
-      @result = HTTParty.delete(path, :body => body.to_json, :headers => header)
-      @ordenc = JSON.parse(@result.body)[0]
-      puts JSON.pretty_generate(@ordenc)
-      if @ordenc.key?('created_at')
-        render json: @result.response.body, status: :ok
+    def cancel(id, motive) #anular
+      if motive != ''
+        body = {id: id, anulacion: motive}
       else
-        render status: 500, json:{
-          Message: 'Declined: failed to process order, we need more details. '+ @ordenc['msg'].to_s
-        }
+        body = {id: id}
       end
+      body = body.to_json
+      response = HTTParty.post(OC_URI + 'anular/' + id,headers: OPT, body: body)
     end
 end
