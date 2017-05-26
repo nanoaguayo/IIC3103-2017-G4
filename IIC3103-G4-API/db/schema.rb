@@ -44,15 +44,11 @@ ActiveRecord::Schema.define(version: 20170526185401) do
 
   create_table "products", force: :cascade do |t|
     t.string   "sku"
-    t.string   "description"
-    t.string   "prodType"
-    t.integer  "unit_cost"
-    t.integer  "lot"
-    t.float    "prod_time"
+    t.string   "ware_house_id"
+    t.integer  "costs"
     t.integer  "stock"
-    t.integer  "price"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "proyected"
   end
 

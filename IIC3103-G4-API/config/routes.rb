@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     #test
     post '/producir', to: 'factory#prodForced'
     get '/cleanStorage', to: 'ware_houses#cleanStorage'
-    
+
     post '/fabricar', to: 'ware_houses#fabricar'
 
     get '/hash', to: 'application#hash'
@@ -30,7 +30,8 @@ Rails.application.routes.draw do
     #cancel
     delete '/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
     #crear OC experimentales
-    put '/purchase_orders/', to:'purchase_orders#comprar'
+    put '/purchase_orders/', to:'purchase_orders#testMovement'
+    #put '/purchase_orders/', to:'purchase_orders#comprar'
 
     #Transfers
     #Transfer money
