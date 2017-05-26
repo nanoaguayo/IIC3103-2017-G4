@@ -4,13 +4,15 @@ HTTParty::Basement.default_options.update(verify: false)
 module Fetcher
 
   BODEGA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
-  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-herokuapp.com/oc/"
-
+  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/"
+  BANK_URI = Rails.env.development? && " https://integracion-2017-dev.herokuapp.com/banco" || Rails.env.production? && " https://integracion-2017-prod.herokuapp.com/banco"
+  
   def self.Bodegas(httpRequest,uri_ext,body = {})
-    auth = Crypt.generarauthdev(httpRequest)
-    if Rails.env.production? then
-      auth = Crypt.generarauthprod(httpRequest)
-    end
+    #auth = Crypt.generarauthdev(httpRequest)
+    #if Rails.env.production? then
+     # auth = Crypt.generarauthprod(httpRequest)
+    #end
+    auth = Crypt.generarauth(httpRequest)
     options = {'Content-type' => 'application/json', 'Authorization' => auth}
     #JSON body
     body = body.to_json
