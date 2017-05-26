@@ -34,8 +34,17 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       #obtener la orden de compra con el id que nos envía el otro grupo.
       body = {}
       body = body.to_json
-      oc = HTTParty.get(OC_URI + 'obtener/' + params[:id],headers: OPT, body: body)
-      
+      id = params[:id]
+      oc = HTTParty.get(OC_URI + 'obtener/' + id,headers: OPT, body: body)
+      sku = oc['sku']
+      #una vez recibida la orden de compra hay que ver si la aceptamos o no
+      #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
+      if oc['precioUnitario'] < Products.find_by(sku: sku).unit_cost
+        reject(id, 'No seai cagao po compadre')
+      elsif Products.find_by(sku: sku).stock < oc['cantidad'] #debería ser comparar contra proyected.
+        reject(id, 'No contamos con suficiente stock')
+      else
+        accept(id)
     end
 
     def testMovement
