@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     #cancel
     delete '/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
     #crear OC experimentales
-    put '/purchase_orders/', to:'purchase_orders#testMovement'
+    put '/purchase_orders/', to:'purchase_orders#parametrosComprarHardcoded'
     #put '/purchase_orders/', to:'purchase_orders#comprar'
 
     #Transfers

@@ -5,8 +5,8 @@ class Api::PurchaseOrdersController < Api::ApplicationController
   ID_G4 = Rails.env.development? && "590baa00d6b4ec0004902465" || Rails.env.production? && "5910c0910e42840004f6e683"
 
 
-  def testMovement
-    comprar("grupo1","22","1000","300","",1993214596281)
+  def parametrosComprarHardcoded
+    comprar("grupo1","2","1000","300","",1993214596281)
   end
 
   def comprar(proveedor,sku,cantidad,precio,comments,fechaE)
@@ -43,25 +43,28 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       body = body.to_json
 
       id = params[:id]
-      oc = HTTParty.get(OC_URI + 'obtener/' + id,headers: OPT, body: body)
-      sku = oc['sku']
+      oc = HTTParty.get(OC_URI + 'obtener/' + id,headers: OPT, body: body)[0]
+      puts "lolojkdhwn"
+      sku = oc["sku"].to_i
+      puts sku
+      puts Product.find_by(sku: sku).cost
       #una vez recibida la orden de compra hay que ver si la aceptamos o no
       #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
-      if oc['precioUnitario'] < Products.find_by(sku: sku).unit_cost
-        reject(id, 'No seai cagao po compadre')
-      elsif Products.find_by(sku: sku).stock < oc['cantidad'] #debería ser comparar contra proyected.
-        reject(id, 'No contamos con suficiente stock')
+      if oc['precioUnitario'].to_i < Product.find_by(sku: sku).cost
+        render json: reject(id, 'No seai cagao po compadre')
+      elsif Product.find_by(sku: sku).stock < oc['cantidad'].to_i #debería ser comparar contra proyected.
+        render json: reject(id, 'No contamos con suficiente stock')
       else
-        accept(id)
-    end
-
+        render json: accept(id)
+      end
     end
 
     def accept(id)#recepcionar
       #hay que afectar nuestro inventario proyectado
       body = {id: id}
       body = body.to_json
-      response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)
+      response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)[0]
+      return response
       #pta en vola hacer algo con eso.
     end
 
@@ -72,7 +75,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
         body = {id: id}
       end
       body = body.to_json
-      response = HTTParty.post(OC_URI + 'rechazar/' + id, headers: OPT, body: body)
+      response = HTTParty.post(OC_URI + 'rechazar/' + id, headers: OPT, body: body)[0]
 
     end
 
@@ -83,6 +86,6 @@ class Api::PurchaseOrdersController < Api::ApplicationController
         body = {id: id}
       end
       body = body.to_json
-      response = HTTParty.post(OC_URI + 'anular/' + id,headers: OPT, body: body)
+      response = HTTParty.post(OC_URI + 'anular/' + id,headers: OPT, body: body)[0]
     end
 end
