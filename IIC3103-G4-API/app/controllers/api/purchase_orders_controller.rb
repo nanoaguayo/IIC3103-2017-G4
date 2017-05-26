@@ -6,7 +6,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
 
 
   def parametrosComprarHardcoded
-    comprar("grupo1","2","1000","300","",1993214596281)
+    comprar("grupo1","2","5000","200","",1993214596281)
   end
 
   def comprar(proveedor,sku,cantidad,precio,comments,fechaE)
@@ -39,24 +39,33 @@ class Api::PurchaseOrdersController < Api::ApplicationController
 #En este metodo debiesen ir todas las validaciones para aceptar una orden de compra
     def recibir
       #obtener la orden de compra con el id que nos envía el otro grupo.
-      body = {}
-      body = body.to_json
-
       id = params[:id]
-      oc = HTTParty.get(OC_URI + 'obtener/' + id,headers: OPT, body: body)[0]
-      puts "lolojkdhwn"
-      sku = oc["sku"].to_i
-      puts sku
-      puts Product.find_by(sku: sku).cost
-      #una vez recibida la orden de compra hay que ver si la aceptamos o no
-      #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
-      if oc['precioUnitario'].to_i < Product.find_by(sku: sku).cost
-        render json: reject(id, 'No seai cagao po compadre')
-      elsif Product.find_by(sku: sku).stock < oc['cantidad'].to_i #debería ser comparar contra proyected.
-        render json: reject(id, 'No contamos con suficiente stock')
-      else
-        render json: accept(id)
-      end
+      @result = HTTParty.get(OC_URI + 'obtener/' + id, :query => {}, :header => OPT)
+      @ordenc = JSON.parse(@result.response.body)[0]
+      #Reviso si el id ingresado es valido para que oc no tire error
+      if @ordenc.key?('created_at')
+        body = {}
+        body = body.to_json
+        oc = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)[0]
+        puts "lolojkdhwn"
+        sku = oc["sku"].to_i
+        puts sku
+        puts Product.find_by(sku: sku).cost
+        #una vez recibida la orden de compra hay que ver si la aceptamos o no
+        #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
+          if oc['precioUnitario'].to_i > Product.find_by(sku: sku).price
+            render json: reject(id, 'No seai cagao po compadre')
+          elsif Product.find_by(sku: sku).stock < oc['cantidad'].to_i #debería ser comparar contra proyected.
+            render json: reject(id, 'No contamos con suficiente stock')
+          else
+            render json: accept(id)
+          end
+        #render json: @result.response.body, status: :ok
+       else
+         render status: 500, json:{
+          Message: 'Declined: failed to process order, we need more details'
+         }
+       end
     end
 
     def accept(id)#recepcionar

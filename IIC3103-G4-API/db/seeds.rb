@@ -8,7 +8,7 @@
 
 #productos
 Product.delete_all
-prod = Product.create(proyected:0, sku:2,description:"Huevo",ptype:"Materia Prima",cost:102,lot:150,ptime:2.011,stock:0,price:306)
+prod = Product.create(proyected:0, sku:2,description:"Huevo",ptype:"Materia Prima",cost:102,lot:150,ptime:2.011,stock:5000,price:306)
 prod.save
 prod = Product.create(proyected:0, sku:4,description:"Aceite de Maravilla",ptype:"Procesado",cost:412,lot:200,ptime:2.713,stock:0,price:1236)
 prod.save
