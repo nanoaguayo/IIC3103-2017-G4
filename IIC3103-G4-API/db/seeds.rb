@@ -181,3 +181,7 @@ sku = SkuGroup.create(sku:53,group:8)
 sku.save
 sku = SkuGroup.create(sku:56,group:5)
 sku.save
+
+
+Spree::Core::Engine.load_seed if defined?(Spree::Core)
+Spree::Auth::Engine.load_seed if defined?(Spree::Auth)

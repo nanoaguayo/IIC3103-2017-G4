@@ -2,7 +2,10 @@ Rails.application.routes.draw do
 
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'dashboard#index'
+  mount Spree::Core::Engine, at: '/store'
+  get '/' => redirect('/store')
+  get '/dashboard', to: 'dashboard#index'
+
   #API
   namespace :api do
     get '/', to:  'application#index'
@@ -10,7 +13,7 @@ Rails.application.routes.draw do
     #test
     post '/producir', to: 'factory#prodForced'
     get '/cleanStorage', to: 'ware_houses#cleanStorage'
-    
+
     post '/fabricar', to: 'ware_houses#fabricar'
 
     get '/hash', to: 'application#hash'
