@@ -9,13 +9,27 @@ class Api::PurchaseOrdersController < Api::ApplicationController
          "590baa00d6b4ec0004902466" => 5,
          "590baa00d6b4ec0004902467" => 6,
          "590baa00d6b4ec0004902468" => 7,
-         "590baa00d6b4ec0004902469" => 8} || Rails.env.production? && {"5910c0910e42840004f6e680" => 1,
+         "590baa00d6b4ec0004902469" => 8,
+         1 => "590baa00d6b4ec0004902462",
+         2 => "590baa00d6b4ec0004902463",
+         3 => "590baa00d6b4ec0004902464",
+         5 => "590baa00d6b4ec0004902466",
+         6 => "590baa00d6b4ec0004902467",
+         7 => "590baa00d6b4ec0004902468",
+         8 => "590baa00d6b4ec0004902469"} || Rails.env.production? && {"5910c0910e42840004f6e680" => 1,
           "5910c0910e42840004f6e681" => 2,
           "5910c0910e42840004f6e682" => 3,
           "5910c0910e42840004f6e684" => 5,
           "5910c0910e42840004f6e685" => 6,
           "5910c0910e42840004f6e686" => 7,
-          "5910c0910e42840004f6e687" => 8}
+          "5910c0910e42840004f6e687" => 8,
+          1 => "5910c0910e42840004f6e680",
+          2 => "5910c0910e42840004f6e681",
+          3 => "5910c0910e42840004f6e682",
+          5 => "5910c0910e42840004f6e684",
+          6 => "5910c0910e42840004f6e685",
+          7 => "5910c0910e42840004f6e686",
+          8 => "5910c0910e42840004f6e687"}
   GURI = Rails.env.development? && "http://dev.integra17-" || Rails.env.production? && "http://integra17-"
 
 
@@ -39,7 +53,8 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     case @result.code
     when 200
       @ordenc = JSON.parse(@result.response.body)
-      @purchase_order = PurchaseOrder.new(@ordenc)
+      @purchase_order = PurchaseOrder.new(@ordenc)#esta parte deguardar las ordenes de compra lo haría solo una vez que nos
+      #respondan que la aceptaron
       if @purchase_order.save then
         render json: @result.response.body, status: :OK
         id = @result["_id"]
@@ -65,7 +80,8 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       if @ordenc.key?('created_at')
         body = {}
         body = body.to_json
-        oc = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)[0]
+        acceptOC = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)
+        oc = acceptOC[0]
         cliente = oc["cliente"]
         cliente = IDS[cliente].to_s
         sku = oc["sku"].to_i
@@ -79,6 +95,8 @@ class Api::PurchaseOrdersController < Api::ApplicationController
             #HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
           else
             render json: accept(id)
+            @ordenc = JSON.parse(@result.response.body)
+            @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
             #HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: OPT, body: body)
           end
         #render json: @result.response.body, status: :ok
@@ -106,7 +124,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       end
       body = body.to_json
       response = HTTParty.post(OC_URI + 'rechazar/' + id, headers: OPT, body: body)[0]
-
+      return response
     end
 
     def cancel(id, motive) #anular
@@ -117,9 +135,13 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       end
       body = body.to_json
       response = HTTParty.post(OC_URI + 'anular/' + id,headers: OPT, body: body)[0]
+      return response
     end
 
-    def CheckOC 
+    def CheckStockOC(oc, sku)#se entrega la oc como la respuesta de un request de httparty[0]
+      if Product.find_by(sku: sku).stock - oc['cantidad'].to_i < 100
+        return false
+      elsif 
       return true
     end
 end
