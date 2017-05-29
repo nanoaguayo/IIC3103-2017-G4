@@ -1,13 +1,23 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  sku: MyString
-  name: MyString
+  sku: 1
+  description: MyString
+  cost: 1
+  lot: 1
   price: 1
+  ptype: MyString
+  ptime: 1
+  proyected: 1
   stock: 1
 
 two:
-  sku: MyString
-  name: MyString
+  sku: 1
+  description: MyString
+  cost: 1
+  lot: 1
   price: 1
+  ptype: MyString
+  ptime: 1
+  proyected: 1
   stock: 1

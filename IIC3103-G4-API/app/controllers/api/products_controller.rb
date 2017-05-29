@@ -3,6 +3,7 @@ class Api::ProductsController < Api::ApplicationController
   def index
     updateStock
     @products = Product.all
+    render json: @products
   end
 
   def updateStock
