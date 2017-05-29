@@ -181,3 +181,27 @@ sku = SkuGroup.create(sku:53,group:8)
 sku.save
 sku = SkuGroup.create(sku:56,group:5)
 sku.save
+
+#nuestros sku
+sku = SkuGroup.create(sku:2,group:4)
+sku.save
+sku = SkuGroup.create(sku:4,group:4)
+sku.save
+sku = SkuGroup.create(sku:8,group:4)
+sku.save
+sku = SkuGroup.create(sku:10,group:4)
+sku.save
+sku = SkuGroup.create(sku:14,group:4)
+sku.save
+sku = SkuGroup.create(sku:16,group:4)
+sku.save
+sku = SkuGroup.create(sku:20,group:4)
+sku.save
+sku = SkuGroup.create(sku:26,group:4)
+sku.save
+sku = SkuGroup.create(sku:50,group:4)
+sku.save
+sku = SkuGroup.create(sku:54,group:4)
+sku.save
+sku = SkuGroup.create(sku:55,group:4)
+sku.save
