@@ -20,13 +20,13 @@ class Api::PurchaseOrdersController < Api::ApplicationController
 
 
   def parametrosComprarHardcoded
-    comprar("grupo1","2","5000","200","",1993214596281)
+    comprar("590baa00d6b4ec0004902462","2","5000","200","",1993214596281)
   end
 
   def comprar(proveedor,sku,cantidad,precio,comments,fechaE)
     params = {
       "cliente": ID_G4, # nuestro id grupo 4
-      "proveedor": "590baa00d6b4ec0004902462", # dev grupo 1
+      "proveedor": proveedor, # dev grupo 1
       "sku": sku,
       "fechaEntrega": fechaE,
       "cantidad": cantidad,
@@ -42,8 +42,13 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       @purchase_order = PurchaseOrder.new(@ordenc)
       if @purchase_order.save then
         render json: @result.response.body, status: :OK
-        puts @result["_id"]
-        #hacer put '/purchase_orders/:id' al proveedor con el id @result["_id"]
+        id = @result["_id"]
+        puts id
+        body = {}
+        body = body.to_json
+        resp = HTTParty.put(GURI + IDS[proveedor].to_s + ".ing.puc.cl/purchase_orders/#{id}", headers: OPT, body: body)
+        #render json: resp // hay que cachar si ellos nos aceptan nuestra oc o no...
+        #puts resp
       end
     else
     render json: @result.response.body, status: :OK
@@ -62,7 +67,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
         body = body.to_json
         oc = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)[0]
         cliente = oc["cliente"]
-        cliente = IDS[cliente]
+        cliente = IDS[cliente].to_s
         sku = oc["sku"].to_i
         #una vez recibida la orden de compra hay que ver si la aceptamos o no
         #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora

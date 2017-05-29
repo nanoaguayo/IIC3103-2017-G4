@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   #API
   namespace :api do
     get '/', to:  'application#index'
-
+    get '/shit', to: 'purchase_orders#parametrosComprarHardcoded'
     #test
     post '/producir', to: 'factory#prodForced'
     get '/cleanStorage', to: 'ware_houses#cleanStorage'
