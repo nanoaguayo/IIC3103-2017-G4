@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     #Purchase order
     #show
     get '/purchase_orders/:id', to:'purchase_orders#obtener'
-    #create
+    #recibir
     put '/purchase_orders/:id', to: 'purchase_orders#recibir'
     #accept
     post '/purchase_orders/:id/accept', to: 'purchase_orders#accept'
@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     #cancel
     delete '/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
     #crear OC experimentales
-    put '/purchase_orders/', to:'purchase_orders#parametrosComprarHardcoded'
+    #put '/purchase_orders/', to:'purchase_orders#testMovement'
     #put '/purchase_orders/', to:'purchase_orders#comprar'
 
     #Transfers
