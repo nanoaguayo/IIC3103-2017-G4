@@ -1,0 +1,8 @@
+<h1>Ticket#new</h1>
+
+<% @order.each do |item| %>
+ id = <%= item[1][:id]%> <br>
+ quantity = <%= item[1][:quantity]%> <br>
+<% end %>
+<%=@responder%>
+Precio total = <%=@precio%>
