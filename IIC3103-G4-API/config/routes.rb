@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     post '/producir', to: 'factory#prodForced'
     get '/cleanStorage', to: 'ware_houses#cleanStorage'
 
-    post '/fabricar', to: 'ware_houses#fabricar'
+    post '/fabricar', to: 'ware_houses#fab'
 
     get '/hash', to: 'application#hash'
 
