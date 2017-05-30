@@ -1,8 +1,18 @@
-<h1>Ticket#new</h1>
+<h1>Sistema de pago del grupo 4</h1>
 
-<% @order.each do |item| %>
- id = <%= item[1][:id]%> <br>
- quantity = <%= item[1][:quantity]%> <br>
-<% end %>
-<%=@responder%>
-Precio total = <%=@precio%>
+<h3>Está siendo rediriccionado a la página de pago</h3>
+
+<a class="btn btn-danger" href="/store/cart">Cancelar</a>
+
+
+<a class="btn btn-success" href=<%=@url%>>Continuar</a>
+
+<%#<% @order.each do |item| %>
+<%# id = <%= item[1][:id]%> <br>
+<%# quantity = <%= item[1][:quantity]%> <br>
+<%#<% end %> <br>
+<%#592dfd80b0cb21000497566d<br>
+<%#<%=@url%>
+<%#<br>
+<%#Precio total = <%=@precio%>
+
