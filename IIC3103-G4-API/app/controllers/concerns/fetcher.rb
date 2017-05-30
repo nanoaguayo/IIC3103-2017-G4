@@ -30,7 +30,7 @@ module Fetcher
     almacenes = Bodegas("GET","almacenes")
     productos = Hash.new 0
     for almacen in almacenes do
-      id = almacen['_id']
+      id = almacen['_id'].to_s
       resp = Bodegas("GET"+id,"skusWithStock?almacenId="+id)
       puts resp
       for aux in resp do
