@@ -44,3 +44,21 @@
     </p>
   </div>
 <% end %>
+<h3 class="dashTitle">Transacciones finalizadas</h3>
+<% for order in @completed do %>
+  <div class="prodContainer">
+    <p>
+      <strong>Unidades: </strong><%= order.total %>
+      <strong>Valor: </strong> <%= order.payment_total %> unidades
+    </p>
+  </div>
+<% end %>
+<h3 class="dashTitle">Transacciones no completadas</h3>
+<% for order in @uncompleted do %>
+  <div class="prodContainer">
+    <p>
+      <strong>Unidades: </strong><%= order.total %>
+      <strong>Valor: </strong> <%= order.payment_total %> unidades
+    </p>
+  </div>
+<% end %>

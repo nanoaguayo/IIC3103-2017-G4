@@ -20,5 +20,10 @@ class DashboardController < ApplicationController
     end
 
     @orders = ProducedOrder.all.reverse.first(20)
+
+    #Spree orders
+    so = Spree::Order.all
+    @completed = so.select(&:state=='complete')
+    @uncompleted = so-@completed
   end
 end

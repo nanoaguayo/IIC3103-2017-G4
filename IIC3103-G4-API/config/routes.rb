@@ -2,20 +2,24 @@ Rails.application.routes.draw do
 
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'
   get '/' => redirect('/store')
+  #Dashboard
   get '/dashboard', to: 'dashboard#index'
 
 
   #API
+  #Sprint 3 WS
+  get '/api/publico/precios', to:'products#publicStock'
+
 
   #test
   post '/producir', to: 'factory#prodForced'
   get '/cleanStorage', to: 'ware_houses#cleanStorage'
-
   post '/fabricar', to: 'ware_houses#fabricar'
-
   get '/hash', to: 'application#hash'
+  #test
 
   #Products
   get '/products', to: 'products#index'
