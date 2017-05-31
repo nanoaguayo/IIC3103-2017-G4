@@ -35,30 +35,52 @@
     </p>
   </div>
 <%end%>
+
 <h3 class="dashTitle">Ordenes de fabricacion (ultimas 20)</h3>
-<% for order in @orders do %>
-  <div class="prodContainer">
-    <p>
-      <strong>SKU:<%= order.sku %></strong>
-      Produccion de <%= order.cantidad %> unidades
-    </p>
-  </div>
+<% if @orders.count > 0 then%>
+  <% for order in @orders do %>
+    <div class="prodContainer">
+      <p>
+        <strong>SKU:<%= order.sku %></strong>
+        Produccion de <%= order.cantidad %> unidades
+      </p>
+    </div>
+  <% end %>
+<% else %>
+ <div class="prodContainer">
+   <h6>No se han registado ordenes de fabricacion</h6>
+ </div>
 <% end %>
+
 <h3 class="dashTitle">Transacciones finalizadas</h3>
-<% for order in @completed do %>
-  <div class="prodContainer">
-    <p>
-      <strong>Unidades: </strong><%= order.total %>
-      <strong>Valor: </strong> <%= order.payment_total %> unidades
-    </p>
-  </div>
+<% if @completed.count > 0 then%>
+  <% for order in @completed do %>
+    <div class="prodContainer">
+      <p>
+        <strong>Unidades: </strong><%= order.total %>
+        <strong>Valor: </strong> <%= order.payment_total %> unidades
+      </p>
+    </div>
+  <% end %>
+<% else %>
+ <div class="prodContainer">
+   <h6>No se han registado transacciones completas</h6>
+ </div>
 <% end %>
+
+
 <h3 class="dashTitle">Transacciones no completadas</h3>
-<% for order in @uncompleted do %>
+<% if @uncompleted.count > 0 then%>
+  <% for order in @uncompleted do %>
+    <div class="prodContainer">
+      <p>
+        <strong>Unidades: </strong><%= order.item_count %>
+        <strong>Valor: CLP$</strong> <%= order.total %>
+      </p>
+    </div>
+  <% end %>
+ <% else %>
   <div class="prodContainer">
-    <p>
-      <strong>Unidades: </strong><%= order.total %>
-      <strong>Valor: </strong> <%= order.payment_total %> unidades
-    </p>
+    <h6>No se han registado transacciones incompletas</h6>
   </div>
-<% end %>
+ <% end %>

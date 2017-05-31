@@ -18,7 +18,7 @@ class ProductsController < ApplicationController
       for variant in vars do
         if variant.sku == prod.sku then
           var_aux = Spree::Variant.find(variant)
-          var_aux.stock_items.first.adjust_count_on_hand(prods[variant.sku])
+          var_aux.stock_items.first.set_count_on_hand(prods[variant.sku])
           var_aux.save
         end
       end

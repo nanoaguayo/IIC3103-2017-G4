@@ -23,7 +23,13 @@ class DashboardController < ApplicationController
 
     #Spree orders
     so = Spree::Order.all
-    @completed = so.select(&:state=='complete')
+    puts so.inspect
+    @completed = so.find{|so| so.state=='complete'}
+    if !@completed then
+      @completed = Array.new
+    end
+    puts @completed.inspect
     @uncompleted = so-@completed
+    puts @uncompleted.inspect
   end
 end
