@@ -141,7 +141,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     def CheckStockOC(oc, sku)#se entrega la oc como la respuesta de un request de httparty[0]
       if Product.find_by(sku: sku).stock - oc['cantidad'].to_i < 100
         return false
-      elsif 
+      else 
         return true
       end
     end
