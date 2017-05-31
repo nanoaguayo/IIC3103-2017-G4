@@ -1,4 +1,4 @@
-class Api::WareHousesController < Api::ApplicationController
+class WareHousesController < ApplicationController
 
   def fabricar(sku,cantidad)
     cantidad = cantidad.to_i

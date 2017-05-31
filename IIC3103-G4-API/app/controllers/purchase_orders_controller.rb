@@ -1,4 +1,4 @@
-class Api::PurchaseOrdersController < Api::ApplicationController
+class PurchaseOrdersController < ApplicationController
 
   def comprar(proveedor,sku,cantidad,precio,comments,fechaE)
     path = "http://integracion-2017-dev.herokuapp.com/oc/crear"
