@@ -4,13 +4,15 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'dashboard#index'
   #API
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     get '/', to:  'application#index'
     #precios y stock por requerimiento de sprint
     get '/publico/precios',to: 'products#publico'
     #test
     post '/producir', to: 'factory#prodForced'
-    get '/cleanStorage', to: 'ware_houses#cleanStorage'
+    get '/cleanStorage', to: 'ware_houses#testingjobs'
 
     post '/fabricar', to: 'ware_houses#fab'
 

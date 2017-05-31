@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TransactionTest < ActiveSupport::TestCase
+class CleanBodegaJobTest < ActiveJob::TestCase
   # test "the truth" do
   #   assert true
   # end

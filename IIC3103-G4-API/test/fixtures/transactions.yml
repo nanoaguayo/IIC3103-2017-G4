@@ -1,11 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  originAccount: MyString
-  destinationAccount: MyString
-  amount: 
+  origen: MyString
+  destino: MyString
+  monto: 1
+  __v: 1
+  _id: MyString
 
 two:
-  originAccount: MyString
-  destinationAccount: MyString
-  amount: 
+  origen: MyString
+  destino: MyString
+  monto: 1
+  __v: 1
+  _id: MyString

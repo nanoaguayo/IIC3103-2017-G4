@@ -46,7 +46,9 @@ class Api::WareHousesController < Api::ApplicationController
       prodAux.save
     end
   end
-
+  def testingjobs
+    CleanBodegaJob.perform_later
+  end
 
   def cleanStorage
       almacenes = Fetcher.Bodegas("GET","almacenes")
