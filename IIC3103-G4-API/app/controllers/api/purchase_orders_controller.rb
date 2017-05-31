@@ -142,6 +142,7 @@ class Api::PurchaseOrdersController < Api::ApplicationController
       if Product.find_by(sku: sku).stock - oc['cantidad'].to_i < 100
         return false
       elsif 
-      return true
+        return true
+      end
     end
 end
