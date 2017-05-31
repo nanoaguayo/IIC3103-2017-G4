@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+
+  patch '/ticket', to:'ticket#new'
+
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #Spree starting in /store URL
