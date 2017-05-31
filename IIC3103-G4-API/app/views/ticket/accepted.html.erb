@@ -1,0 +1,24 @@
+<h1>Pago Aceptado</h1>
+
+<h3>Sus productos son:</h3>
+
+<%=$name.first.price%>
+
+<% $order.each do |item| %>
+ id = <%= item[1][:id]%> <br>
+ quantity = <%= item[1][:quantity]%> <br>
+ Precio Unitario = <%= @items[1][:price]%> <br>
+ <br>
+<% end %> <br>
+592dfd80b0cb21000497566d<br>
+<%=@url%>
+<br>
+Precio total = <%=$precio%>
+
+<h3>Rellene los siguientes datos para el despacho</h3>
+
+<form>
+    <input type="text" name="Id_D">
+    <input type="submit" value="Ingresar">
+</form>
+

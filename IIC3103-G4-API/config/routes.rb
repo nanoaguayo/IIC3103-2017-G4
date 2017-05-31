@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
   
+  get '/ticket_accepted', to: 'ticket#accepted'
+
   patch '/ticket', to:'ticket#new'
 
   resources :ware_houses

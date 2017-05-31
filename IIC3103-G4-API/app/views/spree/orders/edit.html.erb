@@ -22,6 +22,7 @@
           <div class='col-md-6 form-inline pull-right'>
             <form>
               <input style="display:none" type="text" name="precio" value=<%= order_form.object.display_item_total %>>
+              <input type="text" name="lista_completa" value=<%= order_form.object.line_items %>>
               <input type="submit" value="Pagar">
             </form>
           </div>
