@@ -1,29 +1,24 @@
 class Api::InvoicesController < Api::ApplicationController
-  def create
-      #TODO delete this
-      @state = 'pending'
-      render :show
-      return 0
-      po = PurchaseOrder.find_by_id(params[:id])
-      if po then
-        #process
-        ip = Hash.new
-        ip['supplier'] = po.supplier
-        ip['client'] = po.client
-        ip['grossValue'] = Integer(po.quantity*po.unitPrice)
-        ip['iva'] = Integer(ip['grossValue']*0.19)
-        ip['totalValue'] = ip['grossValue'] + ip['iva']
-        ip['state'] = 'pending'
-        ip['purchaseOrderId'] = params['id']
-        @invoice = Invoice.create(ip)
-        if @invoice.save then
-          render :show,status:202
-        else
-          render_error('Invoice could not be processed')
-        end
-      else
-        render_error('Purchase order not found')
+
+  # Crea una factura a partir de una orden de compra
+  def create(oc)
+    path = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/sii/" || Rails.env.production && "https://integracion-2017-prod.herokuapp.com/sii/"
+    header = {"Content-Type" => "application/json"}
+    params = {
+      "oc": oc
+    }
+    @result = HTTParty.put(path, :body => params, :header => header)
+    case @result.code
+    when 200
+      @fact = JSON.parse(@result.response.body)
+      @fact["oc"] = @fact["oc"]["_id"]
+      @invoice = Invoice.new(@fact)
+      if @invoice.save then
+        puts "Guardada con éxito"
       end
+    end
+    render json: @fact, status: :ok
+    return @result
   end
 
   def show

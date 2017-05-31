@@ -8,27 +8,27 @@
 
 #productos
 Product.delete_all
-prod = Product.create(sku:2,description:"Huevo",prodType:"Materia Prima",unit_cost:102,lot:150,prod_time:2.011,stock:0,price:306)
+prod = Product.create(proyected:0, sku:2,description:"Huevo",ptype:"Materia Prima",cost:102,lot:150,ptime:2.011,stock:5000,price:306)
 prod.save
-prod = Product.create(sku:4,description:"Aceite de Maravilla",prodType:"Procesado",unit_cost:412,lot:200,prod_time:2.713,stock:0,price:1236)
+prod = Product.create(proyected:0, sku:4,description:"Aceite de Maravilla",ptype:"Procesado",cost:412,lot:200,ptime:2.713,stock:0,price:1236)
 prod.save
-prod = Product.create(sku:8,description:"Trigo",prodType:"Materia Prima",unit_cost:252,lot:100,prod_time:2.531,stock:0,price:756)
+prod = Product.create(proyected:0, sku:8,description:"Trigo",ptype:"Materia Prima",cost:252,lot:100,ptime:2.531,stock:0,price:756)
 prod.save
-prod = Product.create(sku:10,description:"Pan Marraqueta",prodType:"Procesado",unit_cost:1084,lot:900,prod_time:2.771,stock:0,price:3232)
+prod = Product.create(proyected:0, sku:10,description:"Pan Marraqueta",ptype:"Procesado",cost:1084,lot:900,ptime:2.771,stock:0,price:3232)
 prod.save
-prod = Product.create(sku:14,description:"Cebada",prodType:"Procesado",unit_cost:296,lot:1750,prod_time:2.220,stock:0,price:888)
+prod = Product.create(proyected:0, sku:14,description:"Cebada",ptype:"Procesado",cost:296,lot:1750,ptime:2.220,stock:0,price:888)
 prod.save
-prod = Product.create(sku:16,description:"Pasta de trigo",prodType:"Procesado",unit_cost:612,lot:1000,prod_time:2.493,stock:0,price:1836)
+prod = Product.create(proyected:0, sku:16,description:"Pasta de trigo",ptype:"Procesado",cost:612,lot:1000,ptime:2.493,stock:0,price:1836)
 prod.save
-prod = Product.create(sku:20,description:"Cacao",prodType:"Materia Prima",unit_cost:172,lot:60,prod_time:1.955,stock:0,price:516)
+prod = Product.create(proyected:0, sku:20,description:"Cacao",ptype:"Materia Prima",cost:172,lot:60,ptime:1.955,stock:0,price:516)
 prod.save
-prod = Product.create(sku:26,description:"Sal",prodType:"Materia Prima",unit_cost:99,lot:144,prod_time:1.242,stock:0,price:297)
+prod = Product.create(proyected:0, sku:26,description:"Sal",ptype:"Materia Prima",cost:99,lot:144,ptime:1.242,stock:0,price:297)
 prod.save
-prod = Product.create(sku:50,description:"Arroz con leche",prodType:"Procesado",unit_cost:773,lot:350,prod_time:2.832,stock:0,price:2319)
+prod = Product.create(proyected:0, sku:50,description:"Arroz con leche",ptype:"Procesado",cost:773,lot:350,ptime:2.832,stock:0,price:2319)
 prod.save
-prod = Product.create(sku:54,description:"Hamburguesas",prodType:"Procesado",unit_cost:606,lot:1800,prod_time:0.860,stock:0,price:1818)
+prod = Product.create(proyected:0, sku:54,description:"Hamburguesas",ptype:"Procesado",cost:606,lot:1800,ptime:0.860,stock:0,price:1818)
 prod.save
-prod = Product.create(sku:55,description:"Galletas Integrales",prodType:"Procesado",unit_cost:925,lot:950,prod_time:3.283,stock:0,price:2775)
+prod = Product.create(proyected:0, sku:55,description:"Galletas Integrales",ptype:"Procesado",cost:925,lot:950,ptime:3.283,stock:0,price:2775)
 prod.save
 
 #tuplas sku-grupo
@@ -180,4 +180,28 @@ sku.save
 sku = SkuGroup.create(sku:53,group:8)
 sku.save
 sku = SkuGroup.create(sku:56,group:5)
+sku.save
+
+#nuestros sku
+sku = SkuGroup.create(sku:2,group:4)
+sku.save
+sku = SkuGroup.create(sku:4,group:4)
+sku.save
+sku = SkuGroup.create(sku:8,group:4)
+sku.save
+sku = SkuGroup.create(sku:10,group:4)
+sku.save
+sku = SkuGroup.create(sku:14,group:4)
+sku.save
+sku = SkuGroup.create(sku:16,group:4)
+sku.save
+sku = SkuGroup.create(sku:20,group:4)
+sku.save
+sku = SkuGroup.create(sku:26,group:4)
+sku.save
+sku = SkuGroup.create(sku:50,group:4)
+sku.save
+sku = SkuGroup.create(sku:54,group:4)
+sku.save
+sku = SkuGroup.create(sku:55,group:4)
 sku.save
