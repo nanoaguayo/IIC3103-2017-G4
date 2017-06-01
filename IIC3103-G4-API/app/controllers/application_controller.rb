@@ -2,6 +2,7 @@ require 'json'
 require 'net/http'
 require 'base64'
 class ApplicationController < ActionController::Base
+    
 
   def render_error(error)
     render status: 500, json:{
