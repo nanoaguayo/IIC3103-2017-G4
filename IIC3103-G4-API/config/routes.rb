@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   #precios y stock por requerimiento de sprint
-  get 'api/publico/precios',to: 'products#publico'
+
 
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'
@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   post 'api/purchase_orders/:id/reject', to: 'purchase_orders#reject'
   #cancel
   delete 'api/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
+  post '/purchase_orders/comprar', to: 'purchase_orders#ComprarPostman'
   #crear OC experimentales
   #put '/purchase_orders/', to:'purchase_orders#testMovement'
   #put '/purchase_orders/', to:'purchase_orders#comprar'
