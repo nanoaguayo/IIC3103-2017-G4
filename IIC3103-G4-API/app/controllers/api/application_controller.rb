@@ -1,6 +1,7 @@
 require 'json'
 require 'net/http'
 require 'base64'
+
 class Api::ApplicationController < ActionController::API
 
   def render_error(error)

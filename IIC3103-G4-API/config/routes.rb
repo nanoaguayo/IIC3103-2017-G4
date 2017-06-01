@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   
   get '/ticket_accepted', to: 'ticket#accepted'
+  get '/ticket_decline', to: 'ticket#decline'
 
   patch '/ticket', to:'ticket#new'
 
