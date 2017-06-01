@@ -5,31 +5,64 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Spree::Auth::Engine.load_seed if defined?(Spree::Auth)
+Spree::Product.delete_all
+Spree::Variant.delete_all
+
+'iva'
+tax_category = Spree::TaxCategory.create(name:'IVA', is_default: true)
+tax_category.save
+'valor iva'
+tax_rate = Spree::TaxRate.create(amount: 0.19, tax_category_id: 1, included_in_price: true)
+tax_rate.save
+
 
 #productos
 Product.delete_all
-prod = Product.create(proyected:0, sku:2,description:"Huevo",ptype:"Materia Prima",cost:102,lot:150,ptime:2.011,stock:5000,price:306)
+prod = Product.create(proyected:0, sku:2,description:"Huevo",ptype:"Materia Prima",cost:102,lot:150,ptime:2.011,stock:0,price:306)
 prod.save
-prod = Product.create(proyected:0, sku:4,description:"Aceite de Maravilla",ptype:"Procesado",cost:412,lot:200,ptime:2.713,stock:0,price:1236)
+producto = Spree::Product.create(sku: "2", cost_currency: "CLP", name: "Huevo", description: "Huevos", available_on: Time.now, meta_keywords: "Huevo", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 306)
+producto.save
+prod = Product.create(proyected:0,sku:4,description:"Aceite de Maravilla",ptype:"Procesado",cost:412,lot:200,ptime:2.713,stock:0,price:1236)
 prod.save
-prod = Product.create(proyected:0, sku:8,description:"Trigo",ptype:"Materia Prima",cost:252,lot:100,ptime:2.531,stock:0,price:756)
+producto = Spree::Product.create(sku: "4", cost_currency: "CLP", name: "Aceite de Maravilla", description: "Aceite de maravilla procesado", available_on: Time.now, meta_keywords: "Aceite,Maravilla", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 1236)
+producto.save
+prod = Product.create(proyected:0,sku:8,description:"Trigo",ptype:"Materia Prima",cost:252,lot:100,ptime:2.531,stock:0,price:756)
 prod.save
-prod = Product.create(proyected:0, sku:10,description:"Pan Marraqueta",ptype:"Procesado",cost:1084,lot:900,ptime:2.771,stock:0,price:3232)
+producto = Spree::Product.create(sku: "8", cost_currency: "CLP", name: "Trigo", description: "Trigo", available_on: Time.now, meta_keywords: "Trigo", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 756)
+producto.save
+prod = Product.create(proyected:0,sku:10,description:"Pan Marraqueta",ptype:"Procesado",cost:1084,lot:900,ptime:2.771,stock:0,price:3232)
 prod.save
-prod = Product.create(proyected:0, sku:14,description:"Cebada",ptype:"Procesado",cost:296,lot:1750,ptime:2.220,stock:0,price:888)
+producto = Spree::Product.create(sku: "10", cost_currency: "CLP", name: "Pan Marraqueta", description: "Pan Marraqueta procesado", available_on: Time.now, meta_keywords: "Pan,Marraqueta", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 3232)
+producto.save
+prod = Product.create(proyected:0,sku:14,description:"Cebada",ptype:"Procesado",cost:296,lot:1750,ptime:2.220,stock:0,price:888)
 prod.save
-prod = Product.create(proyected:0, sku:16,description:"Pasta de trigo",ptype:"Procesado",cost:612,lot:1000,ptime:2.493,stock:0,price:1836)
+producto = Spree::Product.create(sku: "14",cost_currency: "CLP", name: "Cebada", description: "Cebada procesada", available_on: Time.now, meta_keywords: "Cebada", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 888)
+producto.save
+prod = Product.create(proyected:0,sku:16,description:"Pasta de trigo",ptype:"Procesado",cost:612,lot:1000,ptime:2.493,stock:0,price:1836)
 prod.save
-prod = Product.create(proyected:0, sku:20,description:"Cacao",ptype:"Materia Prima",cost:172,lot:60,ptime:1.955,stock:0,price:516)
+producto = Spree::Product.create(sku: "16",cost_currency: "CLP", name: "Pasta de trigo", description: "Pasta de trigo procesada", available_on: Time.now, meta_keywords: "Pasta,Trigo", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 1836)
+producto.save
+prod = Product.create(proyected:0,sku:20,description:"Cacao",ptype:"Materia Prima",cost:172,lot:60,ptime:1.955,stock:0,price:516)
 prod.save
-prod = Product.create(proyected:0, sku:26,description:"Sal",ptype:"Materia Prima",cost:99,lot:144,ptime:1.242,stock:0,price:297)
+producto = Spree::Product.create(sku: "20",cost_currency: "CLP", name: "Cacao", description: "Cacao", available_on: Time.now, meta_keywords: "Cacao", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 516)
+producto.save
+prod = Product.create(proyected:0,sku:26,description:"Sal",ptype:"Materia Prima",cost:99,lot:144,ptime:1.242,stock:0,price:297)
 prod.save
-prod = Product.create(proyected:0, sku:50,description:"Arroz con leche",ptype:"Procesado",cost:773,lot:350,ptime:2.832,stock:0,price:2319)
+producto = Spree::Product.create(sku: "26",cost_currency: "CLP", name: "Sal", description: "Sal", available_on: Time.now, meta_keywords: "Sal", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 297)
+producto.save
+prod = Product.create(proyected:0,sku:50,description:"Arroz con leche",ptype:"Procesado",cost:773,lot:350,ptime:2.832,stock:0,price:2319)
 prod.save
-prod = Product.create(proyected:0, sku:54,description:"Hamburguesas",ptype:"Procesado",cost:606,lot:1800,ptime:0.860,stock:0,price:1818)
+producto = Spree::Product.create(sku: "50",cost_currency: "CLP", name: "Arroz con leche", description: "Arroz con leche procesado", available_on: Time.now, meta_keywords: "Arroz,Leche", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 2319)
+producto.save
+prod = Product.create(proyected:0,sku:54,description:"Hamburguesas",ptype:"Procesado",cost:606,lot:1800,ptime:0.860,stock:0,price:1818)
 prod.save
-prod = Product.create(proyected:0, sku:55,description:"Galletas Integrales",ptype:"Procesado",cost:925,lot:950,ptime:3.283,stock:0,price:2775)
+producto = Spree::Product.create(sku: "54", cost_currency: "CLP", name: "Hamburguesas", description: "Hamburguesas procesadas", available_on: Time.now, meta_keywords: "Hamburguesa", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 1818)
+producto.save
+prod = Product.create(proyected:0,sku:55,description:"Galletas Integrales",ptype:"Procesado",cost:925,lot:950,ptime:3.283,stock:0,price:2775)
 prod.save
+producto = Spree::Product.create(sku: "55",cost_currency: "CLP", name: "Galletas integrales", description: "Galletas integrales procesadas", available_on: Time.now, meta_keywords: "Galleta,Integral", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 2775)
+producto.save
 
 #tuplas sku-grupo
 SkuGroup.delete_all

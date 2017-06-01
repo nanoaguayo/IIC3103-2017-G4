@@ -4,13 +4,16 @@ HTTParty::Basement.default_options.update(verify: false)
 module Fetcher
 
   BODEGA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
+  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-herokuapp.com/oc/"
+  SII_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/sii/" || Rails.env.production? && "http://integracion-2017-herokuapp.com/sii/"
   #OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/"
+
 
   def self.Bodegas(httpRequest,uri_ext,body = {})
     auth = Crypt.generarauth(httpRequest)
     #if Rails.env.production? then
      # auth = Crypt.generarauthprod(httpRequest)
-    
+
     options = {'Content-type' => 'application/json', 'Authorization' => auth}
     #JSON body
     body = body.to_json
@@ -29,11 +32,31 @@ module Fetcher
     return response
   end
 
+  def self.Sii(httpRequest,uri_ext,body = {})
+    auth = Crypt.generarauthdev(httpRequest)
+    if Rails.env.production? then
+      auth = Crypt.generarauthprod(httpRequest)
+    end
+    options = {'Content-type' => 'application/json', 'Authorization' => auth}
+    #JSON body
+    body = body.to_json
+    if httpRequest[0..5] == "DELETE" then
+      response = HTTParty.delete(SII_URI+uri_ext, headers: options, body: body)
+    elsif httpRequest[0..2] == "GET" then
+      response = HTTParty.get(SII_URI+uri_ext, headers: options, body: body)
+    elsif httpRequest[0..2] == "PUT" then
+      response = HTTParty.put(SII_URI+uri_ext, headers: options, body: body)
+    elsif httpRequest[0..3] == "POST" then
+      response = HTTParty.post(SII_URI+uri_ext, headers: options, body: body)
+    end
+    return response
+  end
+
   def self.getProductsWithStock
     almacenes = Bodegas("GET","almacenes")
     productos = Hash.new 0
     for almacen in almacenes do
-      id = almacen['_id']
+      id = almacen['_id'].to_s
       resp = Bodegas("GET"+id,"skusWithStock?almacenId="+id)
       puts resp
       for aux in resp do

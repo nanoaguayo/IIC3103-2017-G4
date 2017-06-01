@@ -2,9 +2,19 @@ Rails.application.routes.draw do
 
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'dashboard#index'
-  #API
-  get '/', to:  'application#index'
+  #Spree starting in /store URL
+  mount Spree::Core::Engine, at: '/store'
+  get '/' => redirect('/store')
+  #Dashboard
+  get '/dashboard', to: 'dashboard#index'
+
+  #Tickets
+  get '/ticket_accepted', to: 'ticket#accepted'
+  get '/ticket_decline', to: 'ticket#decline'
+
+  patch '/ticket', to:'ticket#new'
+
+
   #precios y stock por requerimiento de sprint
   get 'api/publico/precios',to: 'products#publico'
   #test

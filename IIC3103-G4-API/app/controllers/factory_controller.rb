@@ -1,5 +1,3 @@
-require 'json'
-
 class FactoryController < ApplicationController
 
   def producir(sku,cantidad)
