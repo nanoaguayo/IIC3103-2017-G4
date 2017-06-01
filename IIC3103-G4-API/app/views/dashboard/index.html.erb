@@ -57,8 +57,8 @@
   <% for order in @completed do %>
     <div class="prodContainer">
       <p>
-        <strong>Unidades: </strong><%= order.total %>
-        <strong>Valor: </strong> <%= order.payment_total %> unidades
+        <strong>Unidades: </strong><%= order.item_count %>
+        <strong>Valor: </strong> CLP$<%= order.total %> unidades
       </p>
     </div>
   <% end %>
@@ -75,7 +75,7 @@
     <div class="prodContainer">
       <p>
         <strong>Unidades: </strong><%= order.item_count %>
-        <strong>Valor: CLP$</strong> <%= order.total %>
+        <strong>Valor: </strong>  CLP$<%= order.total %>
       </p>
     </div>
   <% end %>
