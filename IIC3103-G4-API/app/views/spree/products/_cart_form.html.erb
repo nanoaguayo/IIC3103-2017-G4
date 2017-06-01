@@ -7,7 +7,7 @@
           <% @product.variants_and_option_values(current_currency).each_with_index do |variant, index| %>
             <li>
               <%= radio_button_tag "variant_id", variant.id, index == 0,
-                  'data-price' => variant.price_in(current_currency).money, 
+                  'data-price' => variant.price_in(current_currency).money,
                   'data-in-stock' => variant.can_supply?
               %>
               <%= label_tag "variant_id_#{ variant.id }" do %>
@@ -48,7 +48,7 @@
           <% end %>
         </div>
 
-        <% if @product.can_supply? %>
+        <% if @product.can_supply? &&  @product.variants_including_master.first.stock_items.first.count_on_hand > 110 %>
           <div class="add-to-cart">
             <br />
             <div class="input-group">
@@ -59,6 +59,10 @@
                 <% end %>
               </span>
             </div>
+          </div>
+        <% else %>
+          <div>
+            <span>Lo sentimos, no podemos vender este producto por problemas de stock</span>
           </div>
         <% end %>
       </div>
