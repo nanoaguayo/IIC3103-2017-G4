@@ -14,46 +14,45 @@ Rails.application.routes.draw do
 
   patch '/ticket', to:'ticket#new'
 
-  #API
-  #Sprint 3 WS
-  get '/api/publico/precios', to:'products#publicStock'
 
+  #precios y stock por requerimiento de sprint
+  get 'api/publico/precios',to: 'products#publico'
+  #test
+  post 'api/producir', to: 'factory#prodForced'
+  get 'api/cleanStorage', to: 'ware_houses#cleanStorage'
 
-  #test
-  post '/producir', to: 'factory#prodForced'
-  get '/cleanStorage', to: 'ware_houses#cleanStorage'
-  post '/fabricar', to: 'ware_houses#fabricar'
-  get '/hash', to: 'application#hash'
-  #test
+  post 'api/fabricar', to: 'ware_houses#fab'
+
+  get 'api/hash', to: 'application#hash'
 
   #Products
   get '/products', to: 'products#index'
-  get '/order', to: 'products#updateStock'
 
   #Purchase order
   #show
-  get '/purchase_orders/:id', to:'purchase_orders#obtener'
-  #create
-  put '/purchase_orders/:id', to: 'purchase_orders#recibir'
+  get 'api/purchase_orders/:id', to:'purchase_orders#obtener'
+  #recibir
+  put 'api/purchase_orders/:id', to: 'purchase_orders#recibir'
   #accept
-  post '/purchase_orders/:id/accept', to: 'purchase_orders#accept'
+  post 'api/purchase_orders/:id/accept', to: 'purchase_orders#accept'
   #reject
-  post '/purchase_orders/:id/reject', to: 'purchase_orders#reject'
+  post 'api/purchase_orders/:id/reject', to: 'purchase_orders#reject'
   #cancel
-  delete '/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
+  delete 'api/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
   #crear OC experimentales
-  put '/purchase_orders/', to:'purchase_orders#comprar'
+  #put '/purchase_orders/', to:'purchase_orders#testMovement'
+  #put '/purchase_orders/', to:'purchase_orders#comprar'
 
   #Transfers
   #Transfer money
-  put '/trx', to: "transactions#transfer"
+  put 'api/trx', to: "transactions#transfer"
   #show transaction
-  get '/trx/:id', to: 'transactions#show'
+  get 'api/trx/:id', to: 'transactions#show'
   #get Account Statement
-  post '/cartola', to:'transactions#accStatement'
+  post 'api/cartola', to:'transactions#accStatement'
 
   #Balance
-  get '/banco/cuenta/:id', to:'balances#accBalance'
+  get 'api/banco/cuenta/:id', to:'balances#accBalance'
 
   #Invoice
   put '/invoices/:id', to:'invoices#create'
@@ -66,12 +65,12 @@ Rails.application.routes.draw do
 
   #WareHouse
   #show
-  get '/almacenes', to: 'ware_houses#index'
+  get 'api/almacenes', to: 'ware_houses#index'
   #get Products by sku
-  get '/skusWithStock', to: 'ware_houses#skus_with_stock'
+  get 'api/skusWithStock', to: 'ware_houses#skus_with_stock'
   #get getStock
-  get '/stock', to: 'ware_houses#stock'
+  get 'api/stock', to: 'ware_houses#stock'
   #mover stock
-  post '/moveStock', to: 'ware_houses#moveStock'
+  post 'api/moveStock', to: 'ware_houses#moveStock'
 
 end

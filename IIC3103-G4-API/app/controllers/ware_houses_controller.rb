@@ -1,18 +1,33 @@
 class WareHousesController < ApplicationController
 
-  def fabricar(sku,cantidad)
-    cantidad = cantidad.to_i
-    if cantidad <= 5000 then
-      body = {
-        'sku': sku,
-        'cantidad': Integer(cantidad)
-      }
-      resp = Fetcher.Bodegas("PUT"+sku.to_s+cantidad.to_s,"fabrica/fabricarSinPago",body)
-      render json: resp
+  def fabricar(sku,cantidad)#strings los 2
+    prod = Product.find_by(sku: sku.to_i)
+    cant = cantidad.to_i
+    if cant <= 5000 then
+      monto = prod.cost * cant
+      trx = Banco.transferFab(monto)
+      trans = JSON.parse(trx.response.body) #esto se lo copié a pelao...
+      if trans.key?('created_at')#se creo la transferencia bien
+        parameters = {
+          "trxId": trx['_id'],
+          "sku": sku,
+          "cantidad": cantidad.to_i
+        }
+        puts parameters
+        puts "PUT" + sku + cantidad + trx['_id']
+        resp = Fetcher.Bodegas("PUT" + sku + cantidad + trx['_id'], "fabrica/fabricar", parameters)
+        render json: resp
+      else
+        render_error("error con la transferencia")
+      end
     else
       #Dont send
       render_error("Maximum quantity allowed is 5000")
     end
+  end
+
+  def fab
+    fabricar(params[:sku], params[:cantidad])
   end
   #update local stock
   def updateStock

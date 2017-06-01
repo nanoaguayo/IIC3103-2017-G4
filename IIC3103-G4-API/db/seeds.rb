@@ -19,47 +19,47 @@ tax_rate.save
 
 #productos
 Product.delete_all
-prod = Product.create(sku:2,description:"Huevo",prodType:"Materia Prima",unit_cost:102,lot:150,prod_time:2.011,stock:0,price:306)
+prod = Product.create(proyected:0, sku:2,description:"Huevo",ptype:"Materia Prima",cost:102,lot:150,ptime:2.011,stock:0,price:306)
 prod.save
 producto = Spree::Product.create(sku: "2", cost_currency: "CLP", name: "Huevo", description: "Huevos", available_on: Time.now, meta_keywords: "Huevo", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 306)
 producto.save
-prod = Product.create(sku:4,description:"Aceite de Maravilla",prodType:"Procesado",unit_cost:412,lot:200,prod_time:2.713,stock:0,price:1236)
+prod = Product.create(proyected:0,sku:4,description:"Aceite de Maravilla",ptype:"Procesado",cost:412,lot:200,ptime:2.713,stock:0,price:1236)
 prod.save
 producto = Spree::Product.create(sku: "4", cost_currency: "CLP", name: "Aceite de Maravilla", description: "Aceite de maravilla procesado", available_on: Time.now, meta_keywords: "Aceite,Maravilla", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 1236)
 producto.save
-prod = Product.create(sku:8,description:"Trigo",prodType:"Materia Prima",unit_cost:252,lot:100,prod_time:2.531,stock:0,price:756)
+prod = Product.create(proyected:0,sku:8,description:"Trigo",ptype:"Materia Prima",cost:252,lot:100,ptime:2.531,stock:0,price:756)
 prod.save
 producto = Spree::Product.create(sku: "8", cost_currency: "CLP", name: "Trigo", description: "Trigo", available_on: Time.now, meta_keywords: "Trigo", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 756)
 producto.save
-prod = Product.create(sku:10,description:"Pan Marraqueta",prodType:"Procesado",unit_cost:1084,lot:900,prod_time:2.771,stock:0,price:3232)
+prod = Product.create(proyected:0,sku:10,description:"Pan Marraqueta",ptype:"Procesado",cost:1084,lot:900,ptime:2.771,stock:0,price:3232)
 prod.save
 producto = Spree::Product.create(sku: "10", cost_currency: "CLP", name: "Pan Marraqueta", description: "Pan Marraqueta procesado", available_on: Time.now, meta_keywords: "Pan,Marraqueta", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 3232)
 producto.save
-prod = Product.create(sku:14,description:"Cebada",prodType:"Procesado",unit_cost:296,lot:1750,prod_time:2.220,stock:0,price:888)
+prod = Product.create(proyected:0,sku:14,description:"Cebada",ptype:"Procesado",cost:296,lot:1750,ptime:2.220,stock:0,price:888)
 prod.save
 producto = Spree::Product.create(sku: "14",cost_currency: "CLP", name: "Cebada", description: "Cebada procesada", available_on: Time.now, meta_keywords: "Cebada", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 888)
 producto.save
-prod = Product.create(sku:16,description:"Pasta de trigo",prodType:"Procesado",unit_cost:612,lot:1000,prod_time:2.493,stock:0,price:1836)
+prod = Product.create(proyected:0,sku:16,description:"Pasta de trigo",ptype:"Procesado",cost:612,lot:1000,ptime:2.493,stock:0,price:1836)
 prod.save
 producto = Spree::Product.create(sku: "16",cost_currency: "CLP", name: "Pasta de trigo", description: "Pasta de trigo procesada", available_on: Time.now, meta_keywords: "Pasta,Trigo", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 1836)
 producto.save
-prod = Product.create(sku:20,description:"Cacao",prodType:"Materia Prima",unit_cost:172,lot:60,prod_time:1.955,stock:0,price:516)
+prod = Product.create(proyected:0,sku:20,description:"Cacao",ptype:"Materia Prima",cost:172,lot:60,ptime:1.955,stock:0,price:516)
 prod.save
 producto = Spree::Product.create(sku: "20",cost_currency: "CLP", name: "Cacao", description: "Cacao", available_on: Time.now, meta_keywords: "Cacao", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 516)
 producto.save
-prod = Product.create(sku:26,description:"Sal",prodType:"Materia Prima",unit_cost:99,lot:144,prod_time:1.242,stock:0,price:297)
+prod = Product.create(proyected:0,sku:26,description:"Sal",ptype:"Materia Prima",cost:99,lot:144,ptime:1.242,stock:0,price:297)
 prod.save
 producto = Spree::Product.create(sku: "26",cost_currency: "CLP", name: "Sal", description: "Sal", available_on: Time.now, meta_keywords: "Sal", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 297)
 producto.save
-prod = Product.create(sku:50,description:"Arroz con leche",prodType:"Procesado",unit_cost:773,lot:350,prod_time:2.832,stock:0,price:2319)
+prod = Product.create(proyected:0,sku:50,description:"Arroz con leche",ptype:"Procesado",cost:773,lot:350,ptime:2.832,stock:0,price:2319)
 prod.save
 producto = Spree::Product.create(sku: "50",cost_currency: "CLP", name: "Arroz con leche", description: "Arroz con leche procesado", available_on: Time.now, meta_keywords: "Arroz,Leche", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 2319)
 producto.save
-prod = Product.create(sku:54,description:"Hamburguesas",prodType:"Procesado",unit_cost:606,lot:1800,prod_time:0.860,stock:0,price:1818)
+prod = Product.create(proyected:0,sku:54,description:"Hamburguesas",ptype:"Procesado",cost:606,lot:1800,ptime:0.860,stock:0,price:1818)
 prod.save
 producto = Spree::Product.create(sku: "54", cost_currency: "CLP", name: "Hamburguesas", description: "Hamburguesas procesadas", available_on: Time.now, meta_keywords: "Hamburguesa", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 1818)
 producto.save
-prod = Product.create(sku:55,description:"Galletas Integrales",prodType:"Procesado",unit_cost:925,lot:950,prod_time:3.283,stock:0,price:2775)
+prod = Product.create(proyected:0,sku:55,description:"Galletas Integrales",ptype:"Procesado",cost:925,lot:950,ptime:3.283,stock:0,price:2775)
 prod.save
 producto = Spree::Product.create(sku: "55",cost_currency: "CLP", name: "Galletas integrales", description: "Galletas integrales procesadas", available_on: Time.now, meta_keywords: "Galleta,Integral", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 2775)
 producto.save
@@ -215,6 +215,26 @@ sku.save
 sku = SkuGroup.create(sku:56,group:5)
 sku.save
 
-
-#Spree::Core::Engine.load_seed if defined?(Spree::Core)
-#Spree::Auth::Engine.load_seed if defined?(Spree::Auth)
+#nuestros sku
+sku = SkuGroup.create(sku:2,group:4)
+sku.save
+sku = SkuGroup.create(sku:4,group:4)
+sku.save
+sku = SkuGroup.create(sku:8,group:4)
+sku.save
+sku = SkuGroup.create(sku:10,group:4)
+sku.save
+sku = SkuGroup.create(sku:14,group:4)
+sku.save
+sku = SkuGroup.create(sku:16,group:4)
+sku.save
+sku = SkuGroup.create(sku:20,group:4)
+sku.save
+sku = SkuGroup.create(sku:26,group:4)
+sku.save
+sku = SkuGroup.create(sku:50,group:4)
+sku.save
+sku = SkuGroup.create(sku:54,group:4)
+sku.save
+sku = SkuGroup.create(sku:55,group:4)
+sku.save

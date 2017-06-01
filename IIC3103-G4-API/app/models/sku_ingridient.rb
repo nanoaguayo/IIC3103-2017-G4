@@ -1,0 +1,2 @@
+class SkuIngridient < ApplicationRecord
+end
