@@ -10,9 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20170531012838) do
-
 
   create_table "balances", force: :cascade do |t|
     t.string   "account"
@@ -108,16 +106,6 @@ ActiveRecord::Schema.define(version: 20170531012838) do
     t.datetime "updated_at", null: false
   end
 
-<<<<<<< HEAD
-  create_table "transactions", force: :cascade do |t|
-    t.string   "origen"
-    t.string   "destino"
-    t.integer  "monto"
-    t.integer  "__v"
-    t.string   "_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-=======
   create_table "spree_addresses", force: :cascade do |t|
     t.string   "firstname"
     t.string   "lastname"
@@ -1129,12 +1117,11 @@ ActiveRecord::Schema.define(version: 20170531012838) do
   create_table "transactions", force: :cascade do |t|
     t.string   "origen"
     t.string   "destino"
-    t.integer  "monto",      limit: 8
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.integer  "monto"
     t.integer  "__v"
     t.string   "_id"
->>>>>>> eff0c48df3a546a547e56ca84362fe564fae265d
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "ware_houses", force: :cascade do |t|

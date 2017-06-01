@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   #precios y stock por requerimiento de sprint
-  get '/publico/precios',to: 'products#publico'
+  get 'api/publico/precios',to: 'products#publico'
 
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'
