@@ -45,7 +45,7 @@ gem 'pg'
 gem 'rails_12factor'
 
 #Bootstrap
-gem 'bootstrap-sass'
+gem 'bootstrap-sass','~> 3.3.5.1'
 gem 'autoprefixer-rails'
 
 # Use SCSS for stylesheets
@@ -64,3 +64,13 @@ gem 'better_errors'
 gem 'chartkick'
 
 gem 'sidekiq'
+
+#Spree
+gem 'coffee-rails'
+gem 'spree', '~> 3.2.0.rc1'
+gem 'spree_auth_devise', '~> 3.2.0.beta'
+gem 'spree_gateway', '~> 3.2.0.beta'
+
+#update stock
+gem 'whenever', :require => false
+

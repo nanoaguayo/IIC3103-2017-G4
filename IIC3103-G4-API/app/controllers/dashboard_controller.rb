@@ -20,5 +20,16 @@ class DashboardController < ApplicationController
     end
 
     @orders = ProducedOrder.all.reverse.first(20)
+
+    #Spree orders
+    so = Spree::Order.all
+    puts so.inspect
+    @completed = so.find{|so| so.state=='complete'}
+    if !@completed then
+      @completed = Array.new
+    end
+    puts @completed.inspect
+    @uncompleted = so-@completed
+    puts @uncompleted.inspect
   end
 end
