@@ -1,4 +1,4 @@
-class Api::WareHousesController < Api::ApplicationController
+class WareHousesController < ApplicationController
 
   def fabricar(sku,cantidad)#strings los 2
     prod = Product.find_by(sku: sku.to_i)
@@ -26,7 +26,7 @@ class Api::WareHousesController < Api::ApplicationController
     end
   end
 
-  def fab 
+  def fab
     fabricar(params[:sku], params[:cantidad])
   end
   #update local stock

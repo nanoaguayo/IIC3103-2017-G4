@@ -1,4 +1,4 @@
-class Api::ProductsController < Api::ApplicationController
+class ProductsController < ApplicationController
 
   def index
     updateStock
@@ -21,7 +21,7 @@ class Api::ProductsController < Api::ApplicationController
   	ret = Array.new
   	skus.each do |sku|
   		prod = Product.find_by(sku: sku)
-  		ret << {sku: prod.sku, precio: prod.price, stock: prod.stock}
+  		ret << {sku: prod.sku.to_s, precio: prod.price, stock: prod.stock}
   	end
   	render json: ret
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170526214200) do
+ActiveRecord::Schema.define(version: 20170530044106) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "account"
@@ -20,18 +20,17 @@ ActiveRecord::Schema.define(version: 20170526214200) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.string   "supplier"
-    t.string   "client"
-    t.bigint   "grossValue"
-    t.bigint   "iva"
-    t.bigint   "totalValue"
-    t.string   "state"
-    t.datetime "payDate"
-    t.string   "purchaseOrderId"
-    t.string   "rejectionCause"
-    t.string   "cancellationCause"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.string   "proveedor"
+    t.string   "cliente"
+    t.integer  "bruto",      limit: 8
+    t.integer  "iva",        limit: 8
+    t.integer  "total",      limit: 8
+    t.string   "estado"
+    t.string   "oc"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "__v"
+    t.string   "_id"
   end
 
   create_table "produced_orders", force: :cascade do |t|
@@ -85,12 +84,22 @@ ActiveRecord::Schema.define(version: 20170526214200) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sku_ingridients", force: :cascade do |t|
+    t.integer  "sku"
+    t.integer  "ingridient"
+    t.integer  "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "transactions", force: :cascade do |t|
-    t.string   "originAccount"
-    t.string   "destinationAccount"
-    t.bigint   "amount"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.string   "origen"
+    t.string   "destino"
+    t.integer  "monto",      limit: 8
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "__v"
+    t.string   "_id"
   end
 
   create_table "ware_houses", force: :cascade do |t|

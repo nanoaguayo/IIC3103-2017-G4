@@ -62,3 +62,5 @@ gem 'turbolinks'
 gem 'better_errors'
 #charts
 gem 'chartkick'
+#Spree
+gem 'coffee-rails'
