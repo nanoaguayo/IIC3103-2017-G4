@@ -22,9 +22,6 @@ module Fetcher
     elsif httpRequest[0..2] == "GET" then
       response = HTTParty.get(BODEGA_URI+uri_ext, headers: options, body: body)
     elsif httpRequest[0..2] == "PUT" then
-      puts BODEGA_URI+uri_ext
-      puts options
-      puts body
       response = HTTParty.put(BODEGA_URI+uri_ext, headers: options, body: body)
     elsif httpRequest[0..3] == "POST" then
       response = HTTParty.post(BODEGA_URI+uri_ext, headers: options, body: body)
