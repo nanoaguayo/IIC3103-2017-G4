@@ -31,5 +31,8 @@ class DashboardController < ApplicationController
     puts @completed.inspect
     @uncompleted = so-@completed
     puts @uncompleted.inspect
+
+    #FTP orders
+    @ftp_requested = Ftp.GetOC()
   end
 end
