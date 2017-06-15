@@ -48,26 +48,6 @@ class InvoicesController < ApplicationController
     end
   end
 
-  def cancel
-    #TODO delete this
-    @state = 'cancelled'
-    render :show
-    return 0
-    @invoice = Invoice.find_by_id(params[:id])
-    if @invoice then
-        @invoice.state = "rejected"
-        if params['cause'] then
-          @invoice.cancellationCause = params['cause']
-        end
-        if @invoice.save then
-          render :show
-        else
-          render_error('Could not process your request')
-        end
-    else
-      render_error('Invoice not found')
-    end
-  end
   def reject
     #TODO delete this
     @state = 'rejected'

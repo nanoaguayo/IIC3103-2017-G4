@@ -13,7 +13,27 @@ module Banco
     cuenta = obtenerCuenta()
     header = {"Content-Type" => "application/json"}
     params = {
-      "monto": monto, 
+      "monto": monto,
+      "origen": ID,
+      "destino": cuenta
+    }
+    @result = HTTParty.put(path, :body => params, :header => header)
+    case @result.code
+    when 200
+      @trans = JSON.parse(@result.response.body)
+      @transaction = Transaction.new(@trans)
+      if @transaction.save then
+        puts "Guardada con éxito"
+      end
+    end
+    return @result
+  end
+
+  def self.transfer (monto, cuenta)
+    path = BANK_URI + "trx"
+    header = {"Content-Type" => "application/json"}
+    params = {
+      "monto": monto,
       "origen": ID,
       "destino": cuenta
     }

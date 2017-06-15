@@ -28,27 +28,30 @@ Rails.application.routes.draw do
   #precios y stock por requerimiento de sprint
   get 'api/publico/precios',to: 'products#publico'
   #test
-  post 'api/producir', to: 'factory#prodForced'
-  get 'api/cleanStorage', to: 'ware_houses#cleanStorage'
+  post 'producir', to: 'factory#prodForced'
+  get 'cleanStorage', to: 'ware_houses#cleanStorage'
 
-  post 'api/fabricar', to: 'ware_houses#fab'
+  post 'fabricar', to: 'ware_houses#fab'
 
-  get 'api/hash', to: 'application#hash'
+  get 'hash', to: 'application#hash'
 
   #Products
   get '/products', to: 'products#index'
 
   #Purchase order
   #show
-  get 'api/purchase_orders/:id', to:'purchase_orders#obtener'
+  get '/purchase_orders/:id', to:'purchase_orders#obtener'
   #recibir
-  put 'api/purchase_orders/:id', to: 'purchase_orders#recibir'
+  #realizar_pedido: Crea una notificación de que se nos hizo una orden de compra. Debe tener el id de la orden de compra, el método de pago (puede ser contra factura o contra despacho) y el id de la bodega.
+  put '/purchase_orders/:id', to: 'purchase_orders#recibir'
   #accept
-  post 'api/purchase_orders/:id/accept', to: 'purchase_orders#accept'
+  #confirmar_orden_compra: Crea una notificación de aceptación de la orden de compra generada por nosotros. Debe tener el id de la orden de compra.
+  patch '/purchase_orders/:id/accepted', to: 'purchase_orders#accept'
   #reject
-  post 'api/purchase_orders/:id/reject', to: 'purchase_orders#reject'
+  #rechazar_orden_compra: Crea una notificación de rechazo de la orden de compra generada por nosotros. Debe tener el id de la orden de compra.
+  patch '/purchase_orders/:id/rejected', to: 'purchase_orders#reject'
   #cancel
-  delete 'api/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
+  delete '/purchase_orders/:id/cancel', to: 'purchase_orders#cancel'
   post '/purchase_orders/comprar', to: 'purchase_orders#ComprarPostman'
   #crear OC experimentales
   #put '/purchase_orders/', to:'purchase_orders#testMovement'
@@ -56,23 +59,27 @@ Rails.application.routes.draw do
 
   #Transfers
   #Transfer money
-  put 'api/trx', to: "transactions#transfer"
+  put 'trx', to: "transactions#transfer"
   #show transaction
-  get 'api/trx/:id', to: 'transactions#show'
+  get 'trx/:id', to: 'transactions#show'
   #get Account Statement
-  post 'api/cartola', to:'transactions#accStatement'
+  post 'cartola', to:'transactions#accStatement'
 
   #Balance
-  get 'api/banco/cuenta/:id', to:'balances#accBalance'
+  get 'banco/cuenta/:id', to:'balances#accBalance'
 
   #Invoice
-  put '/invoices/:id', to:'invoices#create'
-  get '/invoices/:id', to:'invoices#show'
-  patch '/invoices/:id/accepted', to:'invoices#accept'
-  patch '/invoices/:id/rejected', to:'invoices#reject'
-  patch '/invoices/:id/delivered', to:'invoices#delivered'
-  patch '/invoices/:id/paid', to:'invoices#paid'
-  delete '/invoices/:id/cancel', to:'invoices#cancel'
+  #enviar_factura: Crea una notificación de habernos emitido una factura. Debe tener el id de la factura y la cuenta del banco.
+  put 'invoices/:id', to:'invoices#create'
+  #enviar_confirmacion_factura: Crea una notificación de que no se rechazará la factura enviada. Debe tener el id de la factura
+  patch 'invoices/:id/accepted', to:'invoices#accept'
+  #enviar_rechazo_factura: Crea una notificación de que se rechaza la factura enviada. Debe tener el id de la factura.
+  patch 'invoices/:id/rejected', to:'invoices#reject'
+  #notificar_orden_despachada: Notificar para cambiar de estado de una factura. Debe tener el id de la factura.
+  patch 'invoices/:id/delivered', to:'invoices#delivered'
+  #enviar_confirmacion_pago: Crea una notificación de que se pagó la factura. Debe tener el id de la factura.
+  patch 'invoices/:id/paid', to:'invoices#paid'
+  get 'invoices/:id', to:'invoices#show'
 
   #WareHouse
   #show
