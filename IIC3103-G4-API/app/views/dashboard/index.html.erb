@@ -84,3 +84,19 @@
     <h6>No se han registado transacciones incompletas</h6>
   </div>
  <% end %>
+
+<h3 class="dashTitle">Ordenes solicitadas via FTP</h3>
+<% if @ftp_requested.count > 0 then%>
+  <% for order in @ftp_requested do %>
+    <div class="prodContainer">
+      <p>
+        <strong>SKU:</strong><%=order[:sku]%>
+        <strong>Unidades: </strong><%= order[:qty] %>
+      </p>
+    </div>
+  <% end %>
+ <% else %>
+  <div class="prodContainer">
+    <h6>No se han registado solicitudes</h6>
+  </div>
+ <% end %>

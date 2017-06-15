@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   #Dashboard
   get '/dashboard', to: 'dashboard#index'
 
+  #Test FTP
+  get '/ftp', to: 'purchase_orders#checkFTP'
 
   #Tickets
   get '/ticket_accepted', to: 'ticket#accepted'

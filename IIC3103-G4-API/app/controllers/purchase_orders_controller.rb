@@ -1,4 +1,4 @@
-class Api::PurchaseOrdersController < Api::ApplicationController
+class PurchaseOrdersController < ApplicationController
 
   OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-herokuapp-prod.com/oc/"
   OPT = {'Content-type' => 'application/json'}
@@ -141,8 +141,13 @@ class Api::PurchaseOrdersController < Api::ApplicationController
     def CheckStockOC(oc, sku)#se entrega la oc como la respuesta de un request de httparty[0]
       if Product.find_by(sku: sku).stock - oc['cantidad'].to_i < 100
         return false
-      else 
+      else
         return true
       end
+    end
+
+    def checkFTP()
+      aux = Ftp.GetOC()
+      render json:aux
     end
 end
