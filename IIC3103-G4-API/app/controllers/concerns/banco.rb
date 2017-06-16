@@ -49,6 +49,19 @@ module Banco
     return @result
   end
 
+
+    def self.obtenerCuentaGrupo(id)
+      path = BANK_URI + "cuenta/"+id
+      header = {"Content-Type" => "application/json"}
+      @result = HTTParty.get(path, :query => {}, :header => header)
+      case @result.code
+      when 200
+        @trans = JSON.parse(@result.response.body)
+      end
+      return @result
+    end
+    
+#Obtener cuenta de la fabrica (interno)
   def self.obtenerCuenta
     auth = Crypt.generarauth("GET")
     puts auth
@@ -60,3 +73,15 @@ module Banco
     return cuenta["cuentaId"]
   end
 end
+
+
+  def self.obtenerTransferencia(id)
+    path = BANK_URI + "trx/"+id
+    header = {"Content-Type" => "application/json"}
+    @result = HTTParty.get(path, :query => {}, :header => header)
+    case @result.code
+    when 200
+      @trans = JSON.parse(@result.response.body)
+    end
+    return @result
+  end

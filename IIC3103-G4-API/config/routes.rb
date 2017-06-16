@@ -58,15 +58,13 @@ Rails.application.routes.draw do
   #put '/purchase_orders/', to:'purchase_orders#comprar'
 
   #Transfers
-  #Transfer money
-  put 'trx', to: "transactions#transfer"
   #show transaction
   get 'trx/:id', to: 'transactions#show'
-  #get Account Statement
-  post 'cartola', to:'transactions#accStatement'
 
   #Balance
   get 'banco/cuenta/:id', to:'balances#accBalance'
+  #get 'banco/cuenta/:id', to:'transactions#showCuenta'
+
 
   #Invoice
   #enviar_factura: Crea una notificación de habernos emitido una factura. Debe tener el id de la factura y la cuenta del banco.
