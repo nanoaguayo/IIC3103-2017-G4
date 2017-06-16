@@ -1,0 +1,48 @@
+<h3 class="dashTitle">Listado de Ordenes de Compra FTP</h3>
+<% for aux in @purchase_orders do %>
+  <div class="container-fluid almacen row">
+      <div class="col-md-8">
+        <h5></h5>
+        <% if aux[:sku] == "2" then %>
+          <h5><strong>Producto: </strong> Huevo</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "4" then%>
+          <h5><strong>Producto: </strong> Aceite de Maravilla</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "8" then%>
+          <h5><strong>Producto: </strong> Trigo</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "10" then%>
+          <h5><strong>Producto: </strong> Pan Marraqueta</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "14" then%>
+          <h5><strong>Producto: </strong> Cebada</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "16" then%>
+          <h5><strong>Producto: </strong> Pasta de Trigo</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "20" then%>
+          <h5><strong>Producto: </strong> Cacao</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "26" then%>
+          <h5><strong>Producto: </strong> Sal</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "50" then%>
+          <h5><strong>Producto: </strong> Arroz con Leche</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "54" then%>
+          <h5><strong>Producto: </strong> Hamburguesas</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% elsif aux[:sku] == "55" then%>
+          <h5><strong>Producto: </strong> Galletas Integrales</h5>
+          <h5><strong>SKU:</strong> <%= aux[:sku] %></h5>
+        <% else %>
+          <h5><%= aux[:sku] %></h5>
+        <% end%>
+        <h5><strong>ID Orden de compra: </strong><%= aux[:id] %></h5>
+        <h5><strong>Cantidad: </strong><%= aux[:qty] %></h5>
+        <%= link_to '<button type="button">Aceptar</button>'.html_safe, "/purchase_orders_ftp/"+aux[:id]+"/aceptar", :method => :patch  %>
+        <%= link_to '<button type="button">Rechazar</button>'.html_safe, "/purchase_orders_ftp/"+aux[:id]+"/rechazar", :method => :patch  %>
+      </div>
+  </div>
+<%end %>

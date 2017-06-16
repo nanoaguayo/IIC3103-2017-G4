@@ -39,15 +39,19 @@ Rails.application.routes.draw do
   get '/products', to: 'products#index'
 
   #Purchase order
+  get '/purchase_orders_ftp', to:'purchase_orders#index'
   #show
   get '/purchase_orders/:id', to:'purchase_orders#obtener'
   #recibir
   #realizar_pedido: Crea una notificación de que se nos hizo una orden de compra. Debe tener el id de la orden de compra, el método de pago (puede ser contra factura o contra despacho) y el id de la bodega.
   put '/purchase_orders/:id', to: 'purchase_orders#recibir'
   #accept
+  #se usa en la view de las ordenes de las ftp
+  patch '/purchase_orders_ftp/:id/aceptar', to: 'purchase_orders#aceptar'
   #confirmar_orden_compra: Crea una notificación de aceptación de la orden de compra generada por nosotros. Debe tener el id de la orden de compra.
   patch '/purchase_orders/:id/accepted', to: 'purchase_orders#accept'
   #reject
+  patch '/purchase_orders_ftp/:id/rechazar', to: 'purchase_orders#rechazar'
   #rechazar_orden_compra: Crea una notificación de rechazo de la orden de compra generada por nosotros. Debe tener el id de la orden de compra.
   patch '/purchase_orders/:id/rejected', to: 'purchase_orders#reject'
   #cancel

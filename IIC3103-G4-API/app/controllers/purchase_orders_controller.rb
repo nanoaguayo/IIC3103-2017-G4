@@ -32,6 +32,9 @@ class PurchaseOrdersController < ApplicationController
           8 => "5910c0910e42840004f6e687"}
   GURI = Rails.env.development? && "http://dev.integra17-" || Rails.env.production? && "http://integra17-"
 
+  def index
+    @purchase_orders = Ftp.GetOC()
+  end
 
   def ComprarPostman
     comprar(params[:proveedor], params[:sku], params[:cantidad], params[:precio], params[:fechaE])
@@ -107,6 +110,13 @@ class PurchaseOrdersController < ApplicationController
        end
     end
 
+    def aceptar #cuando se llama por la view para el ftp (Seba)
+      id = params[:id]
+      @purchase_order = accept(id)
+      puts @purchase_order
+      @purchase_order_ = PurchaseOrder.new(@purchase_order)
+    end
+
     def accept(id)#recepcionar
       #hay que afectar nuestro inventario proyectado
       body = {id: id}
@@ -114,6 +124,12 @@ class PurchaseOrdersController < ApplicationController
       response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)[0]
       return response
       #pta en vola hacer algo con eso.
+    end
+
+    def rechazar
+      id = params[:id]
+      @purchase_order = reject(id,"rechazado en la vista")
+      puts @purchase_order
     end
 
     def reject(id, motive) #rechazar
