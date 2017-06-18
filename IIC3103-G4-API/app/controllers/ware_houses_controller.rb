@@ -1,156 +1,254 @@
 class WareHousesController < ApplicationController
 
   def fabricar(sku,cantidad)#strings los 2
-    prod = Product.find_by(sku: sku.to_i)
-    cant = cantidad.to_i
-    if cant <= 5000 then
-      monto = prod.cost * cant
-      trx = Banco.transferFab(monto)
-      trans = JSON.parse(trx.response.body) #esto se lo copié a pelao...
-      if trans.key?('created_at')#se creo la transferencia bien
-        parameters = {
-          "trxId": trx['_id'],
-          "sku": sku,
-          "cantidad": cantidad.to_i
-        }
-        puts parameters
-        puts "PUT" + sku + cantidad + trx['_id']
-        resp = Fetcher.Bodegas("PUT" + sku + cantidad + trx['_id'], "fabrica/fabricar", parameters)
-        render json: resp
+      prod = Product.find_by(sku: sku.to_i)
+      cant = cantidad.to_i
+      if cant <= 5000 then
+        monto = prod.cost * cant
+        trx = Banco.transferFab(monto)
+        trans = JSON.parse(trx.response.body) #esto se lo copié a pelao...
+        if trans.key?('created_at')#se creo la transferencia bien
+          parameters = {
+            "trxId": trx['_id'],
+            "sku": sku,
+            "cantidad": cantidad.to_i
+          }
+          puts parameters
+          puts "PUT" + sku + cantidad + trx['_id']
+          resp = Fetcher.Bodegas("PUT" + sku + cantidad + trx['_id'], "fabrica/fabricar", parameters)
+          render json: resp
+        else
+          render_error("error con la transferencia")
+        end
       else
-        render_error("error con la transferencia")
-      end
-    else
-      #Dont send
-      render_error("Maximum quantity allowed is 5000")
-    end
-  end
-
-  def fab
-    fabricar(params[:sku], params[:cantidad])
-  end
-  #update local stock
-  def updateStock
-    products = Product.all
-    almacenes = Fetcher.Bodegas("GET","almacenes")
-    newStock = Hash.new 0
-    for alm in almacenes do
-      stock = Fetcher.Bodegas("GET"+alm['_id'],"skusWithStock?almacenId="+alm['_id'])
-      for aux in stock do
-        newStock[aux['_id']] = newStock[aux['_id']] + aux['total']
+        #Dont send
+        render_error("Maximum quantity allowed is 5000")
       end
     end
-    for key in newStock.keys do
-      prodAux = Product.where(sku:key).first
-      prodAux.stock = newStock[key]
-      prodAux.save
-    end
-  end
-  def testingjobs
-    CleanBodegaJob.perform_later
-  end
 
-  def cleanStorage
+    def fab
+      fabricar(params[:sku], params[:cantidad])
+    end
+    #update local stock
+    def updateStock
+      products = Product.all
       almacenes = Fetcher.Bodegas("GET","almacenes")
-      id_pulmon = ""
-      id_recepcion = ""
-      otherStorages = Hash.new 0
+      newStock = Hash.new 0
       for alm in almacenes do
-        if alm['pulmon'] && alm['usedSpace'] > 0 then
-          id_pulmon = alm['_id']
-        elsif alm['recepcion'] && alm['usedSpace'] > 0 then
-          id_recepcion = alm['_id']
-        elsif !alm['recepcion'] && !alm['pulmon'] && !alm['despacho'] && (Integer(alm['totalSpace']) - Integer(alm['usedSpace'])>0) then
-          otherStorages[alm['_id']] = Integer(alm['totalSpace']) - Integer(alm['usedSpace'])
+        stock = Fetcher.Bodegas("GET"+alm['_id'],"skusWithStock?almacenId="+alm['_id'])
+        for aux in stock do
+          newStock[aux['_id']] = newStock[aux['_id']] + aux['total']
         end
       end
-      #Loop to clean all, first recepcion
-      if id_recepcion != "" then
-        prods = Fetcher.Bodegas("GET"+id_recepcion.to_s,"skusWithStock?almacenId="+id_recepcion.to_s)
-        for prod in prods do
-          #get products in storage for each sku
-          puts prod
-          prodList = Fetcher.Bodegas("GET"+id_recepcion.to_s+prod['_id'].to_s,"stock?almacenId="+id_recepcion.to_s+"&sku="+prod['_id']+"&limit=200")
-          puts prodList
-          count = 3
-          while prodList.count > 0 do
-            aux = prodList.pop
-            for key in otherStorages.keys do
-              if otherStorages[key]>0 then
-                moveStock(aux['_id'].to_s,key)
-                otherStorages[key] = otherStorages[key]-1
-                break
-              end
-            end
-            if count == 89 then
-                count = 0
-                sleep(60)
-            end
-            if prodList.count == 0 then
-                prodList = Fetcher.Bodegas("GET"+id_recepcion.to_s+prod['_id'].to_s,"stock?almacenId="+id_recepcion.to_s+"&sku="+prod['_id']+"&limit=200")
-                count = count + 1
-            end
-            count = count + 1
-          end
-        end
-      end
-      #Move to dispatch storage frm pulmon
-      if id_pulmon != "" then
-        prods = Fetcher.Bodegas("GET"+id_pulmon.to_s,"skusWithStock?almacenId="+id_pulmon.to_s)
-        for prod in prods do
-          #get products in storage for each sku
-          puts prod
-          prodList = Fetcher.Bodegas("GET"+id_pulmon.to_s+prod['_id'].to_s,"stock?almacenId="+id_pulmon.to_s+"&sku="+prod['_id']+"&limit=200")
-          count = 3
-          while prodList.count > 0 do
-            aux = prodList.pop
-            moveStock(aux['_id'].to_s,id_recepcion)
-            if count == 89 then
-                count = 0
-                sleep(60)
-            end
-            if prodList.count == 0 then
-                prodList = Fetcher.Bodegas("GET"+id_pulmon.to_s+prod['_id'].to_s,"stock?almacenId="+id_pulmon.to_s+"&sku="+prod['_id']+"&limit=200")
-                count = count + 1
-            end
-            count = count + 1
-          end
-        end
-      end
-  end
-
-  def moveStock(id,to)
-    #to = almacenId
-    body = {
-      'productoId': id,
-      'almacenId': to
-    }
-    resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStock",body)
-  end
-
-  def checkStock
-    prods = Fetcher.getProductsWithStock
-    products = Product.all
-    min_lot = 12
-    for prod in products do
-      if prods[prod.sku] < min_lot * prod.lot then
-        #produce
-        numToProd = Integer( ((min_lot * prod.lot) - prods[prod.sku])/prod.lot)
-        numToProd = numToProd * prod.lot
-        FactoryController.producir(prod.sku,numToProd)
+      for key in newStock.keys do
+        prodAux = Product.where(sku:key).first
+        prodAux.stock = newStock[key]
+        prodAux.save
       end
     end
-  end
+    def testingjobs
+      CleanBodegaJob.perform_later
+    end
 
-  #TODO check if working
-  def dispatchStock(prodId,oc,address,price)
-    body = {
-      'productoId': prodId,
-      'oc': oc,
-      'direccion': address,
-      'precio': price
-    }
-    resp = Fetcher.Bodegas("DELETE"+prodId.to_s+address.to_s+price.to_s+oc.to_s,"stock",)
-    render json:resp
+    def cleanStorage
+        almacenes = Fetcher.Bodegas("GET","almacenes")
+        puts almacenes
+        id_pulmon = ""
+        id_recepcion = ""
+        otherStorages = Hash.new 0
+        for alm in almacenes do
+          if alm['pulmon'] && (Integer(alm['usedSpace']) > 0) then
+            id_pulmon = alm['_id']
+          elsif alm['recepcion'] && (Integer(alm['usedSpace']) > 0) then
+            id_recepcion = alm['_id']
+          elsif !alm['recepcion'] && !alm['pulmon'] && !alm['despacho'] && (Integer(alm['totalSpace']) - Integer(alm['usedSpace'])>0) then
+            otherStorages[alm['_id']] = Integer(alm['totalSpace']) - Integer(alm['usedSpace'])
+          end
+        end
+        #Loop to clean all, first recepcion
+        if id_recepcion != "" then
+          prods = Fetcher.Bodegas("GET"+id_recepcion.to_s,"skusWithStock?almacenId="+id_recepcion.to_s)
+          for prod in prods do
+            #get products in storage for each sku
+            puts prod
+            prodList = Fetcher.Bodegas("GET"+id_recepcion.to_s+prod['_id'].to_s,"stock?almacenId="+id_recepcion.to_s+"&sku="+prod['_id']+"&limit=200")
+            puts prodList
+            count = 3
+            while prodList.count > 0 do
+              aux = prodList.pop
+              for key in otherStorages.keys do
+                if otherStorages[key]>0 then
+                  moveStock(aux['_id'].to_s,key)
+                  otherStorages[key] = otherStorages[key]-1
+                  break
+                end
+              end
+              if count == 89 then
+                  count = 0
+                  sleep(60)
+              end
+              if prodList.count == 0 then
+                  prodList = Fetcher.Bodegas("GET"+id_recepcion.to_s+prod['_id'].to_s,"stock?almacenId="+id_recepcion.to_s+"&sku="+prod['_id']+"&limit=200")
+                  count = count + 1
+              end
+              count = count + 1
+            end
+          end
+        end
+        #Move to dispatch storage frm pulmon
+        if id_pulmon != "" then
+          prods = Fetcher.Bodegas("GET"+id_pulmon.to_s,"skusWithStock?almacenId="+id_pulmon.to_s)
+          for prod in prods do
+            #get products in storage for each sku
+            puts prod
+            prodList = Fetcher.Bodegas("GET"+id_pulmon.to_s+prod['_id'].to_s,"stock?almacenId="+id_pulmon.to_s+"&sku="+prod['_id']+"&limit=200")
+            count = 3
+            while prodList.count > 0 do
+              aux = prodList.pop
+              moveStock(aux['_id'].to_s,id_recepcion)
+              if count == 89 then
+                  count = 0
+                  sleep(60)
+              end
+              if prodList.count == 0 then
+                  prodList = Fetcher.Bodegas("GET"+id_pulmon.to_s+prod['_id'].to_s,"stock?almacenId="+id_pulmon.to_s+"&sku="+prod['_id']+"&limit=200")
+                  count = count + 1
+              end
+              count = count + 1
+            end
+          end
+        end
+    end
+
+    #Mover a despacho
+    def moveToDespachoPostman
+      sku = params[:sku]
+      cant = params[:qty]
+      to = params[:to]
+      transfered = 0
+      while transfered < cant do
+        resp = Fetcher.Bodegas("GET5910c0b90e42840004f6e8a6"+sku.to_s,"stock?almacenId=5910c0b90e42840004f6e8a6&sku="+sku.to_s)
+        count = 0
+        for prod in resp do
+          if count == 89 then
+            sleep(60)
+            count = 0
+          end
+          if transfered < cant then
+            id_aux = prod['_id']
+            moveStock(id_aux,to)
+            count+=1
+            transfered+=1
+          else
+            return 0
+          end
+        end
+      end
+    end
+
+    #Despachar a grupo
+    def moveToGroupPostman
+      sku = params[:sku]
+      cant = params[:qty]
+      to = params[:to]
+      oc = params[:oc]
+      price = Product.where(sku: sku).first.price
+      transfered = 0
+      while transfered < cant do
+        resp = Fetcher.Bodegas("GET5910c0b90e42840004f6e8a6"+sku.to_s,"stock?almacenId=5910c0b90e42840004f6e8a6&sku="+sku.to_s)
+        count = 0
+        for prod in resp do
+          if count == 89 then
+            sleep(60)
+            count = 0
+          end
+          if transfered < cant then
+            id_aux = prod['_id']
+            moveStockDispatch(id_aux,to,oc,price)
+            count+=1
+            transfered+=1
+          else
+            return 0
+          end
+        end
+      end
+    end
+
+    #FTP
+    def despacharFtpPostman
+      #params in body, to has to be non empty string
+      sku = params[:sku]
+      cant = params[:qty]
+      to = params[:to]
+      oc = params[:oc]
+      price = Product.where(sku: sku).first.price
+      transfered = 0
+      #do while products have to be dispatched
+      while transfered < cant do
+        almacen = "5910c0b90e42840004f6e8a5"
+        resp = Fetcher.Bodegas("GET"+almacen+sku.to_s,"stock?almacenId="+almacen+"&sku="+sku.to_s)
+        puts resp
+        count = 0
+        for prod in resp do
+          if count == 89 && transfered < cant then
+            sleep(60)
+            count = 0
+          end
+          if transfered < cant then
+            id_aux = prod['_id']
+            dispatchStockFTP(id_aux,oc,to,price)
+            count+=1
+            transfered+=1
+          else
+            return 0
+          end
+        end
+      end
+    end
+
+    def moveStock(id,to)
+      #to = almacenId
+      body = {
+        'productoId': id,
+        'almacenId': to
+      }
+      resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStock",body)
+    end
+
+    #respaldar
+    def moveStockDispatch(id,to,oc,price)
+      body = {
+        'productoId': id,
+        'almacenId': to,
+        'oc': oc,
+        'precio': price
+      }
+      resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStockBodega",body)
+    end
+
+    #check stock
+    def checkStock
+      prods = Fetcher.getProductsWithStock
+      products = Product.all
+      min_lot = 12
+      for prod in products do
+        if prods[prod.sku] < min_lot * prod.lot then
+          #produce
+          numToProd = Integer( ((min_lot * prod.lot) - prods[prod.sku])/prod.lot)
+          numToProd = numToProd * prod.lot
+          FactoryController.producir(prod.sku,numToProd)
+        end
+      end
+    end
+
+    #Despachar ordenes ftp
+    def dispatchStockFTP(prodId,oc,address,price)
+      body = {
+        'productoId': prodId,
+        'oc': oc,
+        'direccion': address,
+        'precio': price
+      }
+      resp = Fetcher.Bodegas("DELETE"+prodId.to_s+address.to_s+price.to_s+oc.to_s,"stock",body)
+    end
   end
-end
