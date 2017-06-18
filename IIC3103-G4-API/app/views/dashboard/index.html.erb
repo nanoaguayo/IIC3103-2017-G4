@@ -26,12 +26,12 @@
       </div>
   </div>
 <%end %>
-<h3 class="dashTitle">Listado de productos por SKU</h3>
+<h3 class="dashTitle">Listado de productos </h3>
 <%= column_chart @row_data, stacked: true, colors:["#aaa"] %>
 <%for aux in @productos.keys do %>
   <div class="container-fluid">
     <p>
-      <strong><%=aux%>:</strong> <%=@productos[aux]%> unidades
+      <strong><%= @prod_names[aux]%>(SKU: <%=aux%>): </strong>  Total: <%=@productos[aux]%> unidades
     </p>
   </div>
 <%end%>
@@ -88,12 +88,28 @@
 <h3 class="dashTitle">Ordenes solicitadas via FTP</h3>
 <% if @ftp_requested.count > 0 then%>
   <% for order in @ftp_requested do %>
-    <div class="prodContainer">
-      <p>
-        <strong>SKU:</strong><%=order[:sku]%>
-        <strong>Unidades: </strong><%= order[:qty] %>
-      </p>
-    </div>
+    <% if @ftp_status[order[:id].to_s]=="aceptada" then %>
+      <div class="prodContainerAccepted">
+        <p>
+          <strong>SKU:</strong><%=order[:sku]%>
+          <strong>Unidades: </strong><%= order[:qty] %>
+        </p>
+      </div>
+    <% elsif @ftp_status[order[:id].to_s]=="rechazada" then %>
+      <div class="prodContainerRejected">
+        <p>
+          <strong>SKU:</strong><%=order[:sku]%>
+          <strong>Unidades: </strong><%= order[:qty] %>
+        </p>
+      </div>
+    <% elsif @ftp_status[order[:id].to_s]=="creada" %>
+      <div class="prodContainer">
+        <p>
+          <strong>SKU:</strong><%=order[:sku]%>
+          <strong>Unidades: </strong><%= order[:qty] %>
+        </p>
+      </div>
+    <% end %>
   <% end %>
  <% else %>
   <div class="prodContainer">
