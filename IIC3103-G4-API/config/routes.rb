@@ -7,7 +7,12 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   #precios y stock por requerimiento de sprint
-
+  #Aux function postman
+  get '/aceptarOC/:id', to:"purchase_orders#aceptarPostman"
+  post '/mover', to:'ware_houses#moveToDespachoPostman'
+  get '/facturar/:oc', to: 'invoices#createPostman'
+  post '/despacharFTP', to:'ware_houses#despacharFtpPostman'
+  post '/despacharGrupo', to:'ware_houses#moveToGroupPostman'
 
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'

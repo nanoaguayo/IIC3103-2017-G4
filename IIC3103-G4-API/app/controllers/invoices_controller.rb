@@ -21,6 +21,29 @@ class InvoicesController < ApplicationController
     return @result
   end
 
+  def createPostman
+    #oc in body
+    oc = params[:oc]
+    #fixed for prod
+    path = "https://integracion-2017-prod.herokuapp.com/sii/"
+    header = {"Content-Type" => "application/json"}
+    params = {
+      "oc": oc
+    }
+    @result = HTTParty.put(path, :body => params, :header => header)
+    case @result.code
+    when 200
+      @fact = JSON.parse(@result.response.body)
+      @fact["oc"] = @fact["oc"]["_id"]
+      @invoice = Invoice.new(@fact)
+      if @invoice.save then
+        puts "Guardada con éxito"
+      end
+    end
+    render json: @fact, status: :ok
+    return @result
+  end
+
   def show
     @invoice = Invoice.find_by_id(params[:id])
     if @invoice || TRUE then

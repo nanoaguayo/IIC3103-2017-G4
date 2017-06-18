@@ -125,7 +125,11 @@ class PurchaseOrdersController < ApplicationController
       return response
       #pta en vola hacer algo con eso.
     end
-
+    def aceptarPostman
+      id = params[:id]
+      aux = accept(id)
+      render json: aux
+    end
     def rechazar
       id = params[:id]
       @purchase_order = reject(id,"rechazado en la vista")
@@ -166,4 +170,5 @@ class PurchaseOrdersController < ApplicationController
       aux = Ftp.GetOC()
       render json:aux
     end
+
 end
