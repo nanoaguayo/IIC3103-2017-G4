@@ -1,4 +1,5 @@
 class DashboardController < ApplicationController
+  OC_URI = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/obtener/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/obtener/"
   def index
     @almacenes = Fetcher.Bodegas("GET","almacenes")
     @productos = Hash.new 0
@@ -39,7 +40,7 @@ class DashboardController < ApplicationController
     @ftp_requested = Ftp.GetOC()
     @ftp_status = Hash.new "0"
     for fo in @ftp_requested do
-      aux =  HTTParty.get("http://integracion-2017-prod.herokuapp.com/oc/obtener/"+fo[:id], :body => {}, :header => {'Content-type' => 'application/json'})
+      aux =  HTTParty.get(OC_URI+fo[:id], :body => {}, :header => {'Content-type' => 'application/json'})
       @ftp_status[fo[:id].to_s] = aux[0]["estado"]
     end
   end

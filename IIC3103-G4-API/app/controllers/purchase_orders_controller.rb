@@ -1,6 +1,6 @@
 class PurchaseOrdersController < ApplicationController
 
-  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-herokuapp-prod.com/oc/"
+  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/"
   OPT = {'Content-type' => 'application/json'}
   ID_G4 = Rails.env.development? && "590baa00d6b4ec0004902465" || Rails.env.production? && "5910c0910e42840004f6e683"
   IDS = Rails.env.development? && {"590baa00d6b4ec0004902462" => 1,
@@ -169,14 +169,16 @@ class PurchaseOrdersController < ApplicationController
         return true
       end
     end
-
+    #TODO run with scheduler
     def checkFTP()
       aux = Ftp.GetOC()
+      puts aux
       for oc in aux do
         resp = HTTParty.get(OC_URI+"obtener/"+oc[:id], :body => {}, :header => {'Content-type' => 'application/json'})
         if acceptFTP(resp) then
           #accept oc
           accept(oc[:id])
+          puts oc
           #Facturar
           fact = InvoicesController.create(oc[:id])
           #TODO poner en cola
@@ -189,7 +191,12 @@ class PurchaseOrdersController < ApplicationController
       if oc[0]["estado"] == "creada" then
         sku = Integer(oc[0]['sku'])
         type = Product.where(sku:sku).first.ptype
+        stock = Product.where(sku:sku).first.stock
         if type == "Materia Prima" then
+          #podemos fabricar rapido
+          return true
+        elsif (stock - Integer(oc[0]["cantidad"])) > 100 then
+          #si piden un fabricado, revisar que algo de stock quede
           return true
         end
       end
