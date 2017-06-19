@@ -226,6 +226,52 @@ class WareHousesController < ApplicationController
       resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStockBodega",body)
     end
 
+    def despacharFtp(sku,cant,to,oc)
+      price = Product.where(sku: sku).first.price
+      transfered = 0
+      #do while products have to be dispatched
+      while transfered < cant do
+        almacen = "5910c0b90e42840004f6e8a5"
+        resp = Fetcher.Bodegas("GET"+almacen+sku.to_s,"stock?almacenId="+almacen+"&sku="+sku.to_s)
+        puts resp
+        count = 0
+        for prod in resp do
+          if count == 89 && transfered < cant then
+            sleep(60)
+            count = 0
+          end
+          if transfered < cant then
+            id_aux = prod['_id']
+            dispatchStockFTP(id_aux,oc,to,price)
+            count+=1
+            transfered+=1
+          else
+            return 0
+          end
+        end
+      end
+    end
+
+    def moveStock(id,to)
+      #to = almacenId
+      body = {
+        'productoId': id,
+        'almacenId': to
+      }
+      resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStock",body)
+    end
+
+    #respaldar
+    def moveStockDispatch(id,to,oc,price)
+      body = {
+        'productoId': id,
+        'almacenId': to,
+        'oc': oc,
+        'precio': price
+      }
+      resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStockBodega",body)
+    end
+
     #check stock
     def checkStock
       prods = Fetcher.getProductsWithStock
@@ -250,5 +296,18 @@ class WareHousesController < ApplicationController
         'precio': price
       }
       resp = Fetcher.Bodegas("DELETE"+prodId.to_s+address.to_s+price.to_s+oc.to_s,"stock",body)
+    end
+
+    #Every hour check queue and dispatch what can be dispatched
+    def checkQueue
+      #Check queue and deliver
+      queue = Order.where(:state => "accepted").order(:due_date)
+      for order in queue do
+        #TODO check delivery storage stock before start
+        stock = Product.where(sku:Integer(order.sku)).first.stock
+        if order.destination == "FTP" && stock > order.total then
+          despacharFtp(order.sku,order.total,"notEmpty",order.oc)
+        end
+      end
     end
   end

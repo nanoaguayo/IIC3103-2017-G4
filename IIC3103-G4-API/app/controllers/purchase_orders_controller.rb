@@ -106,7 +106,9 @@ class PurchaseOrdersController < ApplicationController
         render json:{
           'Message': "Orden creada, aceptada y facturada"
         }
-        #TODO poner en cola
+        #poner en cola
+        order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination:"", state:"accepted")
+        order.save
       end
     else
      render status: 500, json:{
@@ -181,7 +183,10 @@ class PurchaseOrdersController < ApplicationController
           puts oc
           #Facturar
           fact = InvoicesController.create(oc[:id])
-          #TODO poner en cola
+          #poner en cola
+          oc2 = resp[0]
+          order = Order.new(oc:oc[:id], total:Integer(oc[:qty]), sku:oc[:sku], due_date:oc2['fechaEntrega'], client:oc2['cliente'], price:Integer(oc2['precioUnitario']), destination:"FTP", state:"accepted")
+          order.save
         end
       end
     end
