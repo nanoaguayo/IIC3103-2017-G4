@@ -74,41 +74,45 @@ class PurchaseOrdersController < ApplicationController
   end
 
 #En este metodo debiesen ir todas las validaciones para aceptar una orden de compra
-    def recibir
-      #obtener la orden de compra con el id que nos envía el otro grupo.
-      id = params[:id]
-      @result = HTTParty.get(OC_URI + 'obtener/' + id, :query => {}, :header => OPT)
-      @ordenc = JSON.parse(@result.response.body)[0]
-      #Reviso si el id ingresado es valido para que oc no tire error
-      if @ordenc.key?('created_at')
-        body = {}
-        body = body.to_json
-        acceptOC = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)
-        oc = acceptOC[0]
-        cliente = oc["cliente"]
-        cliente = IDS[cliente].to_s
-        sku = oc["sku"].to_i
-        #una vez recibida la orden de compra hay que ver si la aceptamos o no
-        #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
-          if oc['precioUnitario'].to_i > Product.find_by(sku: sku).price
-            render json: reject(id, 'No seai cagao po compadre')
-            #HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
-          elsif Product.find_by(sku: sku).stock < oc['cantidad'].to_i #debería ser comparar contra proyected.
-            render json: reject(id, 'No contamos con suficiente stock')
-            #HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
-          else
-            render json: accept(id)
-            @ordenc = JSON.parse(@result.response.body)
-            @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
-            #HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: OPT, body: body)
-          end
-        #render json: @result.response.body, status: :ok
-       else
-         render status: 500, json:{
-          Message: 'Declined: failed to process order, we need more details'
-         }
-       end
+def recibir
+  #obtener la orden de compra con el id que nos envía el otro grupo.
+  id = params[:id]
+  @result = HTTParty.get(OC_URI + 'obtener/' + id, :query => {}, :header => OPT)
+  @ordenc = JSON.parse(@result.response.body)[0]
+  #Reviso si el id ingresado es valido para que oc no tire error
+  if @ordenc.key?('created_at') then
+    body = {}
+    body = body.to_json
+    acceptOC = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)
+    oc = acceptOC[0]
+    cliente = oc["cliente"]
+    cliente = IDS[cliente].to_s
+    sku = oc["sku"].to_i
+    #una vez recibida la orden de compra hay que ver si la aceptamos o no
+    #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
+    if oc['precioUnitario'].to_i >= Product.find_by(sku: sku).price
+      HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
+    elsif !CheckStockOC(oc,oc['sku']) #debería ser comparar contra proyected.
+      render json: reject(id, 'No contamos con suficiente stock')
+      HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
+    else
+      resp = accept(id)
+      @ordenc = JSON.parse(@result.response.body)
+      @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
+      #Aceptar a cliente
+      HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: OPT, body: body)
+      #Facturar
+      fact = PurchaseOrdersController.create(oc["_id"])
+      render json:{
+        'Message': "Orden creada, aceptada y facturada"
+      }
     end
+  else
+   render status: 500, json:{
+    Message: 'Declined: failed to process order, we need more details'
+   }
+  end
+end
 
     def aceptar #cuando se llama por la view para el ftp (Seba)
       id = params[:id]
@@ -123,7 +127,6 @@ class PurchaseOrdersController < ApplicationController
       body = body.to_json
       response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)[0]
       return response
-      #pta en vola hacer algo con eso.
     end
     def aceptarPostman
       id = params[:id]
