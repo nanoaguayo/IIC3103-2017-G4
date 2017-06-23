@@ -95,10 +95,14 @@ class PurchaseOrdersController < ApplicationController
         @ordenc = JSON.parse(@result.response.body)
         @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
         InvoicesController.create(oc["_id"])
-        render json:{'Message': "Orden creada, aceptada y facturada"}
         #poner en cola
         order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination: id_store_reception, state:"accepted")
         order.save
+        render json: {'Message': "Orden creada, aceptada y facturada"}
+        
+      else
+        reject(id, '', cliente)
+        render json: {'Message': "Orden rechazada"}
       end
     else
       render status: 500, json:{
@@ -211,8 +215,9 @@ class PurchaseOrdersController < ApplicationController
         prod = Product.find_by(sku: sku)
         ptype = prod.ptype
         stock = prod.stock
+        price = prod.price
         fecha = Time.at(oc["fechaEntrega"].to_f / 1000)
-        if (ptype == "Materia Prima" || (stock - oc["cantidad"].to_i > 100)) && fecha - Time.now > 1.day
+        if (ptype == "Materia Prima" || (stock - oc["cantidad"].to_i > 100)) && fecha - Time.now > 1.day && oc["precioUnitario"].to_i > price
           return true
         end
       end

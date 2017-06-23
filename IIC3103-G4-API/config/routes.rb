@@ -77,7 +77,7 @@ Rails.application.routes.draw do
 
   #Invoice
   #enviar_factura: Crea una notificación de habernos emitido una factura. Debe tener el id de la factura y la cuenta del banco.
-  put 'invoices/:id', to:'invoices#create'
+  put 'invoices/:id', to:'invoices#recibir'
   #enviar_confirmacion_factura: Crea una notificación de que no se rechazará la factura enviada. Debe tener el id de la factura
   patch 'invoices/:id/accepted', to:'invoices#accept'
   #enviar_rechazo_factura: Crea una notificación de que se rechaza la factura enviada. Debe tener el id de la factura.
