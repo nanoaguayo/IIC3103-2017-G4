@@ -3,6 +3,7 @@ class PurchaseOrdersController < ApplicationController
   OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/"
   OPT = {'Content-type' => 'application/json'}
   ID_G4 = Rails.env.development? && "590baa00d6b4ec0004902465" || Rails.env.production? && "5910c0910e42840004f6e683"
+  GOPT = {'Content-type' => 'application/json', "X-ACCESS-TOKEN" => ID_G4}
   IDS = Rails.env.development? && {"590baa00d6b4ec0004902462" => 1,
          "590baa00d6b4ec0004902463" => 2,
          "590baa00d6b4ec0004902464" => 3,
@@ -31,6 +32,8 @@ class PurchaseOrdersController < ApplicationController
           7 => "5910c0910e42840004f6e686",
           8 => "5910c0910e42840004f6e687"}
   GURI = Rails.env.development? && "http://dev.integra17-" || Rails.env.production? && "http://integra17-"
+  SII_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/sii/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/sii/"
+  CTA = Rails.env.development? && "590baa00d6b4ec000490246e" || Rails.env.production? && "5910c0910e42840004f6e68c"
 
   def index
     @purchase_orders = Ftp.GetOC()
@@ -94,12 +97,15 @@ class PurchaseOrdersController < ApplicationController
         accept(id, cliente)#esto le avisa a la api del profe y al otro grupo que aceptamos la oc
         @ordenc = JSON.parse(@result.response.body)
         @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
-        InvoicesController.create(oc["_id"])
+        @purchase_order.save
+        fact = InvoicesController.create(oc["_id"])
+        #se le manda al grupo comprador la factura que acabamos de crear y nuestra cuenta de banco
+        HTTParty.put(GURI + cliente + ".ing.puc.cl/invoices/?id=" + fact.response.body["_id"], headers: GOPT, body:{"bank_account" : CTA})
         #poner en cola
         order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination: id_store_reception, state:"accepted")
         order.save
         render json: {'Message': "Orden creada, aceptada y facturada"}
-        
+
       else
         reject(id, '', cliente)
         render json: {'Message': "Orden rechazada"}
@@ -123,7 +129,7 @@ class PurchaseOrdersController < ApplicationController
       body = body.to_json
       response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)[0]
       if cliente != ''
-        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: OPT, body: {})
+        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: GOPT, body: {})
       end
       return response
       #pta en vola hacer algo con eso.
@@ -149,7 +155,7 @@ class PurchaseOrdersController < ApplicationController
       body = body.to_json
       response = HTTParty.post(OC_URI + 'rechazar/' + id, headers: OPT, body: body)[0]
       if cliente != ''
-        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: {})
+        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: GOPT, body: {})
       end
       return response
     end

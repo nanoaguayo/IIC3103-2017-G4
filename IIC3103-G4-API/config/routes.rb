@@ -84,7 +84,7 @@ Rails.application.routes.draw do
   patch 'invoices/:id/delivered', to:'invoices#delivered'
   #enviar_confirmacion_pago: Crea una notificación de que se pagó la factura. Debe tener el id de la factura.
   patch 'invoices/:id/paid', to:'invoices#paid'
-  get 'invoices/:id', to:'invoices#show'
+
 
   #WareHouse
   #show

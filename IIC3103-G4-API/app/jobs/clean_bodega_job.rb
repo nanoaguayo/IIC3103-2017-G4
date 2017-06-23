@@ -9,7 +9,7 @@ class CleanBodegaJob < ApplicationJob
 
 
   KEY = Rails.env.development? && "z8t4GLUa:TKt0HK" || Rails.env.production? && "vTvHgY0Cu&RsQrV"
-  BODEGA_URI = "https://integracion-2017-dev.herokuapp.com/bodega/"
+  BODEGA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
 
   def perform(*args)
     loop do
