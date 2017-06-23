@@ -77,6 +77,8 @@ class PurchaseOrdersController < ApplicationController
   def recibir
     #obtener la orden de compra con el id que nos envía el otro grupo.
     id = params[:id]
+    id_store_reception = JSON.parse(request.body.read.to_s)
+    id_store_reception = id_store_reception["id_store_reception"]
     @result = HTTParty.get(OC_URI + 'obtener/' + id, :query => {}, :header => OPT)
     @ordenc = JSON.parse(@result.response.body)[0]
     #Reviso si el id ingresado es valido para que oc no tire error
@@ -107,7 +109,8 @@ class PurchaseOrdersController < ApplicationController
           'Message': "Orden creada, aceptada y facturada"
         }
         #poner en cola
-        order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination:"", state:"accepted")
+        #poner para la id de recepcion de los otros grupos
+        order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination: id_store_reception, state:"accepted")
         order.save
       end
     else
@@ -202,6 +205,19 @@ class PurchaseOrdersController < ApplicationController
           return true
         elsif (stock - Integer(oc[0]["cantidad"])) > 100 then
           #si piden un fabricado, revisar que algo de stock quede
+          return true
+        end
+      end
+      return false
+    end
+
+    def accept_general(oc)
+      if oc[0]["estado"] == "creada"
+        sku = oc[0]["sku"].to_i
+        ptype = Product.find_by(sku: sku).ptype
+        stock = Product.find_by(sku: sku).stock
+        fecha = Time.at(oc[0]["fechaEntrega"].to_f / 1000)
+        if (ptype == "Materia Prima" || (stock - oc[0]["cantidad"].to_i > 100)) && fecha - Time.now > 1.day
           return true
         end
       end
