@@ -20,6 +20,10 @@ Rails.application.routes.draw do
   #Dashboard
   get '/dashboard', to: 'dashboard#index'
 
+  #Social
+  get '/social', to: 'social#index'
+  post '/social', to: 'social#twittear'
+
   #Test FTP
   get '/ftp', to: 'purchase_orders#checkFTP'
 
