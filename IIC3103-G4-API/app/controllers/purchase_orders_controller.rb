@@ -80,7 +80,6 @@ class PurchaseOrdersController < ApplicationController
     id_store_reception = JSON.parse(request.body.read.to_s)
     id_store_reception = id_store_reception["id_store_reception"]
     @result = HTTParty.get(OC_URI + 'obtener/' + id, :query => {}, :header => OPT)
-    @ordenc = JSON.parse(@result.response.body)[0]
     #Reviso si el id ingresado es valido para que oc no tire error
     if @ordenc.key?('created_at') then
       body = {}
@@ -89,32 +88,20 @@ class PurchaseOrdersController < ApplicationController
       oc = acceptOC[0]
       cliente = oc["cliente"]
       cliente = IDS[cliente].to_s
-      sku = oc["sku"].to_i
       #una vez recibida la orden de compra hay que ver si la aceptamos o no
       #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
-      if oc['precioUnitario'].to_i >= Product.find_by(sku: sku).price
-        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
-      elsif !CheckStockOC(oc,oc['sku']) #debería ser comparar contra proyected.
-        render json: reject(id, 'No contamos con suficiente stock')
-        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: body)
-      else
-        resp = accept(id)
+      if accept_general?(oc)
+        accept(id, cliente)#esto le avisa a la api del profe y al otro grupo que aceptamos la oc
         @ordenc = JSON.parse(@result.response.body)
         @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
-        #Aceptar a cliente
-        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: OPT, body: body)
-        #Facturar
-        fact = InvoicesController.create(oc["_id"])
-        render json:{
-          'Message': "Orden creada, aceptada y facturada"
-        }
+        InvoicesController.create(oc["_id"])
+        render json:{'Message': "Orden creada, aceptada y facturada"}
         #poner en cola
-        #poner para la id de recepcion de los otros grupos
         order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination: id_store_reception, state:"accepted")
         order.save
       end
     else
-     render status: 500, json:{
+      render status: 500, json:{
       Message: 'Declined: failed to process order, we need more details'
      }
     end
@@ -127,16 +114,20 @@ class PurchaseOrdersController < ApplicationController
       @purchase_order_ = PurchaseOrder.new(@purchase_order)
     end
 
-    def accept(id)#recepcionar
-      #hay que afectar nuestro inventario proyectado
+    def accept(id, cliente)#recepcionar
       body = {id: id}
       body = body.to_json
       response = HTTParty.post(OC_URI + 'recepcionar/' + id,headers: OPT, body: body)[0]
+      if cliente != ''
+        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/accepted", headers: OPT, body: {})
+      end
       return response
+      #pta en vola hacer algo con eso.
     end
+
     def aceptarPostman
       id = params[:id]
-      aux = accept(id)
+      aux = accept(id, '')
       render json: aux
     end
     def rechazar
@@ -145,7 +136,7 @@ class PurchaseOrdersController < ApplicationController
       puts @purchase_order
     end
 
-    def reject(id, motive) #rechazar
+    def reject(id, motive, cliente) #rechazar
       if motive != ''
         body = {id: id, rechazo: motive}
       else
@@ -153,6 +144,9 @@ class PurchaseOrdersController < ApplicationController
       end
       body = body.to_json
       response = HTTParty.post(OC_URI + 'rechazar/' + id, headers: OPT, body: body)[0]
+      if cliente != ''
+        HTTParty.patch(GURI + cliente + ".ing.puc.cl/purchase_orders/#{id}/rejected", headers: OPT, body: {})
+      end
       return response
     end
 
@@ -211,13 +205,14 @@ class PurchaseOrdersController < ApplicationController
       return false
     end
 
-    def accept_general(oc)
-      if oc[0]["estado"] == "creada"
-        sku = oc[0]["sku"].to_i
-        ptype = Product.find_by(sku: sku).ptype
-        stock = Product.find_by(sku: sku).stock
-        fecha = Time.at(oc[0]["fechaEntrega"].to_f / 1000)
-        if (ptype == "Materia Prima" || (stock - oc[0]["cantidad"].to_i > 100)) && fecha - Time.now > 1.day
+    def accept_general?(oc)
+      if oc["estado"] == "creada"
+        sku = oc["sku"].to_i
+        prod = Product.find_by(sku: sku)
+        ptype = prod.ptype
+        stock = prod.stock
+        fecha = Time.at(oc["fechaEntrega"].to_f / 1000)
+        if (ptype == "Materia Prima" || (stock - oc["cantidad"].to_i > 100)) && fecha - Time.now > 1.day
           return true
         end
       end
