@@ -197,7 +197,7 @@ class PurchaseOrdersController < ApplicationController
         sku = Integer(oc[0]['sku'])
         type = Product.where(sku:sku).first.ptype
         stock = Product.where(sku:sku).first.stock
-        if type == "Materia Prima" then
+        if type == "Materia Prima" && then
           #podemos fabricar rapido
           return true
         elsif (stock - Integer(oc[0]["cantidad"])) > 100 then

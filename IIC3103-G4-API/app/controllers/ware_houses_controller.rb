@@ -301,7 +301,8 @@ class WareHousesController < ApplicationController
     #Every hour check queue and dispatch what can be dispatched
     def checkQueue
       #Check queue and deliver
-      queue = Order.where(:state => "accepted").order(:due_date)
+      date = Time.new
+      queue = Order.where(:state => "accepted" and :due_date >= date).order(:due_date)
       for order in queue do
         #TODO check delivery storage stock before start
         stock = Product.where(sku:Integer(order.sku)).first.stock
