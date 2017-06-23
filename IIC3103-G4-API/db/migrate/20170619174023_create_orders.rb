@@ -4,7 +4,7 @@ class CreateOrders < ActiveRecord::Migration[5.0]
       t.string :oc
       t.string :sku
       t.integer :total
-      t.Date :due_date
+      t.date :due_date
       t.string :destination
       t.integer :price
       t.string :client

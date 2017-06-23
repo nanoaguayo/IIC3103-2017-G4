@@ -6,10 +6,10 @@ HTTParty::Basement.default_options.update(verify: false)
 
 class CleanBodegaJob < ApplicationJob
   queue_as :default
-     
 
-  KEY = Rails.env.development? && "z8t4GLUa:TKt0HK" || Rails.env.production && "vTvHgY0Cu&RsQrV"
-  BODEGA_URI = "https://integracion-2017-dev.herokuapp.com/bodega/" 
+
+  KEY = Rails.env.development? && "z8t4GLUa:TKt0HK" || Rails.env.production? && "vTvHgY0Cu&RsQrV"
+  BODEGA_URI = "https://integracion-2017-dev.herokuapp.com/bodega/"
 
   def perform(*args)
     loop do
@@ -63,7 +63,7 @@ class CleanBodegaJob < ApplicationJob
         end
       end
       sleep(5)
-      puts 'hola'    
+      puts 'hola'
     end
   end
 
@@ -77,7 +77,7 @@ class CleanBodegaJob < ApplicationJob
     auth = generarauth(httpRequest)
     #if Rails.env.production? then
      # auth = Crypt.generarauthprod(httpRequest)
-    
+
     options = {'Content-type' => 'application/json', 'Authorization' => auth}
     #JSON body
     body = body.to_json

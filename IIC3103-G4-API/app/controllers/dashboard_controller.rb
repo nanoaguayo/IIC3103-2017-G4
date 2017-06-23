@@ -1,5 +1,6 @@
 class DashboardController < ApplicationController
   OC_URI = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/obtener/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/obtener/"
+  
   def index
     @almacenes = Fetcher.Bodegas("GET","almacenes")
     @productos = Hash.new 0

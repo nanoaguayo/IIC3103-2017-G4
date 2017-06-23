@@ -1,5 +1,8 @@
 class WareHousesController < ApplicationController
 
+  DESPACHO = Rails.env.production? && "5910c0b90e42840004f6e8a5" || Rails.env.development? && "590baa76d6b4ec0004902790"
+  ALMACEN1 = Rails.env.production? && "5910c0b90e42840004f6e8a6" || Rails.env.development? && "590baa76d6b4ec0004902791"
+
   def fabricar(sku,cantidad)#strings los 2
       prod = Product.find_by(sku: sku.to_i)
       cant = cantidad.to_i
@@ -16,13 +19,13 @@ class WareHousesController < ApplicationController
           puts parameters
           puts "PUT" + sku + cantidad + trx['_id']
           resp = Fetcher.Bodegas("PUT" + sku + cantidad + trx['_id'], "fabrica/fabricar", parameters)
-          render json: resp
+          #render json: resp
         else
-          render_error("error con la transferencia")
+          #render_error("error con la transferencia")
         end
       else
         #Dont send
-        render_error("Maximum quantity allowed is 5000")
+        #render_error("Maximum quantity allowed is 5000")
       end
     end
 
@@ -52,7 +55,6 @@ class WareHousesController < ApplicationController
 
     def cleanStorage
         almacenes = Fetcher.Bodegas("GET","almacenes")
-        puts almacenes
         id_pulmon = ""
         id_recepcion = ""
         otherStorages = Hash.new 0
@@ -124,10 +126,10 @@ class WareHousesController < ApplicationController
     def moveToDespachoPostman
       sku = params[:sku]
       cant = params[:qty]
-      to = params[:to]
+      to = DESPACHO
       transfered = 0
       while transfered < cant do
-        resp = Fetcher.Bodegas("GET5910c0b90e42840004f6e8a6"+sku.to_s,"stock?almacenId=5910c0b90e42840004f6e8a6&sku="+sku.to_s)
+        resp = Fetcher.Bodegas("GET"+ALMACEN1+sku.to_s,"stock?almacenId="+ALMACEN1+"&sku="+sku.to_s)
         count = 0
         for prod in resp do
           if count == 89 then
@@ -155,7 +157,7 @@ class WareHousesController < ApplicationController
       price = Product.where(sku: sku).first.price
       transfered = 0
       while transfered < cant do
-        resp = Fetcher.Bodegas("GET5910c0b90e42840004f6e8a6"+sku.to_s,"stock?almacenId=5910c0b90e42840004f6e8a6&sku="+sku.to_s)
+        resp = Fetcher.Bodegas("GET"+DESPACHO+sku.to_s,"stock?almacenId="+DESPACHO+"&sku="+sku.to_s)
         count = 0
         for prod in resp do
           if count == 89 then
@@ -185,8 +187,7 @@ class WareHousesController < ApplicationController
       transfered = 0
       #do while products have to be dispatched
       while transfered < cant do
-        almacen = "5910c0b90e42840004f6e8a5"
-        resp = Fetcher.Bodegas("GET"+almacen+sku.to_s,"stock?almacenId="+almacen+"&sku="+sku.to_s)
+        resp = Fetcher.Bodegas("GET"+DESPACHO+sku.to_s,"stock?almacenId="+DESPACHO+"&sku="+sku.to_s)
         puts resp
         count = 0
         for prod in resp do
@@ -215,7 +216,7 @@ class WareHousesController < ApplicationController
       resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStock",body)
     end
 
-    #respaldar
+    #Enviar a grupo
     def moveStockDispatch(id,to,oc,price)
       body = {
         'productoId': id,
@@ -226,13 +227,13 @@ class WareHousesController < ApplicationController
       resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStockBodega",body)
     end
 
+    #Despachar ordenes de FTP
     def despacharFtp(sku,cant,to,oc)
       price = Product.where(sku: sku).first.price
       transfered = 0
       #do while products have to be dispatched
       while transfered < cant do
-        almacen = "5910c0b90e42840004f6e8a5"
-        resp = Fetcher.Bodegas("GET"+almacen+sku.to_s,"stock?almacenId="+almacen+"&sku="+sku.to_s)
+        resp = Fetcher.Bodegas("GET"+DESPACHO+sku.to_s,"stock?almacenId="+DESPACHO+"&sku="+sku.to_s)
         puts resp
         count = 0
         for prod in resp do
@@ -252,6 +253,51 @@ class WareHousesController < ApplicationController
       end
     end
 
+    def moveToGroup(sku,cant,to,oc)
+      price = Product.where(sku: sku).first.price
+      transfered = 0
+      while transfered < cant do
+        resp = Fetcher.Bodegas("GET"+DESPACHO+sku.to_s,"stock?almacenId="+DESPACHO+"&sku="+sku.to_s)
+        count = 0
+        for prod in resp do
+          if count == 89 then
+            sleep(60)
+            count = 0
+          end
+          if transfered < cant then
+            id_aux = prod['_id']
+            moveStockDispatch(id_aux,to,oc,price)
+            count+=1
+            transfered+=1
+          else
+            return 0
+          end
+        end
+      end
+    end
+
+    def moveToDespacho(sku,cant)
+      transfered = 0
+      while transfered < cant do
+        resp = Fetcher.Bodegas("GET"+ALMACEN1+sku.to_s,"stock?almacenId="+ALMACEN1+"&sku="+sku.to_s)
+        count = 0
+        for prod in resp do
+          if count == 89 then
+            sleep(60)
+            count = 0
+          end
+          if transfered < cant then
+            id_aux = prod['_id']
+            moveStock(id_aux,DESPACHO)
+            count+=1
+            transfered+=1
+          else
+            return 0
+          end
+        end
+      end
+    end
+
     def moveStock(id,to)
       #to = almacenId
       body = {
@@ -261,7 +307,7 @@ class WareHousesController < ApplicationController
       resp = Fetcher.Bodegas("POST"+id.to_s+to.to_s,"moveStock",body)
     end
 
-    #respaldar
+    #Despachar
     def moveStockDispatch(id,to,oc,price)
       body = {
         'productoId': id,
@@ -302,12 +348,25 @@ class WareHousesController < ApplicationController
     def checkQueue
       #Check queue and deliver
       date = Time.new
-      queue = Order.where(:state => "accepted" and :due_date >= date).order(:due_date)
+      date2 = Time.new(2019)
+      queue = Order.where(['state:? and due_date:?',"accepted",date..date2]).order(:due_date)
+      products = Fetcher.getProductsWithStock
       for order in queue do
-        #TODO check delivery storage stock before start
-        stock = Product.where(sku:Integer(order.sku)).first.stock
-        if order.destination == "FTP" && stock > order.total then
-          despacharFtp(order.sku,order.total,"notEmpty",order.oc)
+        #Check stock
+        if products[order.sku] > order.total then
+          #Mover a despacho
+          moveToDespacho(order.sku,order.total)
+          stock = Product.where(sku:Integer(order.sku)).first.stock
+          if order.destination == "FTP" && stock > order.total then
+            #Despachar
+            despacharFtp(order.sku,order.total,"notEmpty",order.oc)
+          else
+            #dispatch to another group
+            moveToGroup(order.sku,order.total,order.destination,order.oc)
+          end
+        else
+          #producir
+
         end
       end
     end
