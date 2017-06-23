@@ -5,3 +5,7 @@ end
 every 6.hours do
   runner "PurchaseOrders#checkFTP"
 end
+
+every 10.minutes do
+  runner "PurchaseOrders#CheckQueue"
+end

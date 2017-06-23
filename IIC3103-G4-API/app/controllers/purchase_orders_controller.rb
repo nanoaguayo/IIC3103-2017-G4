@@ -230,4 +230,14 @@ class PurchaseOrdersController < ApplicationController
       return false
     end
 
+  def CheckQueue
+    #primero se cuantan cuantas ordenes de compra estan siendo despachadas actualmente
+    started = Order.where(state: "processing").count
+    if started == 0
+      #solo puede haber 1 o 0 que se estén despachando, en caso de que no haya niuna, despachamos la más urgente
+      oc = Order.accepted.order(due_date: :asc).first
+      DispatchOcJob.perform_later(oc.id.to_s)
+    end
+  end
+
 end
