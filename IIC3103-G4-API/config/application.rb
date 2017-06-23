@@ -40,7 +40,7 @@ module IIC3103G4Api
     # Skip views, helpers and assets when generating a new resource.
 
     config.api_only = false
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :delayed_job
 
   end
 end

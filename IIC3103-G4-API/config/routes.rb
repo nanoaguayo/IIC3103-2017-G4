@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq'
 
   #precios y stock por requerimiento de sprint
   #Aux function postman
