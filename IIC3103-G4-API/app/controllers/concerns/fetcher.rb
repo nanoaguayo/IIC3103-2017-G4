@@ -30,10 +30,7 @@ module Fetcher
   end
 
   def self.Sii(httpRequest,uri_ext,body = {})
-    auth = Crypt.generarauthdev(httpRequest)
-    if Rails.env.production? then
-      auth = Crypt.generarauthprod(httpRequest)
-    end
+    auth = Crypt.generarauth(httpRequest)
     options = {'Content-type' => 'application/json', 'Authorization' => auth}
     #JSON body
     body = body.to_json
