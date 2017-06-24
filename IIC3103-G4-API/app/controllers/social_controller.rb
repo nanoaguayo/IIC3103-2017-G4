@@ -3,11 +3,14 @@ class SocialController < ApplicationController
   def index
   end
 
-  def twittear
+  def social
 
-    twit = params[:twit]
-    Socialnet.Twittear(twit)
-
+    if params[:twit] then
+      Socialnet.Twittear(params[:twit])
+    end
+    if params[:post] then
+      Socialnet.Postear(params[:post])
+    end
   end
 
 end

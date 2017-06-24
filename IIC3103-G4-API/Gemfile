@@ -81,3 +81,6 @@ gem 'nokogiri'
 
 #Twitter
 gem 'twitter'
+
+#Facebook
+gem 'koala'

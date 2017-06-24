@@ -8,12 +8,16 @@
 	</head>
 	<body>
 		<header>
-			<h1>Twittear</h1>
+			<h1>Twitter</h1>
       <%= form_tag 'social' do -%>
         <div><%= text_field_tag 'twit' %>
         <%= submit_tag 'Twitea' %></div>
       <% end -%>
-      <!-- <%= button_to "Twittear", {params: {twit: "herma"}, action: "twittear"} %> -->
+      <h1>Facebook</h1>
+      <%= form_tag 'social' do -%>
+        <div><%= text_field_tag 'post' %>
+        <%= submit_tag 'Postea' %></div>
+      <% end -%>
 		</header>
   </body>
 <html>

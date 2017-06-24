@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
   #Social
   get '/social', to: 'social#index'
-  post '/social', to: 'social#twittear'
+  post '/social', to: 'social#social'
 
   #Test FTP
   get '/ftp', to: 'purchase_orders#checkFTP'
