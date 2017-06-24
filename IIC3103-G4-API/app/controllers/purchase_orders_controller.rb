@@ -119,7 +119,7 @@ class PurchaseOrdersController < ApplicationController
 
     def aceptar #cuando se llama por la view para el ftp (Seba)
       id = params[:id]
-      @purchase_order = accept(id)
+      @purchase_order = accept(id, '')
       puts @purchase_order
       @purchase_order_ = PurchaseOrder.new(@purchase_order)
     end
@@ -186,7 +186,7 @@ class PurchaseOrdersController < ApplicationController
         resp = HTTParty.get(OC_URI+"obtener/"+oc[:id], :body => {}, :header => {'Content-type' => 'application/json'})
         if acceptFTP(resp) then
           #accept oc
-          accept(oc[:id])
+          accept(oc[:id], '')
           puts oc
           #Facturar
           fact = InvoicesController.create(oc[:id])

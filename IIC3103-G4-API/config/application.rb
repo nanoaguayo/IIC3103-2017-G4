@@ -42,5 +42,6 @@ module IIC3103G4Api
     config.api_only = false
     config.active_job.queue_adapter = :delayed_job
 
+    config.autoload_paths << "#{Rails.root}/app/jobs/concerns"
   end
 end
