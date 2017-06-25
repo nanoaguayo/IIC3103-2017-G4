@@ -49,6 +49,7 @@ GEM
       activerecord (>= 3.0)
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
+    amq-protocol (2.2.0)
     arel (7.1.4)
     autoprefixer-rails (7.1.1)
       execjs
@@ -64,6 +65,8 @@ GEM
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
     builder (3.2.3)
+    bunny (2.7.0)
+      amq-protocol (>= 2.2.0)
     byebug (9.0.6)
     camertron-eprun (1.1.1)
     cancancan (1.10.1)
@@ -350,6 +353,7 @@ DEPENDENCIES
   autoprefixer-rails
   better_errors
   bootstrap-sass (~> 3.3.5.1)
+  bunny (>= 2.7.0)
   byebug
   chartkick
   coffee-rails
