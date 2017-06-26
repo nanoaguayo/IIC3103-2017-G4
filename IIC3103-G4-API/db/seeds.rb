@@ -238,3 +238,40 @@ sku = SkuGroup.create(sku:54,group:4)
 sku.save
 sku = SkuGroup.create(sku:55,group:4)
 sku.save
+
+
+#ingredientes, sacados de las formulas.
+sku = SkuIngridient.create(sku: 4, ingridient: 38, amount: 190)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 23, amount: 342)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 26, amount: 309)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 4, amount: 100)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 27, amount: 279)
+sku.save
+sku = SkuIngridient.create(sku: 16, ingridient: 2, amount: 383)
+sku.save
+sku = SkuIngridient.create(sku: 16, ingridient: 23, amount: 330)
+sku.save
+sku = SkuIngridient.create(sku: 16, ingridient: 26, amount: 313)
+sku.save
+sku = SkuIngridient.create(sku: 50, ingridient: 7, amount: 200)
+sku.save
+sku = SkuIngridient.create(sku: 50, ingridient: 25, amount: 41)
+sku.save
+sku = SkuIngridient.create(sku: 50, ingridient: 13, amount: 100)
+sku.save
+sku = SkuIngridient.create(sku: 54, ingridient: 9, amount: 2154)
+sku.save
+sku = SkuIngridient.create(sku: 54, ingridient: 26, amount: 313)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 23, amount: 330)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 20, amount: 96)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 2, amount: 383)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 52, amount: 1365)
+sku.save

@@ -52,7 +52,7 @@ class InvoicesController < ApplicationController
       cuenta = cuenta["bank_account"]
       trans = Banco.transfer(result.response.body["total"].to_i, cuenta)
       if trans.code == 200
-        HTTParty.patch(GURI + proveedor.to_s + ".ing.puc.cl/invoices/" + id + "/paid", header: gheader, body: {"trx_id": trans.response.body["_id"]})
+        HTTParty.patch(GURI + proveedor.to_s + ".ing.puc.cl/invoices/" + id + "/paid", header: gheader, body: {"id_transaction": trans.response.body["_id"]})
         #en esta parte no estaba seguro del nombre del id de la transaccion..
       end
     else
@@ -99,7 +99,7 @@ class InvoicesController < ApplicationController
     result = HTTParty.get(PATH + params[:id], body: params, header: header)
     if result.code == 200
       trx = JSON.parse(request.body.read.to_s)
-      trx = trx["trx_id"]            #HAY QUE CACHAR BIEN ESTE NOMBRE...
+      trx = trx["id_transaction"]    #este es el nombre segun el grupo 2
       trx = Banco.obtenerTransferencia(trx)
       monto = trx["monto"]
       if monto.to_i >= result.response.body["total"].to_i #si es que nos pagaron al menos lo que correspondia, entonces se marca como pagada la factura

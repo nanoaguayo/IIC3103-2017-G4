@@ -223,8 +223,14 @@ class PurchaseOrdersController < ApplicationController
         stock = prod.stock
         price = prod.price
         fecha = Time.at(oc["fechaEntrega"].to_f / 1000)
-        if (ptype == "Materia Prima" || (stock - oc["cantidad"].to_i > 100)) && fecha - Time.now > 1.day && oc["precioUnitario"].to_i > price
-          return true
+        if oc["precioUnitario"].to_i > price
+          if ptype == "Materia Prima"
+            if fecha - Time.now > 6.hours #todas nuestras materias primas se producen en cerca de 2 horas
+              return true
+            end
+          elsif stock - oc["cantidad"].to_i > 100 && fecha - Time.now > 1.day #nos da algo de tiempo para producir más
+            return true
+          end
         end
       end
       return false
@@ -235,8 +241,20 @@ class PurchaseOrdersController < ApplicationController
     started = Order.where(state: "processing").count
     if started == 0
       #solo puede haber 1 o 0 que se estén despachando, en caso de que no haya niuna, despachamos la más urgente
+      WareHousesController.updateStock
+      producing = Order.producing
+      producing.each do |oc|
+        if oc.total < Product.find_by(sku: oc.sku.to_i).stock
+          DispatchOcJob.perform_later(oc.id.to_s)  
+          return 0 #terminar todo el metodo acá
+        end
+      end
       oc = Order.accepted.order(due_date: :asc).first
-      DispatchOcJob.perform_later(oc.id.to_s)
+      if oc.total < Product.find_by(sku: oc.sku.to_i).stock
+        DispatchOcJob.perform_later(oc.id.to_s)
+      else
+        ProduceStockJob.perform_later(oc.id.to_s)
+      end
     end
   end
 

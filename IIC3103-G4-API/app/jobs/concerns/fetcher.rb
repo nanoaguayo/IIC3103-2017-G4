@@ -27,25 +27,25 @@ module Fetcher
     return response
   end
 
-  # def self.getProductsWithStock
-  #   almacenes = Bodegas("GET","almacenes")
-  #   productos = Hash.new 0
-  #   for almacen in almacenes do
-  #     id = almacen['_id'].to_s
-  #     resp = Bodegas("GET"+id,"skusWithStock?almacenId="+id)
-  #     puts resp
-  #     for aux in resp do
-  #       productos[aux['_id']] = productos[aux['_id']] + aux['total']
-  #     end
-  #   end
+  def self.getProductsWithStock
+    almacenes = Bodegas("GET","almacenes")
+    productos = Hash.new 0
+    for almacen in almacenes do
+      id = almacen['_id'].to_s
+      resp = Bodegas("GET"+id,"skusWithStock?almacenId="+id)
+      puts resp
+      for aux in resp do
+        productos[aux['_id']] = productos[aux['_id']] + aux['total']
+      end
+    end
 
-  #   row_data = Hash.new 0
-  #   for prod in productos.keys do
-  #     puts prod
-  #     row_data[prod] = row_data[prod] + productos[prod]
-  #   end
-  #   return row_data
-  # end
+    row_data = Hash.new 0
+    for prod in productos.keys do
+      puts prod
+      row_data[prod] = row_data[prod] + productos[prod]
+    end
+    return row_data
+  end
 
   #Despachar ordenes de FTP
   def self.despacharFtp(sku, cant, adress, oc)
