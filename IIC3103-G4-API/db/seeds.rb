@@ -64,6 +64,23 @@ prod.save
 producto = Spree::Product.create(sku: "55",cost_currency: "CLP", name: "Galletas integrales", description: "Galletas integrales procesadas", available_on: Time.now, meta_keywords: "Galleta,Integral", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 2775)
 producto.save
 
+prod = Product.create(proyected:0,sku:38,description:"Semillas Maravillas",ptype:"Insumo",cost:379,lot:30,ptime:0,stock:0,price:1137)
+prod.save
+prod = Product.create(proyected:0,sku:23,description:"Harina",ptype:"Insumo",cost:364,lot:300,ptime:0,stock:0,price:1092)
+prod.save
+prod = Product.create(proyected:0,sku:27,description:"Levadura",ptype:"Insumo",cost:232,lot:620,ptime:0,stock:0,price:696)
+prod.save
+prod = Product.create(proyected:0,sku:7,description:"Leche",ptype:"Insumo",cost:290,lot:1000,ptime:0,stock:0,price:870)
+prod.save
+prod = Product.create(proyected:0,sku:25,description:"Azucar",ptype:"Insumo",cost:93,lot:560,ptime:0,stock:0,price:279)
+prod.save
+prod = Product.create(proyected:0,sku:13,description:"Arroz",ptype:"Insumo",cost:358,lot:1000,ptime:0,stock:0,price:1074)
+prod.save
+prod = Product.create(proyected:0,sku:9,description:"Carne",ptype:"Insumo",cost:350,lot:620,ptime:0,stock:0,price:1050)
+prod.save
+prod = Product.create(proyected:0,sku:52,description:"Harina Integral",ptype:"Insumo",cost:410,lot:890,ptime:0,stock:0,price:1230)
+prod.save
+
 #tuplas sku-grupo
 SkuGroup.delete_all
 sku = SkuGroup.create(sku:1,group:1)
