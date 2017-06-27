@@ -14,17 +14,14 @@
             <%= render partial: 'form', locals: { order_form: order_form } %>
           </div>
 
-          <div class="links col-md-3 navbar-form pull-right text-right" data-hook="cart_buttons">
-
-          </div>
-
           <div class='col-md-6 form-inline pull-right'>
             <form>
-              <input style="display:none" type="text" name="precio" value=<%= order_form.object.display_item_total %>>
-              <input type="submit" value="Pagar" class="btn btn-primary">
+              <input style="display:none" type="text" name="precio" value=<%= order_form.object.display_item_total %> <%= $aux = order_form.object.line_items %>>
+              <input url: "/ticket" type="submit" value="Pagar">
             </form>
           </div>
         </div>
+
 
         <div class='col-md-6 form-inline pull-right' data-hook='coupon_code'>
           <%= form_tag('/store/apply_coupon',{class:'form-inline'}) do %>

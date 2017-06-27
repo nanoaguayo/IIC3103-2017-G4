@@ -3,7 +3,8 @@ class TicketController < ApplicationController
   def new
     $precio = params[:precio]
     $order5 = params[:order]
-    @precioInt = $precio[1, $precio.length].to_i
+    @precioInt = $precio.sub(/\,/, '')[1, $precio.length-3].to_i
+    puts @precioInt
     body = {proveedor:"590baa00d6b4ec0004902465",cliente:"Hola",total:@precioInt}
     @responder = Fetcher.Sii("PUT","boleta",body)
     @id = @responder["_id"].to_s
@@ -22,11 +23,8 @@ class TicketController < ApplicationController
       @almacenes = Fetcher.Bodegas("GET","almacenes");
       #Mientras queden cosas por desapchar
       while @porDespachar > 0 do
-        puts (@almacenes)
-        puts (@almacenes[@almacen_revisado]['_id'])
         #Revisamos el stock del almacen
         @stock_producto = Fetcher.Bodegas("GET"+@almacenes[@almacen_revisado]['_id']+item_order.sku,"stock?almacenId="+@almacenes[@almacen_revisado]['_id']+"&sku="+item_order.sku)
-        puts (@stock_producto.length)
         #Si es que hay
         if @stock_producto != nil
           #Se mandan todos los posibles
@@ -40,7 +38,7 @@ class TicketController < ApplicationController
               productoId:	@stock_producto[i]['_id'],
               oc:	@id,
               direccion:	"Direccion",
-              precio:	@stock_producto[i]['price'].to_i
+              precio:	@stock_producto[i]['price']
             }
             #Finalmente se despacha
             string = "DELETE"
@@ -50,15 +48,16 @@ class TicketController < ApplicationController
             resp2 = Fetcher.Bodegas(string,"stock",body)
             #Y se baja en uno la cantidad que falta por despachar
             @porDespachar -= 1
+            if @porDespachar == 0
+              break
+            end
           end
         end
         #Si no se alcanzo a despachar todo se revisa otro almacen
         @almacen_revisado += 1
-        puts (@almacen_revisado)
       end
       #Cuando se envio todo el producto se pasa al siguiente del carro
       @almacen_revisado = 0
     end
   end
-
 end
