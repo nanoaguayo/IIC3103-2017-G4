@@ -35,9 +35,9 @@ prod = Product.create(proyected:0,sku:10,description:"Pan Marraqueta",ptype:"Pro
 prod.save
 producto = Spree::Product.create(sku: "10", cost_currency: "CLP", name: "Pan Marraqueta", description: "Pan Marraqueta procesado", available_on: Time.now, meta_keywords: "Pan,Marraqueta", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 3232)
 producto.save
-prod = Product.create(proyected:0,sku:14,description:"Cebada",ptype:"Procesado",cost:296,lot:1750,ptime:2.220,stock:0,price:888)
+prod = Product.create(proyected:0,sku:14,description:"Cebada",ptype:"Materia Prima",cost:296,lot:1750,ptime:2.220,stock:0,price:888)
 prod.save
-producto = Spree::Product.create(sku: "14",cost_currency: "CLP", name: "Cebada", description: "Cebada procesada", available_on: Time.now, meta_keywords: "Cebada", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 888)
+producto = Spree::Product.create(sku: "14",cost_currency: "CLP", name: "Cebada", description: "Cebada", available_on: Time.now, meta_keywords: "Cebada", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 888)
 producto.save
 prod = Product.create(proyected:0,sku:16,description:"Pasta de trigo",ptype:"Procesado",cost:612,lot:1000,ptime:2.493,stock:0,price:1836)
 prod.save
