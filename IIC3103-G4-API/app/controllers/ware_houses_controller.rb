@@ -11,6 +11,8 @@ class WareHousesController < ApplicationController
       monto = prod.cost * cant
       trx = Banco.transferFab(monto)
       trans = JSON.parse(trx.response.body) #esto se lo copié a pelao...
+      aux = ProducedOrder.create(sku:sku.to_s,cantidad:Integer(cantidad),oc_id:trx['_id'])
+      aux.save
       if trans.key?('created_at')#se creo la transferencia bien
         parameters = {
           "trxId": trx['_id'],
@@ -46,6 +48,8 @@ class WareHousesController < ApplicationController
       if enough#si hay ingredientes suficientes
         trx = Banco.transferFab(prod.cost * cant)#se paga la produccion al banco
         trans = JSON.parse(trx.response.body)
+        aux = ProducedOrder.create(sku:sku.to_s,cantidad:Integer(cantidad),oc_id:trx['_id'])
+        aux.save
         if trans.key?('created_at')#si no hubo problemas con la transferencia se continua el flujo
           ProduceElaboratedJob.perform_later(sku, cantidad, insumos, trx['_id'].to_s)
         else
@@ -67,7 +71,7 @@ class WareHousesController < ApplicationController
       fabricarElaborado(params[:sku], params[:cantidad])
     end
   end
-  
+
   #update local stock
   def updateStock
     products = Product.all
@@ -85,7 +89,7 @@ class WareHousesController < ApplicationController
       prodAux.save
     end
   end
-  
+
   def clean
     CleanBodegaJob.perform_later
   end
