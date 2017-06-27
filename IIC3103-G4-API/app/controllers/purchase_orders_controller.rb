@@ -100,7 +100,7 @@ class PurchaseOrdersController < ApplicationController
         @purchase_order.save
         fact = InvoicesController.create(oc["_id"])
         #se le manda al grupo comprador la factura que acabamos de crear y nuestra cuenta de banco
-        HTTParty.put(GURI + cliente + ".ing.puc.cl/invoices/?id=" + fact.response.body["_id"], headers: GOPT, body:{"bank_account" : CTA})
+        HTTParty.put(GURI + cliente + ".ing.puc.cl/invoices/?id=" + fact.response.body["_id"], headers: GOPT, body:{"bank_account" => CTA})
         #poner en cola
         order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination: id_store_reception, state:"accepted")
         order.save
@@ -245,7 +245,7 @@ class PurchaseOrdersController < ApplicationController
       producing = Order.producing
       producing.each do |oc|
         if oc.total < Product.find_by(sku: oc.sku.to_i).stock
-          DispatchOcJob.perform_later(oc.id.to_s)  
+          DispatchOcJob.perform_later(oc.id.to_s)
           return 0 #terminar todo el metodo acá
         end
       end

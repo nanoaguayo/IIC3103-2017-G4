@@ -1,6 +1,6 @@
 class InvoicesController < ApplicationController
 
-  PATH = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/sii/" || Rails.env.production && "https://integracion-2017-prod.herokuapp.com/sii/"
+  PATH = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/sii/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/sii/"
   IDS = Rails.env.development? && {"590baa00d6b4ec0004902462" => 1,
          "590baa00d6b4ec0004902463" => 2,
          "590baa00d6b4ec0004902464" => 3,
@@ -38,7 +38,7 @@ class InvoicesController < ApplicationController
   end
 
   def recibir
-    #se recibe la factura, y acá tenemos que pagarla 
+    #se recibe la factura, y acá tenemos que pagarla
     id = params[:id].to_s
     params = {"id": id}
     header = {"Content-Type" => "application/json"}
