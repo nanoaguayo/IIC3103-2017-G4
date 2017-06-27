@@ -97,6 +97,27 @@ module Spree
       end
     end
 
+    def apply_coupon
+      code = params[:coupon_code]
+      oferta = Oferta.where(codigo:code).first
+      if oferta && oferta.inicio.past? && !oferta.fin.past? then
+        for li in current_order.line_items do
+          variant = li.variant
+          if variant.sku = oferta.sku then
+            li.price = oferta.precio
+            li.save
+            current_order.update_with_updater!
+            current_order.save
+            flash[:coupon_used] = "Descuento aplicado"
+          end
+        end
+      else
+        flash[:coupon_used] = "Cupon no valido"
+      end
+
+      redirect_to :cart
+    end
+
     private
 
       def order_params
