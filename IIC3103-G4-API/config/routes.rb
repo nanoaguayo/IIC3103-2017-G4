@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   resources :ware_houses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq'
 
   #precios y stock por requerimiento de sprint
   #Aux function postman
@@ -86,7 +84,7 @@ Rails.application.routes.draw do
 
   #Invoice
   #enviar_factura: Crea una notificación de habernos emitido una factura. Debe tener el id de la factura y la cuenta del banco.
-  put 'invoices/:id', to:'invoices#create'
+  put 'invoices/:id', to:'invoices#recibir'
   #enviar_confirmacion_factura: Crea una notificación de que no se rechazará la factura enviada. Debe tener el id de la factura
   patch 'invoices/:id/accepted', to:'invoices#accept'
   #enviar_rechazo_factura: Crea una notificación de que se rechaza la factura enviada. Debe tener el id de la factura.
@@ -95,7 +93,7 @@ Rails.application.routes.draw do
   patch 'invoices/:id/delivered', to:'invoices#delivered'
   #enviar_confirmacion_pago: Crea una notificación de que se pagó la factura. Debe tener el id de la factura.
   patch 'invoices/:id/paid', to:'invoices#paid'
-  get 'invoices/:id', to:'invoices#show'
+
 
   #WareHouse
   #show
