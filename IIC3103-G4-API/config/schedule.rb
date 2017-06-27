@@ -38,3 +38,7 @@ end
 every 6.hours do
   runner "offers#updateOffers"
 end
+
+every :hour do
+  runner "social#publishOffers"
+end
