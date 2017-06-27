@@ -43,4 +43,8 @@ class DashboardController < ApplicationController
       @ftp_status[fo[:id].to_s] = aux[0]["estado"]
     end
   end
+
+  def TestSpree
+    AMQP.updateOffers()
+  end
 end

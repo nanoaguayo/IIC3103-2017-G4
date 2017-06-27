@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170531012838) do
+ActiveRecord::Schema.define(version: 20170627022815) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "account"
@@ -45,6 +45,30 @@ ActiveRecord::Schema.define(version: 20170531012838) do
     t.datetime "updated_at",           null: false
     t.integer  "__v"
     t.string   "_id"
+  end
+
+  create_table "oferta", force: :cascade do |t|
+    t.string   "sku"
+    t.integer  "precio"
+    t.date     "inicio"
+    t.date     "fin"
+    t.string   "codigo"
+    t.boolean  "publicar"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.string   "oc"
+    t.string   "sku"
+    t.integer  "total"
+    t.date     "due_date"
+    t.string   "destination"
+    t.integer  "price"
+    t.string   "client"
+    t.string   "state"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "produced_orders", force: :cascade do |t|
@@ -275,6 +299,17 @@ ActiveRecord::Schema.define(version: 20170531012838) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["source_id", "source_type"], name: "index_spree_log_entries_on_source_id_and_source_type"
+  end
+
+  create_table "spree_oferta", force: :cascade do |t|
+    t.string   "sku"
+    t.integer  "precio"
+    t.date     "inicio"
+    t.date     "fin"
+    t.string   "codigo"
+    t.boolean  "publicar"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "spree_option_type_prototypes", force: :cascade do |t|

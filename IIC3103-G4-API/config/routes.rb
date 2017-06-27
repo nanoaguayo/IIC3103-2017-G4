@@ -13,10 +13,15 @@ Rails.application.routes.draw do
   get '/facturar/:oc', to: 'invoices#createPostman'
   post '/despacharFTP', to:'ware_houses#despacharFtpPostman'
   post '/despacharGrupo', to:'ware_houses#moveToGroupPostman'
+  get '/promo', to:'dashboard#TestSpree'
 
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'
   get '/' => redirect('/store')
+  Spree::Core::Engine.routes.prepend do
+    # Your new routes
+    post '/apply_coupon', to:'orders#apply_coupon'
+  end
   #Dashboard
   get '/dashboard', to: 'dashboard#index'
 
