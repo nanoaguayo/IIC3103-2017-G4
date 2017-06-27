@@ -60,5 +60,4 @@ class TicketController < ApplicationController
       @almacen_revisado = 0
     end
   end
-  Spree.t(:empty_cart)
 end
