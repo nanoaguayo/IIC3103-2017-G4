@@ -78,5 +78,12 @@ gem 'whenever', :require => false
 gem 'net-sftp'
 #XML
 gem 'nokogiri'
+
 #AMQP
 gem "bunny", ">= 2.7.0"
+
+#Twitter
+gem 'twitter'
+
+#Facebook
+gem 'koala'
