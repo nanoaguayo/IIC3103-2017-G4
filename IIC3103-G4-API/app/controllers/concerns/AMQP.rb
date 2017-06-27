@@ -1,4 +1,5 @@
 require "bunny"
+require "json"
 
 module AMQP
   #Connect to AMQP
@@ -12,13 +13,13 @@ module AMQP
     q  = ch.queue("ofertas", :auto_delete => true)
 
     q.subscribe do |delivery_info, metadata, payload|
-      json = payload.to_json
-      puts json
+      json = JSON.parse(payload)
       #Ver si es valida para nosotros
-      if Product.where(sku:json['sku']).first then
-        #TODO crear Oferta en modelo
-        #TODO ver bien las keys
-        #Spree::Oferta.create(sku:json['sku'],precio:json['precio'],inicio:Date(json['inicio']),fin:Date(json['fin']),codigo:json['codigo'],publicar:json['publicar'])
+      if Spree::Product.where(sku:json['sku']).first then
+        if Spree::Oferta.where(["inicio = ? and fin= ? and sku = ? and precio = ?",Date(json['inicio']),Date(json['fin']),json['sku'],Integer(json['precio'])]).empty? then
+          of = Spree::Oferta.create(sku:json['sku'],precio:json['precio'],inicio:Date(json['inicio']),fin:Date(json['fin']),codigo:json['codigo'],publicar:json['publicar'])
+          of.save
+        end
       end
     end
 

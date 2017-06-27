@@ -44,7 +44,4 @@ class DashboardController < ApplicationController
     end
   end
 
-  def TestSpree
-    AMQP.updateOffers()
-  end
 end
