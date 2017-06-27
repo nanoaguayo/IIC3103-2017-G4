@@ -10,7 +10,6 @@
     <div data-hook="outside_cart_form">
       <%= form_for @order, url: "/ticket", html: { id: 'update-cart' } do |order_form| %>
         <div data-hook="inside_cart_form">
-
           <div data-hook="cart_items" class="table-responsive">
             <%= render partial: 'form', locals: { order_form: order_form } %>
           </div>
@@ -22,6 +21,17 @@
             </form>
           </div>
         </div>
+
+
+        <div class='col-md-6 form-inline pull-right' data-hook='coupon_code'>
+          <%= form_tag('/store/apply_coupon',{class:'form-inline'}) do %>
+            <label for="coupon_code">Codigo de dcto:</label>
+            <%= text_field_tag :coupon_code  %>
+            <%= submit_tag "Aplicar",{class:'btn btn-default' }%>
+          <% end %>
+        </div>
+
+        <a style="display:none"<%= $aux = order_form.object.line_items %>>
       <% end %>
     </div>
 

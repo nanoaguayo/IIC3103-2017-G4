@@ -64,6 +64,23 @@ prod.save
 producto = Spree::Product.create(sku: "55",cost_currency: "CLP", name: "Galletas integrales", description: "Galletas integrales procesadas", available_on: Time.now, meta_keywords: "Galleta,Integral", tax_category_id: 1, shipping_category_id: 1, promotionable: false, price: 2775)
 producto.save
 
+prod = Product.create(proyected:0,sku:38,description:"Semillas Maravillas",ptype:"Insumo",cost:379,lot:30,ptime:0,stock:0,price:1137)
+prod.save
+prod = Product.create(proyected:0,sku:23,description:"Harina",ptype:"Insumo",cost:364,lot:300,ptime:0,stock:0,price:1092)
+prod.save
+prod = Product.create(proyected:0,sku:27,description:"Levadura",ptype:"Insumo",cost:232,lot:620,ptime:0,stock:0,price:696)
+prod.save
+prod = Product.create(proyected:0,sku:7,description:"Leche",ptype:"Insumo",cost:290,lot:1000,ptime:0,stock:0,price:870)
+prod.save
+prod = Product.create(proyected:0,sku:25,description:"Azucar",ptype:"Insumo",cost:93,lot:560,ptime:0,stock:0,price:279)
+prod.save
+prod = Product.create(proyected:0,sku:13,description:"Arroz",ptype:"Insumo",cost:358,lot:1000,ptime:0,stock:0,price:1074)
+prod.save
+prod = Product.create(proyected:0,sku:9,description:"Carne",ptype:"Insumo",cost:350,lot:620,ptime:0,stock:0,price:1050)
+prod.save
+prod = Product.create(proyected:0,sku:52,description:"Harina Integral",ptype:"Insumo",cost:410,lot:890,ptime:0,stock:0,price:1230)
+prod.save
+
 #tuplas sku-grupo
 SkuGroup.delete_all
 sku = SkuGroup.create(sku:1,group:1)
@@ -237,4 +254,41 @@ sku.save
 sku = SkuGroup.create(sku:54,group:4)
 sku.save
 sku = SkuGroup.create(sku:55,group:4)
+sku.save
+
+
+#ingredientes, sacados de las formulas.
+sku = SkuIngridient.create(sku: 4, ingridient: 38, amount: 190)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 23, amount: 342)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 26, amount: 309)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 4, amount: 100)
+sku.save
+sku = SkuIngridient.create(sku: 10, ingridient: 27, amount: 279)
+sku.save
+sku = SkuIngridient.create(sku: 16, ingridient: 2, amount: 383)
+sku.save
+sku = SkuIngridient.create(sku: 16, ingridient: 23, amount: 330)
+sku.save
+sku = SkuIngridient.create(sku: 16, ingridient: 26, amount: 313)
+sku.save
+sku = SkuIngridient.create(sku: 50, ingridient: 7, amount: 200)
+sku.save
+sku = SkuIngridient.create(sku: 50, ingridient: 25, amount: 41)
+sku.save
+sku = SkuIngridient.create(sku: 50, ingridient: 13, amount: 100)
+sku.save
+sku = SkuIngridient.create(sku: 54, ingridient: 9, amount: 2154)
+sku.save
+sku = SkuIngridient.create(sku: 54, ingridient: 26, amount: 313)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 23, amount: 330)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 20, amount: 96)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 2, amount: 383)
+sku.save
+sku = SkuIngridient.create(sku: 55, ingridient: 52, amount: 1365)
 sku.save

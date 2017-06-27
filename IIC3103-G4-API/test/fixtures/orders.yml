@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  oc: MyString
+  sku: MyString
+  total: 1
+  due_date: 
+  destination: MyString
+  price: 1
+  client: MyString
+
+two:
+  oc: MyString
+  sku: MyString
+  total: 1
+  due_date: 
+  destination: MyString
+  price: 1
+  client: MyString

@@ -6,7 +6,7 @@ require 'httparty'
 module Crypt
   # include HHTParty
 
-  KEY = Rails.env.development? && "z8t4GLUa:TKt0HK" || Rails.env.production && "vTvHgY0Cu&RsQrV"
+  KEY = Rails.env.development? && "z8t4GLUa:TKt0HK" || Rails.env.production? && "vTvHgY0Cu&RsQrV"
 
   #def self.sha1(str)
    # Digest::SHA1.hexdigest str.to_s

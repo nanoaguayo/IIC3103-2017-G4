@@ -63,7 +63,9 @@ gem 'better_errors'
 #charts
 gem 'chartkick'
 
-gem 'sidekiq'
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+gem 'daemons'
 
 #Spree
 gem 'coffee-rails'
@@ -78,6 +80,9 @@ gem 'whenever', :require => false
 gem 'net-sftp'
 #XML
 gem 'nokogiri'
+
+#AMQP
+gem "bunny", ">= 2.7.0"
 
 #Twitter
 gem 'twitter'

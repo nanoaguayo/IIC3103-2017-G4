@@ -6,7 +6,7 @@ require 'httparty'
 module Banco
   BANK_URI = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/banco/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/banco/"
   CUENTA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/fabrica/getCuenta" || Rails.env.production? &&"https://integracion-2017-prod.herokuapp.com/bodega/fabrica/getCuenta"
-  ID = Rails.env.development? && "590baa00d6b4ec000490246e" || Rails.env.production? && "5910c0910e42840004f6e68c"
+  ID = Rails.env.development? && "590baa00d6b4ec000490246e" || Rails.env.production? && "5910c0910e42840004f6e68c" #cuenta nuestra
 
   def self.transferFab(monto)
     path = BANK_URI + "trx"
@@ -83,5 +83,5 @@ end
     when 200
       @trans = JSON.parse(@result.response.body)
     end
-    return @result
+    return @trans
   end
