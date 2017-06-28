@@ -44,6 +44,7 @@ class InvoicesController < ApplicationController
     header = {"Content-Type" => "application/json"}
     gheader = {"Content-Type" => "application/json", "X-ACCESS-TOKEN" => ID_G4}
     result = HTTParty.get(PATH + params[:id], body: params, header: header)
+    puts result
     if result.code == 200
       proveedor = result.response.body["proveedor"]
       proveedor = IDS[proveedor.to_s]
@@ -54,6 +55,7 @@ class InvoicesController < ApplicationController
       if trans.code == 200
         HTTParty.patch(GURI + proveedor.to_s + ".ing.puc.cl/invoices/" + id + "/paid", header: gheader, body: {"id_transaction": trans.response.body["_id"]})
         #en esta parte no estaba seguro del nombre del id de la transaccion..
+        render json: {"message": "Pagada con exito"}
       end
     else
       render json: result.response.body
