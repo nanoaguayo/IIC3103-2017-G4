@@ -50,20 +50,18 @@ class InvoicesController < ApplicationController
       proveedor2 = IDS[proveedor.to_s].to_s
       uri = GURI + proveedor2.to_s + ".ing.puc.cl/invoices/" + id.to_s + "/accepted"
       begin
-        response =  HTTParty.patch(uri, header: gheader, body: {})
+        #response =  HTTParty.patch(uri, header: gheader, body: {})
       rescue HTTParty::Error
         puts "error httparty"
-      else
-        case response.code
-          when 500
-            puts "No se pudo notificar"
-        end
       end
-      cuenta = params["bank_account"]
-      trans = Banco.transfer(result[0]["total"].to_i, cuenta)
+      cuenta = JSON.parse(request.raw_post)["bank_account"]
+      puts cuenta
+      total = result[0]["total"]
+      puts total
+      trans = Banco.transfer(total.to_i, cuenta)
       puts trans.inspect
       if trans.code == 200
-        HTTParty.patch(GURI + proveedor.to_s + ".ing.puc.cl/invoices/" + id + "/paid", header: gheader, body: {"id_transaction": trans.response.body["_id"]})
+        HTTParty.patch(GURI + proveedor2.to_s + ".ing.puc.cl/invoices/" + id + "/paid", header: gheader, body: {"id_transaction": trans.response.body["_id"]})
         #en esta parte no estaba seguro del nombre del id de la transaccion..
         render json: {"message": "Pagada con exito"}
       else

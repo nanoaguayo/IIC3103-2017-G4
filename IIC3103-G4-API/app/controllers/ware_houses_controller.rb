@@ -97,6 +97,7 @@ class WareHousesController < ApplicationController
   end
 
   def cleanStorage
+    loop do
       almacenes = Fetcher.Bodegas("GET","almacenes")
       id_pulmon = ""
       id_recepcion = ""
@@ -110,6 +111,7 @@ class WareHousesController < ApplicationController
           otherStorages[alm['_id']] = Integer(alm['totalSpace']) - Integer(alm['usedSpace'])
         end
       end
+      break if id_recepcion == "" && id_pulmon == ""
       #Loop to clean all, first recepcion
       if id_recepcion != "" then
         prods = Fetcher.Bodegas("GET"+id_recepcion.to_s,"skusWithStock?almacenId="+id_recepcion.to_s)
@@ -163,6 +165,7 @@ class WareHousesController < ApplicationController
           end
         end
       end
+    end
   end
 
   #Mover a despacho
