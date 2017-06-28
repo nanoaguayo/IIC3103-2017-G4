@@ -206,6 +206,7 @@ class PurchaseOrdersController < ApplicationController
         stock = Product.where(sku:sku).first.stock
         if type == "Materia Prima" then
           #podemos fabricar rapido
+          WareHousesController.fabricarMateriaPrima(sku.to_s,oc[0]["cantidad"])
           return true
         elsif (stock - Integer(oc[0]["cantidad"])) > 100 then
           #si piden un fabricado, revisar que algo de stock quede
@@ -226,6 +227,7 @@ class PurchaseOrdersController < ApplicationController
         if oc["precioUnitario"].to_i > price
           if ptype == "Materia Prima"
             if fecha - Time.now > 6.hours #todas nuestras materias primas se producen en cerca de 2 horas
+              WareHousesController.fabricarMateriaPrima(sku.to_s,oc["cantidad"])
               return true
             end
           elsif stock - oc["cantidad"].to_i > 100 && fecha - Time.now > 1.day #nos da algo de tiempo para producir más
