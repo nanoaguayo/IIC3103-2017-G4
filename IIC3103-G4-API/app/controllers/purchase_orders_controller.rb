@@ -98,7 +98,7 @@ class PurchaseOrdersController < ApplicationController
         @ordenc = JSON.parse(@result.response.body)
         @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
         @purchase_order.save
-        fact = InvoicesController.create(oc["_id"])
+        fact = createInvoice(oc["_id"])
         #se le manda al grupo comprador la factura que acabamos de crear y nuestra cuenta de banco
         HTTParty.put(GURI + cliente + ".ing.puc.cl/invoices/?id=" + fact.response.body["_id"], headers: GOPT, body:{"bank_account" => CTA})
         #poner en cola
@@ -116,6 +116,25 @@ class PurchaseOrdersController < ApplicationController
      }
     end
   end
+
+    def createInvoice(oc)
+      header = {"Content-Type" => "application/json"}
+      params = {
+        "oc": oc
+      }
+      @result = HTTParty.put(SII_URI, :body => params, :header => header)
+      case @result.code
+      when 200
+        @fact = JSON.parse(@result.response.body)
+        @fact["oc"] = @fact["oc"]["_id"]
+        @invoice = Invoice.new(@fact)
+        if @invoice.save then
+          puts "Guardada con éxito"
+        end
+      end
+      #render json: @fact, status: :ok
+      return @result
+    end
 
     def aceptar #cuando se llama por la view para el ftp (Seba)
       id = params[:id]
@@ -206,7 +225,7 @@ class PurchaseOrdersController < ApplicationController
         stock = Product.where(sku:sku).first.stock
         if type == "Materia Prima" then
           #podemos fabricar rapido
-          WareHousesController.fabricarMateriaPrima(sku.to_s,oc[0]["cantidad"])
+          #WareHousesController.fabricarMateriaPrima(sku.to_s,oc[0]["cantidad"])
           return true
         elsif (stock - Integer(oc[0]["cantidad"])) > 100 then
           #si piden un fabricado, revisar que algo de stock quede
@@ -227,7 +246,7 @@ class PurchaseOrdersController < ApplicationController
         if oc["precioUnitario"].to_i > price
           if ptype == "Materia Prima"
             if fecha - Time.now > 6.hours #todas nuestras materias primas se producen en cerca de 2 horas
-              WareHousesController.fabricarMateriaPrima(sku.to_s,oc["cantidad"])
+              #WareHousesController.fabricarMateriaPrima(sku.to_s,oc["cantidad"])
               return true
             end
           elsif stock - oc["cantidad"].to_i > 100 && fecha - Time.now > 1.day #nos da algo de tiempo para producir más
@@ -243,7 +262,7 @@ class PurchaseOrdersController < ApplicationController
     started = Order.where(state: "processing").count
     if started == 0
       #solo puede haber 1 o 0 que se estén despachando, en caso de que no haya niuna, despachamos la más urgente
-      WareHousesController.updateStock
+      #WareHousesController.updateStock
       producing = Order.producing
       producing.each do |oc|
         if oc.total < Product.find_by(sku: oc.sku.to_i).stock
