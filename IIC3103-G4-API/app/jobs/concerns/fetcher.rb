@@ -3,10 +3,6 @@ HTTParty::Basement.default_options.update(verify: false)
 
 module Fetcher
 
-  BODEGA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
-  OC_URI =  Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/"
-
-
   def self.Bodegas(httpRequest,uri_ext,body = {})
     auth = Crypt.generarauth(httpRequest)
     #if Rails.env.production? then
