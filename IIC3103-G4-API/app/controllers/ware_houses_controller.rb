@@ -11,6 +11,8 @@ class WareHousesController < ApplicationController
       monto = prod.cost * cant
       trx = Banco.transferFab(monto)
       trans = JSON.parse(trx.response.body) #esto se lo copié a pelao...
+      puts "aa"
+      puts trans
       aux = ProducedOrder.create(sku:sku.to_s,cantidad:Integer(cantidad),oc_id:trx['_id'])
       aux.save
       if trans.key?('created_at')#se creo la transferencia bien
@@ -19,7 +21,7 @@ class WareHousesController < ApplicationController
           "sku": sku,
           "cantidad": cant
         }
-        resp = Fetcher.Bodegas("PUT" + sku + cantidad + trx['_id'], "fabrica/fabricar", parameters)
+        resp = Fetcher.Bodegas("PUT" + sku.to_s + cantidad.to_s + trx['_id'], "fabrica/fabricar", parameters)
         render json: resp
       else
         render json: {'error': "error con la transferencia"}
