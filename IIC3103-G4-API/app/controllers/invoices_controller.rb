@@ -39,7 +39,6 @@ class InvoicesController < ApplicationController
 
   def recibir
     #se recibe la factura, y acá tenemos que pagarla
-    puts "balbla"
     id = params[:id].to_s
     params = {"id": id}
     header = {"Content-Type" => "application/json"}
@@ -48,11 +47,8 @@ class InvoicesController < ApplicationController
     puts result
     if result.code == 200
       proveedor = result[0]["proveedor"]
-      puts proveedor
       proveedor2 = IDS[proveedor.to_s].to_s
-      puts proveedor2
       uri = GURI + proveedor2.to_s + ".ing.puc.cl/invoices/" + id.to_s + "/accepted"
-      puts uri
       begin
         response =  HTTParty.patch(uri, header: gheader, body: {})
       rescue HTTParty::Error
@@ -116,11 +112,10 @@ class InvoicesController < ApplicationController
     header = {"Content-Type" => "application/json"}
     result = HTTParty.get(PATH + params[:id], body: params, header: header)
     if result.code == 200
-      trx = JSON.parse(request.body.read.to_s)
-      trx = trx["id_transaction"]    #este es el nombre segun el grupo 2
+      trx = params["id_transaction"]    #este es el nombre segun el grupo 2
       trx = Banco.obtenerTransferencia(trx)
       monto = trx["monto"]
-      if monto.to_i >= result.response.body["total"].to_i #si es que nos pagaron al menos lo que correspondia, entonces se marca como pagada la factura
+      if monto.to_i >= result[0]["total"].to_i #si es que nos pagaron al menos lo que correspondia, entonces se marca como pagada la factura
         result = HTTParty.post(PATH + "pay/" + id, header: header, body: params)
         render json: result.response.body
       else
