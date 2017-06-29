@@ -86,6 +86,9 @@
  <% end %>
 
 <h3 class="dashTitle">Ordenes solicitadas via FTP</h3>
+<div class="prodContainer">
+  <%= pie_chart ({"Aceptadas" => Integer(@queue.count), "No aceptadas" => (Integer(@ftp_requested.count))}), donut: true, height:"200px", colors:["#aaa","#555"] %>
+</div>
 <% if @ftp_requested.count > 0 then%>
   <% for order in @ftp_requested do %>
     <% if @ftp_status[order[:id].to_s]=="aceptada" then %>
@@ -93,6 +96,7 @@
         <p>
           <strong>SKU:</strong><%=order[:sku]%>
           <strong>Unidades: </strong><%= order[:qty] %>
+          <strong>Estado:</strong><%= @ftp_status[order[:id].to_s] %>
         </p>
       </div>
     <% elsif @ftp_status[order[:id].to_s]=="rechazada" then %>
@@ -100,6 +104,7 @@
         <p>
           <strong>SKU:</strong><%=order[:sku]%>
           <strong>Unidades: </strong><%= order[:qty] %>
+          <strong>Estado:</strong><%= @ftp_status[order[:id].to_s] %>
         </p>
       </div>
     <% elsif @ftp_status[order[:id].to_s]=="creada" %>
@@ -107,6 +112,7 @@
         <p>
           <strong>SKU:</strong><%=order[:sku]%>
           <strong>Unidades: </strong><%= order[:qty] %>
+          <strong>Estado:</strong><%= @ftp_status[order[:id].to_s] %>
         </p>
       </div>
     <% end %>

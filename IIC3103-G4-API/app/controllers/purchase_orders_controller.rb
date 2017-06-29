@@ -208,7 +208,7 @@ class PurchaseOrdersController < ApplicationController
           accept(oc[:id], '')
           puts oc
           #Facturar
-          fact = InvoicesController.create(oc[:id])
+          fact = Invoice.crear(oc[:id])
           #poner en cola
           oc2 = resp[0]
           order = Order.new(oc:oc[:id], total:Integer(oc[:qty]), sku:oc[:sku], due_date:oc2['fechaEntrega'], client:oc2['cliente'], price:Integer(oc2['precioUnitario']), destination:"FTP", state:"accepted")
@@ -219,7 +219,7 @@ class PurchaseOrdersController < ApplicationController
 
     def acceptFTP(oc)
       #cambiar criterios
-      if oc[0]["estado"] == "creada" then
+      if oc[0]["estado"] == "creada" && !Date.parse(oc["fechaEntrega"].to_s).past? then
         sku = Integer(oc[0]['sku'])
         type = Product.where(sku:sku).first.ptype
         stock = Product.where(sku:sku).first.stock
