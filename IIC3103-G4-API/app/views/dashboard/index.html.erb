@@ -31,7 +31,7 @@
 <%for aux in @productos.keys do %>
   <div class="container-fluid">
     <p>
-      <strong><%= @prod_names[aux]%> (SKU <%=aux%>): </strong>  Total: <%=@productos[aux]%> unidades
+      <strong><%= @prod_names[aux]%> (SKU <%=aux%>): </strong><%=@productos[aux]%> unidades
     </p>
   </div>
 <%end%>
