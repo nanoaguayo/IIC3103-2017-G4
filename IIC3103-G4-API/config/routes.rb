@@ -11,9 +11,10 @@ Rails.application.routes.draw do
   get '/facturar/:oc', to: 'invoices#createPostman'
   post '/despacharFTP', to:'ware_houses#despacharFtpPostman'
   post '/despacharGrupo', to:'ware_houses#moveToGroupPostman'
-  get '/promo', to:'offers#updateOffers'
+  get '/promo', to:'offers#getOffers'
   get "/stock", to: "products#updateStock"
-
+  get "/ftp", to: "purchase_orders#checkFTP"
+  get "/queue", to: "ware_houses#checkQueue"
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'
   get '/' => redirect('/store')

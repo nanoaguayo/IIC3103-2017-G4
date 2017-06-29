@@ -1,6 +1,8 @@
+require "date"
+
 class DashboardController < ApplicationController
   OC_URI = Rails.env.development? && "http://integracion-2017-dev.herokuapp.com/oc/obtener/" || Rails.env.production? && "http://integracion-2017-prod.herokuapp.com/oc/obtener/"
-  
+
   def index
     @almacenes = Fetcher.Bodegas("GET","almacenes")
     @productos = Hash.new 0
@@ -39,10 +41,14 @@ class DashboardController < ApplicationController
 
     #FTP orders
     @ftp_requested = Ftp.GetOC()
+    @queue = Order.where(['(state=? or state=?)',"accepted","Despachada"])
     @ftp_status = Hash.new "0"
     for fo in @ftp_requested do
       aux =  HTTParty.get(OC_URI+fo[:id], :body => {}, :header => {'Content-type' => 'application/json'})
-      @ftp_status[fo[:id].to_s] = aux[0]["estado"]
+      @ftp_status[fo[:id].to_s] = aux[0]["estado"].capitalize
+    end
+    for order in @queue do
+      @ftp_status[order.oc.to_s] = "Aceptada"
     end
   end
 
