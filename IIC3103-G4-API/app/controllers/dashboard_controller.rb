@@ -45,7 +45,10 @@ class DashboardController < ApplicationController
     @ftp_status = Hash.new "0"
     for fo in @ftp_requested do
       aux =  HTTParty.get(OC_URI+fo[:id], :body => {}, :header => {'Content-type' => 'application/json'})
-      @ftp_status[fo[:id].to_s] = aux[0]["estado"]
+      @ftp_status[fo[:id].to_s] = aux[0]["estado"].capitalize
+    end
+    for order in @queue do
+      @ftp_status[order.oc.to_s] = "Aceptada"
     end
   end
 
