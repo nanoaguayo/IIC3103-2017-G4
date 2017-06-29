@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   post '/despacharFTP', to:'ware_houses#despacharFtpPostman'
   post '/despacharGrupo', to:'ware_houses#moveToGroupPostman'
   get '/promo', to:'offers#updateOffers'
+  get "/stock", to: "products#updateStock"
 
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'

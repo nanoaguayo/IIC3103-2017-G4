@@ -6,7 +6,7 @@ HTTParty::Basement.default_options.update(verify: false)
 
 class CleanBodegaJob < ApplicationJob
   queue_as :default
-     
+
 
   KEY = Rails.env.development? && "z8t4GLUa:TKt0HK" || Rails.env.production? && "vTvHgY0Cu&RsQrV"
   BODEGA_URI = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
@@ -80,7 +80,7 @@ class CleanBodegaJob < ApplicationJob
         end
       end
       logger.info "antes de sleep"
-      sleep(60)  
+      sleep(60)
       logger.info "after sleep"
     end
   end
@@ -94,8 +94,8 @@ class CleanBodegaJob < ApplicationJob
   def Bodegas(httpRequest,uri_ext,body = {})
     auth = generarauth(httpRequest)
     #if Rails.env.production? then
-     # auth = Crypt.generarauthprod(httpRequest)
-    
+     # auth = CryptJob.generarauthprod(httpRequest)
+
     options = {'Content-type' => 'application/json', 'Authorization' => auth}
     #JSON body
     body = body.to_json

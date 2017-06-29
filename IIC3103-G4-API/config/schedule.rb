@@ -19,7 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 every :hour do # Many shortcuts available: :hour, :day, :month, :year, :reboot
-  runner "Products#updateStock"
+  runner "Product.updateStock"
 end
 
 every 6.hours do
@@ -27,7 +27,7 @@ every 6.hours do
 end
 
 every 30.minutes do
-  runner "WareHouses#clean" #que cada media hora se encole el job para limpiar las bodegas
+  runner "CleanBodegaJob.perform" #que cada media hora se encole el job para limpiar las bodegas
   #total si están vacias no hace nada.
 end
 
@@ -36,9 +36,9 @@ every 10.minutes do
 end
 
 every 6.hours do
-  runner "offers#updateOffers"
+  runner "Spree::Offer.getOffers"
 end
 
 every :hour do
-  runner "social#publishOffers"
+  runner "Spree::Offer.getOfferspublishOffers"
 end
