@@ -1,7 +1,9 @@
 require 'httparty'
 HTTParty::Basement.default_options.update(verify: false)
 
-module Fetcher
+module FetcherJob
+
+  BODEGA_URIJ = Rails.env.development? && "https://integracion-2017-dev.herokuapp.com/bodega/" || Rails.env.production? && "https://integracion-2017-prod.herokuapp.com/bodega/"
 
   def self.Bodegas(httpRequest,uri_ext,body = {})
     auth = Crypt.generarauth(httpRequest)
@@ -12,13 +14,13 @@ module Fetcher
     #JSON body
     body = body.to_json
     if httpRequest[0..5] == "DELETE" then
-      response = HTTParty.delete(BODEGA_URI+uri_ext, headers: options, body: body)
+      response = HTTParty.delete(BODEGA_URIJ+uri_ext, headers: options, body: body)
     elsif httpRequest[0..2] == "GET" then
-      response = HTTParty.get(BODEGA_URI+uri_ext, headers: options, body: body)
+      response = HTTParty.get(BODEGA_URIJ+uri_ext, headers: options, body: body)
     elsif httpRequest[0..2] == "PUT" then
-      response = HTTParty.put(BODEGA_URI+uri_ext, headers: options, body: body)
+      response = HTTParty.put(BODEGA_URIJ+uri_ext, headers: options, body: body)
     elsif httpRequest[0..3] == "POST" then
-      response = HTTParty.post(BODEGA_URI+uri_ext, headers: options, body: body)
+      response = HTTParty.post(BODEGA_URIJ+uri_ext, headers: options, body: body)
     end
     return response
   end

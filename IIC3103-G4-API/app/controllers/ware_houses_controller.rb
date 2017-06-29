@@ -117,9 +117,7 @@ class WareHousesController < ApplicationController
         prods = Fetcher.Bodegas("GET"+id_recepcion.to_s,"skusWithStock?almacenId="+id_recepcion.to_s)
         for prod in prods do
           #get products in storage for each sku
-          puts prod
           prodList = Fetcher.Bodegas("GET"+id_recepcion.to_s+prod['_id'].to_s,"stock?almacenId="+id_recepcion.to_s+"&sku="+prod['_id']+"&limit=200")
-          puts prodList
           count = 3
           while prodList.count > 0 do
             aux = prodList.pop
@@ -145,13 +143,15 @@ class WareHousesController < ApplicationController
       #Move to dispatch storage frm pulmon
       if id_pulmon != "" then
         prods = Fetcher.Bodegas("GET"+id_pulmon.to_s,"skusWithStock?almacenId="+id_pulmon.to_s)
+        total = 0
         for prod in prods do
           #get products in storage for each sku
           puts prod
           prodList = Fetcher.Bodegas("GET"+id_pulmon.to_s+prod['_id'].to_s,"stock?almacenId="+id_pulmon.to_s+"&sku="+prod['_id']+"&limit=200")
           count = 3
-          while prodList.count > 0 do
+          while prodList.count > 0 && total < 1026 do
             aux = prodList.pop
+            total = total + 1
             moveStock(aux['_id'].to_s,id_recepcion)
             if count == 89 then
                 count = 0
@@ -171,7 +171,7 @@ class WareHousesController < ApplicationController
   #Mover a despacho
   def moveToDespachoPostman
     sku = params[:sku]
-    cant = params[:qty]
+    cant = params[:qty].to_i
     to = DESPACHO
     transfered = 0
     while transfered < cant do
