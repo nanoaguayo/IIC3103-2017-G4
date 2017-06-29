@@ -7,18 +7,19 @@ class ProductsController < ApplicationController
 
   def updateStock
     prods = Fetcher.getProductsWithStock
+    puts prods
     prods2 = Product.all
     prods3 = Spree::Product.all
     vars = Spree::Variant.all
     for prod in prods2 do
-      prod.stock = prods[prod.sku]
+      prod.stock = prods[prod.sku.to_s]
       prod.save
     end
     for prod in prods3 do
       for variant in vars do
         if variant.sku == prod.sku then
           var_aux = Spree::Variant.find(variant)
-          var_aux.stock_items.first.set_count_on_hand(prods[variant.sku])
+          var_aux.stock_items.first.set_count_on_hand(prods[variant.sku.to_s])
           var_aux.save
         end
       end

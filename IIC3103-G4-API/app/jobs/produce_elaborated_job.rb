@@ -1,6 +1,6 @@
 class ProduceElaboratedJob < ApplicationJob
   queue_as :default
-
+  
   def perform(sku, cantidad, insumos, trxId)
     insumos.keys.each do |insumo| #insumos es un hash con el sku del insumo como llave y la cantidad como valor
       FetcherJob.moveToDespacho(insumo, insumos[insumo].to_i)

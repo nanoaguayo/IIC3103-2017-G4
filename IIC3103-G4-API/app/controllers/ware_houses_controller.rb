@@ -36,24 +36,34 @@ class WareHousesController < ApplicationController
     cant = cantidad.to_i
     if cant%prod.lot == 0 && cant <= 5000
       lotes = cant / prod.lot #se calcula la cantidad de lotes a producir
+      puts lotes
       ingredientes_necesarios = SkuIngridient.where(sku: sku.to_i)
       enough = true
       insumos = Hash.new 0
       ingredientes_necesarios.each do |ingrediente|
-        ing = Product.where(sku: ing.ingridient)
+        ing = Product.where(sku: ingrediente.ingridient).first
+        puts ing.inspect
         if ingrediente.amount * lotes > ing.stock
           enough = false#en caso de que falte de cualquier ingrediente, no se puede producir
           break
         end
-        insumos[ing.ingridient.to_s] = ingrediente.amount.to_s
+        insumos[ing.sku.to_s] = ingrediente.amount.to_s
       end
       if enough#si hay ingredientes suficientes
         trx = Banco.transferFab(prod.cost * cant)#se paga la produccion al banco
         trans = JSON.parse(trx.response.body)
-        aux = ProducedOrder.create(sku:sku.to_s,cantidad:Integer(cantidad),oc_id:trx['_id'])
+        #trans = {"__v"=>0, "created_at"=>"2017-06-29T03:53:23.278Z", "updated_at"=>"2017-06-29T03:53:23.278Z", "origen"=>"5910c0910e42840004f6e68c", "destino"=>"5910c0910e42840004f6e67e", "_id"=>"595479b3b70c2a0004295100", "monto"=>1090800}
+        aux = ProducedOrder.create(sku:sku.to_s,cantidad:Integer(cantidad),oc_id:trans['_id'])
         aux.save
         if trans.key?('created_at')#si no hubo problemas con la transferencia se continua el flujo
-          ProduceElaboratedJob.perform_later(sku, cantidad, insumos, trx['_id'].to_s)
+          #ProduceElaboratedJob.perform_later(sku, cantidad, insumos, trans['_id'].to_s)
+          parameters = {
+            "trxId": trans['_id'].to_s,
+            "sku": sku,
+            "cantidad": cantidad.to_i
+          }
+          resp = FetcherJob.Bodegas("PUT" + sku.to_s + cantidad + trans['_id'].to_s, "fabrica/fabricar", parameters)
+          render json:resp
         else
           render json: {'error': "error con la transferencia"}
         end
@@ -61,7 +71,7 @@ class WareHousesController < ApplicationController
         render json: {'error': "no hay suficiente stock de insumos"}
       end
     else
-      prender json: {'error': "se excede la cantidad maxima de 5000, o la cantidad no se ajusta al tamaño del lote"}
+      render json: {'error': "se excede la cantidad maxima de 5000, o la cantidad no se ajusta al tamaño del lote"}
     end
   end
 
@@ -188,7 +198,7 @@ class WareHousesController < ApplicationController
           count+=1
           transfered+=1
         else
-          return 0
+          render json: {"message": "transfered"}
         end
       end
     end
@@ -238,7 +248,7 @@ class WareHousesController < ApplicationController
           count+=1
           transfered+=1
         else
-          return 0
+          render json: {"message": "movido a grupo"}
         end
       end
     end
@@ -292,7 +302,7 @@ class WareHousesController < ApplicationController
           count+=1
           transfered+=1
         else
-          return 0
+          render json: {"message": "despachado"}
         end
       end
     end
