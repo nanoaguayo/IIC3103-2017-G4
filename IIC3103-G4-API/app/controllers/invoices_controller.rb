@@ -111,7 +111,7 @@ class InvoicesController < ApplicationController
       trx = Banco.obtenerTransferencia(trx)
       monto = trx["monto"]
       if monto.to_i >= result[0]["total"].to_i #si es que nos pagaron al menos lo que correspondia, entonces se marca como pagada la factura
-        result = HTTParty.post(PATH + "pay/" + id, header: header, body: params)
+        result = HTTParty.post(PATH + "pay", header: header, body: params)
         render json: result.response.body
       else
         render json: {"error": "monto cancelado es menor al monto de la factura"}

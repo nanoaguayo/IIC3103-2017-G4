@@ -16,10 +16,11 @@ module AMQP
       json = JSON.parse(payload)
       puts json
       #Ver si es valida para nosotros
-      if json && Spree::Product.where(sku:json['sku']).first then
+      if json && !Spree::Variant.where(sku:json['sku']).empty? then
         if Spree::Oferta.where(["inicio = ? and fin= ? and sku = ? and precio = ?",Date(json['inicio']),Date(json['fin']),json['sku'],Integer(json['precio'])]).empty? then
           of = Spree::Oferta.create(sku:json['sku'],precio:json['precio'],inicio:Date(json['inicio']),fin:Date(json['fin']),codigo:json['codigo'],publicar:json['publicar'])
           of.save
+          puts of
         end
       end
     end

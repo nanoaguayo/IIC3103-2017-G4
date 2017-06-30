@@ -240,7 +240,7 @@ class WareHousesController < ApplicationController
       cant = params[:qty]
       to = params[:to]
       oc = params[:oc]
-      price = 302
+      price = Product.where(sku:sku).first.price
       transfered = 0
       while transfered < cant do
         resp = Fetcher.Bodegas("GET"+DESPACHO+sku.to_s,"stock?almacenId="+DESPACHO+"&sku="+sku.to_s)
@@ -260,6 +260,10 @@ class WareHousesController < ApplicationController
           end
         end
       end
+      #restar stock
+      a = Product.where(sku:sku.to_i).first
+      a.stock -= cant
+      a.save
     end
   end
 
@@ -284,6 +288,10 @@ class WareHousesController < ApplicationController
         end
       end
     end
+    #restar stock
+    a = Product.where(sku:sku.to_i).first
+    a.stock -= cant
+    a.save
   end
 
   #FTP
@@ -316,6 +324,10 @@ class WareHousesController < ApplicationController
           end
         end
       end
+      #restar stock
+      a = Product.where(sku:sku.to_i).first
+      a.stock -= cant
+      a.save
     end
   end
 
@@ -343,6 +355,10 @@ class WareHousesController < ApplicationController
         end
       end
     end
+    #restar stock
+    a = Product.where(sku:sku.to_i).first
+    a.stock -= cant
+    a.save
   end
 
   #Despachar a otro grupo

@@ -200,10 +200,10 @@ class PurchaseOrdersController < ApplicationController
     #TODO run with scheduler
     def checkFTP()
       aux = Ftp.GetOC()
-      puts aux
       for oc in aux do
         resp = HTTParty.get(OC_URI+"obtener/"+oc[:id], :body => {}, :header => {'Content-type' => 'application/json'})
-        if acceptFTP(resp) then
+        puts resp.code
+        if acceptFTP(resp) && resp.code == 200 then
           #accept oc
           accept(oc[:id], '')
           puts oc
@@ -219,7 +219,7 @@ class PurchaseOrdersController < ApplicationController
 
     def acceptFTP(oc)
       #cambiar criterios
-      if oc[0]["estado"] == "creada" && !Date.parse(oc["fechaEntrega"].to_s).past? then
+      if oc[0]["estado"] == "creada" && !Date.parse(oc[0]["fechaEntrega"].to_s).past? then
         sku = Integer(oc[0]['sku'])
         type = Product.where(sku:sku).first.ptype
         stock = Product.where(sku:sku).first.stock

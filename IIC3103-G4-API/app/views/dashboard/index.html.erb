@@ -91,7 +91,7 @@
 </div>
 <% if @ftp_requested.count > 0 then%>
   <% for order in @ftp_requested do %>
-    <% if @ftp_status[order[:id].to_s]=="aceptada" then %>
+    <% if @ftp_status[order[:id].to_s]=="Aceptada" then %>
       <div class="prodContainerAccepted">
         <p>
           <strong>SKU: </strong><%=order[:sku]%>
@@ -99,7 +99,7 @@
           <strong>Estado: </strong><%= @ftp_status[order[:id].to_s] %>
         </p>
       </div>
-    <% elsif @ftp_status[order[:id].to_s]=="rechazada" then %>
+    <% elsif @ftp_status[order[:id].to_s]=="Rechazada" then %>
       <div class="prodContainerRejected">
         <p>
           <strong>SKU: </strong><%=order[:sku]%>
@@ -107,7 +107,7 @@
           <strong>Estado: </strong><%= @ftp_status[order[:id].to_s] %>
         </p>
       </div>
-    <% elsif @ftp_status[order[:id].to_s]=="creada" %>
+    <% elsif @ftp_status[order[:id].to_s]=="Creada" %>
       <div class="prodContainer">
         <p>
           <strong>SKU: </strong><%=order[:sku]%>
