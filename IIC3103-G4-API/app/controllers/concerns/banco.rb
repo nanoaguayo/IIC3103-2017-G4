@@ -60,7 +60,7 @@ module Banco
       end
       return @result
     end
-    
+
 #Obtener cuenta de la fabrica (interno)
   def self.obtenerCuenta
     auth = Crypt.generarauth("GET")
@@ -72,8 +72,6 @@ module Banco
     puts cuenta["cuentaId"]
     return cuenta["cuentaId"]
   end
-end
-
 
   def self.obtenerTransferencia(id)
     path = BANK_URI + "trx/"+id
@@ -85,3 +83,5 @@ end
     end
     return @trans
   end
+  
+end

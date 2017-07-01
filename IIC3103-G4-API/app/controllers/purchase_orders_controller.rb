@@ -97,7 +97,7 @@ class PurchaseOrdersController < ApplicationController
         @purchase_order.save
         fact = createInvoice(oc["_id"])
         #se le manda al grupo comprador la factura que acabamos de crear y nuestra cuenta de banco
-        HTTParty.put(GURI + cliente + ".ing.puc.cl/invoices/?id=" + fact.response.body["_id"], headers: GOPT, body:{"bank_account" => CTA})
+        HTTParty.put(GURI + cliente + ".ing.puc.cl/invoices/" + fact[0]["_id"], headers: GOPT, body:{"bank_account" => CTA})
         #poner en cola
         order = Order.new(oc:oc['_id'], total:Integer(oc['cantidad']), sku:oc['sku'], due_date:oc['fechaEntrega'], client:oc['cliente'], price:Integer(oc['precioUnitario']), destination: id_store_reception, state:"accepted")
         order.save

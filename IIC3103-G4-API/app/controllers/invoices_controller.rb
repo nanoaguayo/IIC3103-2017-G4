@@ -103,21 +103,23 @@ class InvoicesController < ApplicationController
 
   def paid
     id = params[:id].to_s
-    params = {"id": params[:id].to_s}
+    params = {"id": id}
     header = {"Content-Type" => "application/json"}
-    result = HTTParty.get(PATH + params[:id], body: params, header: header)
-    if result.code == 200
-      trx = params["id_transaction"]    #este es el nombre segun el grupo 2
-      trx = Banco.obtenerTransferencia(trx)
-      monto = trx["monto"]
-      if monto.to_i >= result[0]["total"].to_i #si es que nos pagaron al menos lo que correspondia, entonces se marca como pagada la factura
+    result = HTTParty.get(PATH + id, body: params, header: header)
+    inv = result.response.body[0]
+    if result.code == 200 && inv["estado"] == "pendiente"
+      #trx = result[0]["_id"]    #este es el nombre segun el grupo 2
+      #puts trx
+      #trx = Banco.obtenerTransferencia(trx)
+      #monto = trx["monto"]
+      #if monto.to_i >= result[0]["total"].to_i #si es que nos pagaron al menos lo que correspondia, entonces se marca como pagada la factura
         result = HTTParty.post(PATH + "pay", header: header, body: params)
-        render json: result.response.body
-      else
-        render json: {"error": "monto cancelado es menor al monto de la factura"}
-      end
+        render json: result
+      #else
+      #  render json: {"error": "monto cancelado es menor al monto de la factura"}
+      #end
     else
-      render json: result.response.body
+      render json: inv
     end
   end
 
