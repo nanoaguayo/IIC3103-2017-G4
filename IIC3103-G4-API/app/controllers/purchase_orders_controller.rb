@@ -83,20 +83,17 @@ class PurchaseOrdersController < ApplicationController
     id_store_reception = JSON.parse(request.body.read.to_s)
     id_store_reception = id_store_reception["id_store_reception"]
     @result = HTTParty.get(OC_URI + 'obtener/' + id, :query => {}, :header => OPT)
+    puts @result
     #Reviso si el id ingresado es valido para que oc no tire error
-    if @ordenc.key?('created_at') then
-      body = {}
-      body = body.to_json
-      acceptOC = HTTParty.get(OC_URI + 'obtener/' + id, headers: OPT, body: body)
-      oc = acceptOC[0]
+    if !@result[0]['created_at'].nil? then
+      oc = @result[0]
       cliente = oc["cliente"]
       cliente = IDS[cliente].to_s
       #una vez recibida la orden de compra hay que ver si la aceptamos o no
       #de momento no me preocuparía de ver si podemos comprar otras materias primas para producir y cumplir ordenes de comora
       if accept_general?(oc)
         accept(id, cliente)#esto le avisa a la api del profe y al otro grupo que aceptamos la oc
-        @ordenc = JSON.parse(@result.response.body)
-        @purchase_order = PurchaseOrder.new(@ordenc) #si aceptamos la OC la guardamos en nuestro modelo.
+        @purchase_order = PurchaseOrder.new(oc) #si aceptamos la OC la guardamos en nuestro modelo.
         @purchase_order.save
         fact = createInvoice(oc["_id"])
         #se le manda al grupo comprador la factura que acabamos de crear y nuestra cuenta de banco
@@ -242,14 +239,17 @@ class PurchaseOrdersController < ApplicationController
         ptype = prod.ptype
         stock = prod.stock
         price = prod.price
-        fecha = Time.at(oc["fechaEntrega"].to_f / 1000)
-        if oc["precioUnitario"].to_i > price
+        fecha = Time.parse(oc["fechaEntrega"])
+        puts fecha
+        puts fecha - Time.now
+        puts 1.day
+        if oc["precioUnitario"].to_i >= price
           if ptype == "Materia Prima"
             if fecha - Time.now > 6.hours #todas nuestras materias primas se producen en cerca de 2 horas
               #WareHousesController.fabricarMateriaPrima(sku.to_s,oc["cantidad"])
               return true
             end
-          elsif stock - oc["cantidad"].to_i > 100 && fecha - Time.now > 1.day #nos da algo de tiempo para producir más
+          elsif ((stock - oc["cantidad"].to_i) > 100) && ((fecha - Time.now > 1.day)) #nos da algo de tiempo para producir más
             return true
           end
         end
