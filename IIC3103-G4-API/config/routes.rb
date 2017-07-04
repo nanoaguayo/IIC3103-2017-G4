@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get "/stock", to: "products#updateStock"
   get "/ftp", to: "purchase_orders#checkFTP"
   get "/queue", to: "ware_houses#checkQueue"
+  get "/publish", to: "social#publishOffers"
   #Spree starting in /store URL
   mount Spree::Core::Engine, at: '/store'
   get '/' => redirect('/store')
