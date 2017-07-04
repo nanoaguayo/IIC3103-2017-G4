@@ -398,10 +398,10 @@ class WareHousesController < ApplicationController
     #Check queue and deliver
     Thread.new do
       queue = Order.where(['state=?',"accepted"]).order(:due_date)
-      products = Fetcher.getProductsWithStock
       for order in queue do
         #Check stock
         puts order
+        products = Fetcher.getProductsWithStock
         if products[order.sku] > order.total && !order.due_date.past? then
           #Mover a despacho
           moveToDespacho(order.sku,order.total)
