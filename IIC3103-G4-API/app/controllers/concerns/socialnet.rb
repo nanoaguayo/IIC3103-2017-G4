@@ -9,8 +9,8 @@ CLIENTTWITTER = Twitter::REST::Client.new do |config|
 end
 
 Koala.configure do |config|
-  config.access_token = "EAAIAUd42WqYBALaamio0x7Qq019eacdGpMC1e7VOFGefw1TnwLZBcBN3B9LMV3IUzU7RXf7wi1fyQpYmraTdDGCpnK3A9IrjyMxGN6C3CeMAr0RGCLzxycxlSkI62dYMjFT2UKvcilgYyw1rLZBRWm4UiPcqas6KbxjLRz7BbqvVZBYuoi0erbZBjO4FSTQZD"
-  config.app_access_token = "EAAIAUd42WqYBANOkRoaKrIuiATQZCZAadSgTSZCDWZBWZBKbQBcOjzkG0YhmMEG4asOcA1eUgCOKQpcuzhIVjTNKF1EAow3XccxvLbQydchSEs56xeMUALLpzdQahAev2U6kdTSob5dUaUliiNAA4KDZCdWZBo4Y2gZBmyOmbWjOW2mQ2T3MTDX8F5pOJdDD18oZD"
+  config.access_token = "EAAIAUd42WqYBAOCCLbQbd7ZC9f7J8DrDuFYLIR6zBQLkKZAXnu9xlA4EbZAXW3evuLJIDMeOkyYJg5FJrCM8MlUYMoDmo7oBUgV9fCaN4WS1G1cawuWPWCiRNBHUrAES5fZAo3EAdZAhGBUmVZClU8tZCPtDZCdy7ecZD"
+  config.app_access_token = "EAAIAUd42WqYBAOCCLbQbd7ZC9f7J8DrDuFYLIR6zBQLkKZAXnu9xlA4EbZAXW3evuLJIDMeOkyYJg5FJrCM8MlUYMoDmo7oBUgV9fCaN4WS1G1cawuWPWCiRNBHUrAES5fZAo3EAdZAhGBUmVZClU8tZCPtDZCdy7ecZD"
   config.app_id = "563301573876390"
   config.app_secret = "d3e7d77f760febafa4536c0595891efe"
 end
@@ -25,8 +25,11 @@ module Socialnet
 #Facebook
   def self.Postear(post)
 
-    @page_graph = Koala::Facebook::API.new("EAAIAUd42WqYBANOkRoaKrIuiATQZCZAadSgTSZCDWZBWZBKbQBcOjzkG0YhmMEG4asOcA1eUgCOKQpcuzhIVjTNKF1EAow3XccxvLbQydchSEs56xeMUALLpzdQahAev2U6kdTSob5dUaUliiNAA4KDZCdWZBo4Y2gZBmyOmbWjOW2mQ2T3MTDX8F5pOJdDD18oZD")
-
+    access_token = "EAAIAUd42WqYBAOCCLbQbd7ZC9f7J8DrDuFYLIR6zBQLkKZAXnu9xlA4EbZAXW3evuLJIDMeOkyYJg5FJrCM8MlUYMoDmo7oBUgV9fCaN4WS1G1cawuWPWCiRNBHUrAES5fZAo3EAdZAhGBUmVZClU8tZCPtDZCdy7ecZD"
+    @graph = Koala::Facebook::API.new(access_token)
+		pages = @graph.get_connections('me', 'accounts')
+		first_page_token = pages.first['access_token']
+		@page_graph = Koala::Facebook::API.new(first_page_token)
     @page_graph.get_object('me') # I'm a page
     @page_graph.get_connection('me', 'feed') # the page's wall
     @page_graph.put_wall_post(post)
