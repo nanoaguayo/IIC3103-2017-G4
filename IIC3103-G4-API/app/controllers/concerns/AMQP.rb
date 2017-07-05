@@ -14,11 +14,14 @@ module AMQP
 
     q.subscribe do |delivery_info, metadata, payload|
       json = JSON.parse(payload)
-      puts json
       #Ver si es valida para nosotros
-      if json && !Spree::Variant.where(sku:json['sku']).empty? then
-        if Spree::Oferta.where(["inicio = ? and fin= ? and sku = ? and precio = ?",Date(json['inicio']),Date(json['fin']),json['sku'],Integer(json['precio'])]).empty? then
-          of = Spree::Oferta.create(sku:json['sku'],precio:json['precio'],inicio:Date(json['inicio']),fin:Date(json['fin']),codigo:json['codigo'],publicar:json['publicar'])
+      i = (json["inicio"]/1000)
+      f = (json["fin"]/1000)
+      inicio = Time.at(i)
+      fin = Time.at(f)   
+      if !Spree::Variant.where(sku:json['sku'].to_s).empty? then
+        if Spree::Oferta.where(["inicio = ? and fin= ? and sku = ? and precio = ?",inicio,fin,json['sku'],Integer(json['precio'])]).empty? then
+          of = Spree::Oferta.create(sku:json['sku'],precio:json['precio'],inicio:inicio,fin:fin,codigo:json['codigo'],publicar:json['publicar'])
           of.save
           puts of
         end
